@@ -1,0 +1,23 @@
+name: Scrabby Daily Run
+
+on:
+  schedule:
+    - cron: '0 10 * * *' 
+  
+  workflow_dispatch: 
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Obtener código de GitHub
+        uses: actions/checkout@v4
+      
+      - name: Construir la imagen
+        run: docker build -t scrabby-bot .
+      
+      - name: Iniciar Scraping
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: docker run -e DATABASE_URL="$DATABASE_URL" scrabby-bot
