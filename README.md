@@ -1,36 +1,36 @@
 # Scrabby
 
-Scrabby es un scraper y una API para comparar precios de componentes de PC en tiendas argentinas. El proyecto obtiene productos desde distintas fuentes, filtra resultados irrelevantes, guarda un snapshot local en JSON, persiste la informacion en PostgreSQL y la expone mediante FastAPI.
+Scrabby is a scraper and API for comparing PC component prices across Argentine stores. The project fetches products from multiple sources, filters irrelevant results, saves a local JSON snapshot, stores the data in PostgreSQL, and exposes it through FastAPI.
 
-## Caracteristicas
+## Features
 
-- Scraping de productos desde Mercado Libre y Fravega.
-- Filtrado de publicaciones irrelevantes segun precio minimo y palabras blacklist.
-- Persistencia de resultados en `data/products.json`.
-- Persistencia de productos en PostgreSQL con `upsert` por `url`.
-- API REST con documentacion interactiva en Swagger.
+- Product scraping from Mercado Libre and Fravega.
+- Result filtering based on minimum price and blacklist keywords.
+- Local snapshot persistence in `data/products.json`.
+- PostgreSQL persistence with `upsert` behavior based on `url`.
+- REST API with interactive Swagger documentation.
 
-## Arquitectura
+## Architecture
 
-El proyecto esta dividido en dos partes: el pipeline de scraping y la API de consulta.
+The project is split into two main parts: the scraping pipeline and the API layer.
 
-### Pipeline de scraping
+### Scraping pipeline
 
-1. [main.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/main.py:1) orquesta el proceso completo.
-2. [scrappers/fravega.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/scrappers/fravega.py:1) consulta la API de Fravega y normaliza productos.
-3. [scrappers/mercadolibre.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/scrappers/mercadolibre.py:1) obtiene HTML, parsea `ld+json` y normaliza productos.
-4. [main.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/main.py:7) filtra resultados con `is_valid_product`.
-5. [main.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/main.py:33) guarda el snapshot en `data/products.json`.
-6. [database/database.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/database/database.py:10) inserta o actualiza la tabla `products`.
+1. [main.py](/Scrabby/main.py:1) orchestrates the full process.
+2. [scrappers/fravega.py](/Scrabby/scrappers/fravega.py:1) queries Fravega's API and normalizes products.
+3. [scrappers/mercadolibre.py](/Scrabby/scrappers/mercadolibre.py:1) fetches HTML, parses `ld+json`, and normalizes products.
+4. [main.py](/Scrabby/main.py:7) filters results with `is_valid_product`.
+5. [main.py](/Scrabby/main.py:33) saves a local snapshot in `data/products.json`.
+6. [database/database.py](/Scrabby/database/database.py:10) inserts or updates records in the `products` table.
 
-### API
+### API layer
 
-1. [api/main.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/api/main.py:1) crea la app FastAPI y registra el router.
-2. [api/routers/products.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/api/routers/products.py:1) expone los endpoints de consulta.
-3. [api/dependencies.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/api/dependencies.py:1) administra la conexion a base de datos por request.
-4. [api/schemas/product.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/api/schemas/product.py:1) y [api/schemas/store.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/api/schemas/store.py:1) definen los modelos de respuesta.
+1. [api/main.py](/Scrabby/api/main.py:1) creates the FastAPI app and registers the router.
+2. [api/routers/products.py](/Scrabby/api/routers/products.py:1) exposes the API endpoints.
+3. [api/dependencies.py](/Scrabby/api/dependencies.py:1) manages one database connection per request.
+4. [api/schemas/product.py](/Scrabby/api/schemas/product.py:1) and [api/schemas/store.py](/Scrabby/api/schemas/store.py:1) define the response models.
 
-## Estructura del proyecto
+## Project structure
 
 ```text
 Scrabby/
@@ -55,19 +55,19 @@ Scrabby/
 `-- Dockerfile
 ```
 
-## Requisitos
+## Requirements
 
 - Python 3.12
 - PostgreSQL
-- Variable de entorno `DATABASE_URL`
+- `DATABASE_URL` environment variable
 
-Ejemplo:
+Example:
 
 ```env
-DATABASE_URL=postgresql://usuario:password@localhost:5432/scrabby
+DATABASE_URL=postgresql://user:password@localhost:5432/scrabby
 ```
 
-## Instalacion
+## Installation
 
 ```bash
 python -m venv venv
@@ -75,27 +75,27 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## Ejecutar el scraper
+## Run the scraper
 
 ```bash
 python main.py
 ```
 
-El scraper:
+The scraper:
 
-1. Consulta las tiendas configuradas.
-2. Filtra productos no validos.
-3. Ordena por precio.
-4. Guarda un JSON local.
-5. Inserta o actualiza la base de datos.
+1. Queries the configured stores.
+2. Filters invalid products.
+3. Sorts them by price.
+4. Saves a local JSON file.
+5. Inserts or updates the database.
 
-## Ejecutar la API
+## Run the API
 
 ```bash
 venv\Scripts\uvicorn api.main:app --reload
 ```
 
-Swagger queda disponible en:
+Swagger UI is available at:
 
 ```text
 http://127.0.0.1:8000/docs
@@ -103,7 +103,7 @@ http://127.0.0.1:8000/docs
 
 ## Endpoints
 
-Base URL local:
+Local base URL:
 
 ```text
 http://127.0.0.1:8000
@@ -111,18 +111,18 @@ http://127.0.0.1:8000
 
 ### GET `/products/`
 
-Lista productos con filtros, paginacion y ordenamiento.
+Returns products with filtering, pagination, and sorting.
 
 Query params:
 
-- `search`: coincidencia parcial sobre `name`.
-- `store`: filtro por tienda.
-- `limit`: cantidad maxima de resultados. Default `20`.
-- `offset`: desplazamiento para paginacion. Default `0`.
-- `order_by`: `price`, `name` o `scraped_at`.
-- `order_dir`: `asc` o `desc`.
+- `search`: partial match against `name`.
+- `store`: filter by store.
+- `limit`: maximum number of results. Default `20`.
+- `offset`: pagination offset. Default `0`.
+- `order_by`: `price`, `name`, or `scraped_at`.
+- `order_dir`: `asc` or `desc`.
 
-Ejemplos:
+Examples:
 
 ```http
 GET /products/
@@ -131,38 +131,38 @@ GET /products/?store=fravega&order_by=name&order_dir=desc
 GET /products/?search=3060&limit=10&offset=20
 ```
 
-Respuesta:
+Response:
 
 ```json
 [
   {
     "id": 1,
     "store": "fravega",
-    "name": "Placa De Video RTX 3060 Ti",
+    "name": "RTX 3060 Ti Graphics Card",
     "price": 499999.0,
     "currency": "ARS",
-    "url": "https://www.fravega.com/p/ejemplo/",
+    "url": "https://www.fravega.com/p/example/",
     "scraped_at": "2026-04-24T10:00:00"
   }
 ]
 ```
 
-Errores:
+Errors:
 
-- `400` si `order_by` o `order_dir` son invalidos.
-- `404` si no se encontraron productos.
+- `400` if `order_by` or `order_dir` are invalid.
+- `404` if no products are found.
 
 ### GET `/products/compare/`
 
-Busca productos por nombre y agrupa los resultados por tienda.
+Searches products by name and groups them by store.
 
-Ejemplo:
+Example:
 
 ```http
 GET /products/compare/?query=rtx%203060
 ```
 
-Respuesta:
+Response:
 
 ```json
 {
@@ -170,10 +170,10 @@ Respuesta:
     {
       "id": 1,
       "store": "fravega",
-      "name": "Placa De Video RTX 3060 Ti",
+      "name": "RTX 3060 Ti Graphics Card",
       "price": 499999.0,
       "currency": "ARS",
-      "url": "https://www.fravega.com/p/ejemplo/",
+      "url": "https://www.fravega.com/p/example/",
       "scraped_at": "2026-04-24T10:00:00"
     }
   ],
@@ -184,28 +184,28 @@ Respuesta:
       "name": "RTX 3060 Ti MSI",
       "price": 515000.0,
       "currency": "ARS",
-      "url": "https://articulo.mercadolibre.com.ar/ejemplo",
+      "url": "https://articulo.mercadolibre.com.ar/example",
       "scraped_at": "2026-04-24T10:05:00"
     }
   ]
 }
 ```
 
-Errores:
+Errors:
 
-- `404` si no se encontraron productos.
+- `404` if no products are found.
 
 ### GET `/products/stores/`
 
-Devuelve el resumen de productos por tienda.
+Returns a store-level summary of products.
 
-Ejemplo:
+Example:
 
 ```http
 GET /products/stores/
 ```
 
-Respuesta:
+Response:
 
 ```json
 [
@@ -224,25 +224,25 @@ Respuesta:
 
 ### GET `/products/cheapest/`
 
-Devuelve el producto mas barato de cada tienda.
+Returns the cheapest product for each store.
 
-Ejemplo:
+Example:
 
 ```http
 GET /products/cheapest/
 ```
 
-Respuesta:
+Response:
 
 ```json
 [
   {
     "id": 1,
     "store": "fravega",
-    "name": "Placa De Video RTX 3060 Ti",
+    "name": "RTX 3060 Ti Graphics Card",
     "price": 499999.0,
     "currency": "ARS",
-    "url": "https://www.fravega.com/p/ejemplo/",
+    "url": "https://www.fravega.com/p/example/",
     "scraped_at": "2026-04-24T10:00:00"
   },
   {
@@ -251,7 +251,7 @@ Respuesta:
     "name": "RTX 3060 Ti MSI",
     "price": 515000.0,
     "currency": "ARS",
-    "url": "https://articulo.mercadolibre.com.ar/ejemplo",
+    "url": "https://articulo.mercadolibre.com.ar/example",
     "scraped_at": "2026-04-24T10:05:00"
   }
 ]
@@ -259,35 +259,35 @@ Respuesta:
 
 ### GET `/products/{id}`
 
-Devuelve un producto especifico por su ID.
+Returns a specific product by ID.
 
-Ejemplo:
+Example:
 
 ```http
 GET /products/1
 ```
 
-Respuesta:
+Response:
 
 ```json
 {
   "id": 1,
   "store": "fravega",
-  "name": "Placa De Video RTX 3060 Ti",
+  "name": "RTX 3060 Ti Graphics Card",
   "price": 499999.0,
   "currency": "ARS",
-  "url": "https://www.fravega.com/p/ejemplo/",
+  "url": "https://www.fravega.com/p/example/",
   "scraped_at": "2026-04-24T10:00:00"
 }
 ```
 
-Errores:
+Errors:
 
-- `404` si el producto no existe.
+- `404` if the product does not exist.
 
-## Modelo de datos
+## Data model
 
-La API trabaja sobre una tabla `products` con estas columnas:
+The API works against a `products` table with these columns:
 
 - `id`
 - `store`
@@ -297,10 +297,10 @@ La API trabaja sobre una tabla `products` con estas columnas:
 - `url`
 - `scraped_at`
 
-La capa de persistencia usa `ON CONFLICT (url)` para actualizar precio y fecha de scraping cuando un producto ya existe.
+The persistence layer uses `ON CONFLICT (url)` to update existing prices and scrape timestamps.
 
-## Notas
+## Notes
 
-- El endpoint `/products/cheapest/` usa `DISTINCT ON (store)`, una caracteristica especifica de PostgreSQL.
-- Swagger se genera automaticamente desde los `response_model` y la metadata definida en FastAPI.
-- El scraper principal actualmente usa la query fija `rtx 3060 ti` en [main.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/main.py:47).
+- `/products/cheapest/` uses `DISTINCT ON (store)`, which is PostgreSQL-specific.
+- Swagger is generated automatically from FastAPI metadata and `response_model` declarations.
+- The main scraper currently uses the fixed query `rtx 3060 ti` in [main.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/main.py:47).

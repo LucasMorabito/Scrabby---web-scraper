@@ -1,5 +1,7 @@
 from fastapi import FastAPI
+
 from api.routers import products
+
 
 app = FastAPI(
     title="Scrabby API",

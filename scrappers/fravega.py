@@ -1,5 +1,6 @@
 import requests
 
+
 BASE_URL = "https://www.fravega.com/api/v2"
 
 ZONES = [

@@ -4,7 +4,9 @@ from api.dependencies import get_db
 from api.schemas.product import ProductResponse
 from api.schemas.store import StoreResponse
 
+
 router = APIRouter()
+
 
 ALLOWED_ORDER_BY = {"price", "name", "scraped_at"}
 ALLOWED_ORDER_DIR = {"asc", "desc"}
