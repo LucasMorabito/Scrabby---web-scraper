@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+
 class ProductResponse(BaseModel):
     id: int
     store: str | None = None

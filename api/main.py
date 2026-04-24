@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from api.routers import products
 
-app = FastAPI()
+app = FastAPI(
+    title="Scrabby API",
+    description="API de comparacion de precios de componentes de PC en tiendas argentinas.",
+    version="1.0.0"
+)
 
 app.include_router(products.router, prefix="/products", tags=["products"])
