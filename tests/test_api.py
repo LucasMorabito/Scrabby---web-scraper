@@ -76,6 +76,12 @@ class ApiTests(unittest.TestCase):
         self.assertIn("/products/stores/", paths)
         self.assertIn("/products/{id}", paths)
 
+    def test_health_endpoint_is_available(self):
+        response = self.client.get("/health")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"status": "ok"})
+
     def test_products_returns_404_when_empty(self):
         self.override_db([])
 
