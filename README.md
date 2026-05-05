@@ -2,6 +2,7 @@
 
 Scrabby is a scraper and API for comparing PC component prices across Argentine stores. The project fetches products from multiple sources, filters irrelevant results, saves a local JSON snapshot, stores the data in PostgreSQL, and exposes it through FastAPI.
 
+Documentation: /docs/documentacion-app.md
 ## Features
 
 - Product scraping from Mercado Libre and Fravega.
