@@ -11,3 +11,9 @@ services:
         value: 3.12.13
       - key: DATABASE_URL
         sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: ALGORITHM
+        value: HS256
+      - key: TOKEN_SECONDS_EXPIRE
+        value: 900
