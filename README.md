@@ -19,7 +19,7 @@ The project is split into two main parts: the scraping pipeline and the API laye
 
 1. [main.py](/Scrabby/main.py:1) orchestrates the full process.
 2. [scrappers/fravega.py](/Scrabby/scrappers/fravega.py:1) queries Fravega's API and normalizes products.
-3. [scrappers/mercadolibre.py](/Scrabby/scrappers/mercadolibre.py:1) fetches HTML, parses `ld+json`, and normalizes products.
+3. [scrappers/mercadolibre.py](/Scrabby/scrappers/mercadolibre.py:1) tries Mercado Libre's JSON search API, falls back to HTML `ld+json`, and normalizes products.
 4. [main.py](/Scrabby/main.py:7) filters results with `is_valid_product`.
 5. [main.py](/Scrabby/main.py:33) saves a local snapshot in `data/products.json`.
 6. [database/database.py](/Scrabby/database/database.py:10) inserts or updates records in the `products` table.
@@ -61,11 +61,18 @@ Scrabby/
 - Python 3.12
 - PostgreSQL
 - `DATABASE_URL` environment variable
+- Optional Mercado Libre credentials if public search requests are blocked
 
 Example:
 
 ```env
 DATABASE_URL=postgresql://user:password@localhost:5432/scrabby
+SCRABBY_SEARCH_QUERY=placas de video
+SCRABBY_RESULT_LIMIT=50
+MERCADOLIBRE_ACCESS_TOKEN=
+MERCADOLIBRE_REFRESH_TOKEN=
+MERCADOLIBRE_CLIENT_ID=
+MERCADOLIBRE_CLIENT_SECRET=
 ```
 
 ## Installation
@@ -80,6 +87,13 @@ pip install -r requirements.txt
 
 ```bash
 python main.py
+```
+
+You can override the default search at runtime:
+
+```bash
+python main.py rtx 3060 ti
+python main.py "placas de video" --limit 100
 ```
 
 The scraper:
@@ -304,4 +318,5 @@ The persistence layer uses `ON CONFLICT (url)` to update existing prices and scr
 
 - `/products/cheapest/` uses `DISTINCT ON (store)`, which is PostgreSQL-specific.
 - Swagger is generated automatically from FastAPI metadata and `response_model` declarations.
-- The main scraper currently uses the fixed query `rtx 3060 ti` in [main.py](/c:/Users/Usuario/Desktop/IT/Proyectos/Scrabby/main.py:47).
+- The main scraper defaults to `SCRABBY_SEARCH_QUERY` or `placas de video`; you can also pass the query as CLI arguments.
+- Mercado Libre may return `401`/`403` from its API depending on access policy. Set `MERCADOLIBRE_ACCESS_TOKEN`; if it expires, the scraper can refresh it using `MERCADOLIBRE_REFRESH_TOKEN`, `MERCADOLIBRE_CLIENT_ID`, and `MERCADOLIBRE_CLIENT_SECRET`. It also accepts the shorter env names `ACCESS_TOKEN`, `REFRESH_TOKEN`, `APP_ID`, and `CLIENT_SECRET`.

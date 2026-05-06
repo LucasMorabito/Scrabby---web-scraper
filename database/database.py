@@ -7,7 +7,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_connection():
-    return psycopg2.connect(os.getenv("DATABASE_URL"))
+    database_url = os.getenv("DATABASE_URL")
+    if not database_url:
+        raise RuntimeError("DATABASE_URL no configurada")
+
+    return psycopg2.connect(database_url)
 
 def save_products(products: list[dict]) -> int:
     """
@@ -24,6 +28,9 @@ def save_products(products: list[dict]) -> int:
         with conn:
             with conn.cursor() as cur:
                 for p in products:
+                    if not p.get("name") or p.get("price") is None or not p.get("url"):
+                        continue
+
                     cur.execute("""
                         INSERT INTO products (store, name, price, currency, url)
                         VALUES (%s, %s, %s, %s, %s)

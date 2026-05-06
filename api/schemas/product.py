@@ -9,6 +9,6 @@ class ProductResponse(BaseModel):
     name: str
     price: float
     currency: str | None = None
-    url: str
+    url: str | None = None
     scraped_at: datetime | None = None
     

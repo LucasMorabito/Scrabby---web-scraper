@@ -126,6 +126,17 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(body["id"], 1)
         self.assertEqual(body["store"], "fravega")
 
+    def test_products_allows_legacy_rows_without_url(self):
+        self.override_db([
+            (1, "fravega", "RTX 3060 Ti", 499999.0, "ARS", None, None)
+        ])
+
+        response = self.client.get("/products/")
+
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertIsNone(body[0]["url"])
+
     def test_compare_groups_results_by_store(self):
         self.override_db([
             (1, "fravega", "RTX 3060 Ti", 499999.0, "ARS", "https://fravega.com/1", None),
