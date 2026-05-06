@@ -1,4 +1,5 @@
 import os
+import logging
 
 from fastapi import HTTPException
 import psycopg2
@@ -6,6 +7,7 @@ import psycopg2
 from dotenv import load_dotenv
 
 load_dotenv()
+logger = logging.getLogger(__name__)
 
 def get_db():
     database_url = os.getenv("DATABASE_URL")
@@ -15,6 +17,7 @@ def get_db():
     try:
         conn = psycopg2.connect(database_url)
     except psycopg2.Error as exc:
+        logger.exception("Database connection failed")
         raise HTTPException(
             status_code=503,
             detail="No se pudo conectar a la base de datos",

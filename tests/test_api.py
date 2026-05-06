@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
@@ -51,6 +52,25 @@ class FakeDB:
         return FakeCursor(self.rows)
 
 
+class FakeHealthCursor:
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        pass
+
+    def execute(self, query):
+        self.query = query
+
+
+class FakeHealthDB:
+    def cursor(self):
+        return FakeHealthCursor()
+
+    def close(self):
+        pass
+
+
 class ApiTests(unittest.TestCase):
     def setUp(self):
         self.client = TestClient(app)
@@ -81,6 +101,20 @@ class ApiTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"status": "ok"})
+
+    @patch("api.main.get_connection", return_value=FakeHealthDB())
+    def test_database_health_endpoint_is_available(self, _mock_get_connection):
+        response = self.client.get("/health/db")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"status": "ok"})
+
+    @patch("api.main.get_connection", side_effect=RuntimeError("boom"))
+    def test_database_health_endpoint_returns_503_when_db_fails(self, _mock_get_connection):
+        response = self.client.get("/health/db")
+
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(response.json()["detail"], "No se pudo conectar a la base de datos")
 
     def test_products_returns_404_when_empty(self):
         self.override_db([])
