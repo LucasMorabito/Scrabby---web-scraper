@@ -1,26 +1,21 @@
-import os
-import logging
-
-from fastapi import HTTPException
 import psycopg2
+from fastapi import HTTPException, status
 
-from dotenv import load_dotenv
+from database.database import get_connection
 
-load_dotenv()
-logger = logging.getLogger(__name__)
 
 def get_db():
-    database_url = os.getenv("DATABASE_URL")
-    if not database_url:
-        raise HTTPException(status_code=503, detail="DATABASE_URL no configurada")
-
     try:
-        conn = psycopg2.connect(database_url)
-    except psycopg2.Error as exc:
-        logger.exception("Database connection failed")
+        conn = get_connection()
+    except RuntimeError as exc:
         raise HTTPException(
-            status_code=503,
-            detail="No se pudo conectar a la base de datos",
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Database is not configured",
+        ) from exc
+    except psycopg2.Error as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Database connection unavailable",
         ) from exc
 
     try:

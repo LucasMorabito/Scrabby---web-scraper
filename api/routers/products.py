@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from api.dependencies import get_db
 from api.schemas.product import ProductResponse
@@ -10,6 +10,10 @@ router = APIRouter()
 
 ALLOWED_ORDER_BY = {"price", "name", "scraped_at"}
 ALLOWED_ORDER_DIR = {"asc", "desc"}
+ORDER_BY_ERROR = "Invalid order_by. Allowed values: name, price, scraped_at"
+ORDER_DIR_ERROR = "Invalid order_dir. Allowed values: asc, desc"
+PRODUCTS_NOT_FOUND = "Products not found"
+PRODUCT_NOT_FOUND = "Product not found"
 
 
 def _fetch_as_dicts(cur) -> list[dict]:
@@ -32,10 +36,16 @@ def get_products(
 
     try:
         if order_by not in ALLOWED_ORDER_BY:
-            raise HTTPException(status_code=400, detail="order_by invalido")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=ORDER_BY_ERROR,
+            )
 
         if order_dir not in ALLOWED_ORDER_DIR:
-            raise HTTPException(status_code=400, detail="order_dir invalido")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=ORDER_DIR_ERROR,
+            )
 
         base_query = "SELECT id, store, name, price, currency, url, scraped_at FROM products"
         conditions = []
@@ -59,7 +69,10 @@ def get_products(
         results = _fetch_as_dicts(cur)
 
         if not results:
-            raise HTTPException(status_code=404, detail="No se encontraron productos")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=PRODUCTS_NOT_FOUND,
+            )
 
         return results
 
@@ -83,7 +96,10 @@ def compare_products(query: str, db=Depends(get_db)):
         results = _fetch_as_dicts(cur)
 
         if not results:
-            raise HTTPException(status_code=404, detail="No se encontraron productos")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=PRODUCTS_NOT_FOUND,
+            )
 
         grouped: dict[str, list[dict]] = {}
         for row in results:
@@ -146,7 +162,10 @@ def get_product_by_id(id: int, db=Depends(get_db)):
         results = _fetch_as_dicts(cur)
 
         if not results:
-            raise HTTPException(status_code=404, detail="Producto no encontrado")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=PRODUCT_NOT_FOUND,
+            )
 
         return results[0]
 

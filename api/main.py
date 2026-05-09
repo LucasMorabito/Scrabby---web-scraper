@@ -1,13 +1,8 @@
-import logging
+from fastapi import FastAPI, HTTPException, status
 
-from fastapi import HTTPException
-from fastapi import FastAPI
-
-from api.routers import products, auth
+from api.core.handlers import register_exception_handlers
+from api.routers import auth, products
 from database.database import get_connection
-
-
-logger = logging.getLogger(__name__)
 
 
 app = FastAPI(
@@ -17,13 +12,16 @@ app = FastAPI(
 )
 
 
+register_exception_handlers(app)
+
+
 @app.get("/health", tags=["health"])
-def health_check():
+def health_check() -> dict[str, str]:
     return {"status": "ok"}
 
 
 @app.get("/health/db", tags=["health"])
-def database_health_check():
+def database_health_check() -> dict[str, str]:
     try:
         conn = get_connection()
         try:
@@ -32,10 +30,9 @@ def database_health_check():
         finally:
             conn.close()
     except Exception as exc:
-        logger.exception("Database health check failed")
         raise HTTPException(
-            status_code=503,
-            detail="No se pudo conectar a la base de datos",
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Database connection unavailable",
         ) from exc
 
     return {"status": "ok"}

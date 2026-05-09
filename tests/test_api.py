@@ -84,6 +84,13 @@ class ApiTests(unittest.TestCase):
 
         app.dependency_overrides[get_db] = _override
 
+    def assert_error_response(self, response, status_code, message):
+        self.assertEqual(response.status_code, status_code)
+        body = response.json()
+        self.assertFalse(body["success"])
+        self.assertEqual(body["error"]["code"], status_code)
+        self.assertEqual(body["error"]["message"], message)
+
     def test_docs_and_openapi_are_available(self):
         docs_response = self.client.get("/docs")
         openapi_response = self.client.get("/openapi.json")
@@ -102,6 +109,11 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"status": "ok"})
 
+    def test_unknown_route_uses_standard_error_response(self):
+        response = self.client.get("/missing")
+
+        self.assert_error_response(response, 404, "Not Found")
+
     @patch("api.main.get_connection", return_value=FakeHealthDB())
     def test_database_health_endpoint_is_available(self, _mock_get_connection):
         response = self.client.get("/health/db")
@@ -113,40 +125,43 @@ class ApiTests(unittest.TestCase):
     def test_database_health_endpoint_returns_503_when_db_fails(self, _mock_get_connection):
         response = self.client.get("/health/db")
 
-        self.assertEqual(response.status_code, 503)
-        self.assertEqual(response.json()["detail"], "No se pudo conectar a la base de datos")
+        self.assert_error_response(response, 503, "Database connection unavailable")
 
     def test_products_returns_404_when_empty(self):
         self.override_db([])
 
         response = self.client.get("/products/?search=missing")
 
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json()["detail"], "No se encontraron productos")
+        self.assert_error_response(response, 404, "Products not found")
 
     def test_compare_returns_404_when_empty(self):
         self.override_db([])
 
         response = self.client.get("/products/compare/?query=missing")
 
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json()["detail"], "No se encontraron productos")
+        self.assert_error_response(response, 404, "Products not found")
 
     def test_products_rejects_invalid_order_by(self):
         self.override_db([])
 
         response = self.client.get("/products/?order_by=invalid_column")
 
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json()["detail"], "order_by invalido")
+        self.assert_error_response(
+            response,
+            400,
+            "Invalid order_by. Allowed values: name, price, scraped_at",
+        )
 
     def test_products_rejects_invalid_order_dir(self):
         self.override_db([])
 
         response = self.client.get("/products/?order_dir=sideways")
 
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json()["detail"], "order_dir invalido")
+        self.assert_error_response(
+            response,
+            400,
+            "Invalid order_dir. Allowed values: asc, desc",
+        )
 
     def test_get_product_by_id_returns_product(self):
         self.override_db([
