@@ -4,9 +4,9 @@ from fastapi import HTTPException, status
 from database.database import get_connection
 
 
-def get_db():
+def open_db_connection():
     try:
-        conn = get_connection()
+        return get_connection()
     except RuntimeError as exc:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -17,6 +17,10 @@ def get_db():
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Database connection unavailable",
         ) from exc
+
+
+def get_db():
+    conn = open_db_connection()
 
     try:
         yield conn

@@ -116,6 +116,32 @@ Swagger UI is available at:
 http://127.0.0.1:8000/docs
 ```
 
+## Database schema and migrations
+
+The expected PostgreSQL schema is documented in `schema.sql`. Runtime schema changes are versioned with Alembic under `database/migrations`.
+
+Detailed notes about the authentication tests, Alembic setup, schema SQL, and Supabase usage are available in `docs/tests-auth-alembic-schema.md`.
+
+Alembic reads `DATABASE_URL` from the environment or `.env`.
+
+For an empty database:
+
+```bash
+venv\Scripts\python -m alembic upgrade head
+```
+
+If the Supabase database already has the same `products` and `users` tables created manually, mark the current schema as applied instead of recreating it:
+
+```bash
+venv\Scripts\python -m alembic stamp head
+```
+
+To create the next migration:
+
+```bash
+venv\Scripts\python -m alembic revision -m "describe change"
+```
+
 ## Endpoints
 
 Local base URL:

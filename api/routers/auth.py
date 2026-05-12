@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from typing import Annotated
 
-from api.dependencies import get_db
+from api.dependencies import get_db, open_db_connection
 from api.security import (
     ACCESS_TOKEN_COOKIE_NAME,
     TOKEN_SECONDS_EXPIRE,
@@ -33,16 +33,18 @@ def login_page(request: Request):
 
 
 @router.get("/dashboard", response_class=HTMLResponse)
-def dashboard(
-    request: Request,
-    db=Depends(get_db),
-):
+def dashboard(request: Request):
     username = get_current_username(request)
 
     if not username:
-        return redirect_to_login()
+        has_session_cookie = ACCESS_TOKEN_COOKIE_NAME in request.cookies
+        return redirect_to_login(clear_session=has_session_cookie)
 
-    user = get_user_by_username(username, db)
+    db = open_db_connection()
+    try:
+        user = get_user_by_username(username, db)
+    finally:
+        db.close()
 
     if not user or not user["is_active"]:
         return redirect_to_login(clear_session=True)
