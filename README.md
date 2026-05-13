@@ -19,7 +19,7 @@ The project is split into two main parts: the scraping pipeline and the API laye
 
 1. [main.py](/Scrabby/main.py:1) orchestrates the full process.
 2. [scrappers/fravega.py](/Scrabby/scrappers/fravega.py:1) queries Fravega's API and normalizes products.
-3. [scrappers/mercadolibre.py](/Scrabby/scrappers/mercadolibre.py:1) tries Mercado Libre's JSON search API, falls back to HTML `ld+json`, and normalizes products.
+3. [scrappers/mercadolibre.py](/Scrabby/scrappers/mercadolibre.py:1) scrapes Mercado Libre search HTML, reads `ld+json` product data, and normalizes products.
 4. [main.py](/Scrabby/main.py:7) filters results with `is_valid_product`.
 5. [main.py](/Scrabby/main.py:33) saves a local snapshot in `data/products.json`.
 6. [database/database.py](/Scrabby/database/database.py:10) inserts or updates records in the `products` table.
@@ -61,7 +61,6 @@ Scrabby/
 - Python 3.12
 - PostgreSQL
 - `DATABASE_URL` environment variable
-- Optional Mercado Libre credentials if public search requests are blocked
 
 Example:
 
@@ -69,10 +68,6 @@ Example:
 DATABASE_URL=postgresql://user:password@localhost:5432/scrabby
 SCRABBY_SEARCH_QUERY=placas de video
 SCRABBY_RESULT_LIMIT=50
-MERCADOLIBRE_ACCESS_TOKEN=
-MERCADOLIBRE_REFRESH_TOKEN=
-MERCADOLIBRE_CLIENT_ID=
-MERCADOLIBRE_CLIENT_SECRET=
 ```
 
 ## Installation
@@ -103,6 +98,7 @@ The scraper:
 3. Sorts them by price.
 4. Saves a local JSON file.
 5. Inserts or updates the database.
+6. Records each valid product price in `price_history`.
 
 ## Run the API
 
@@ -326,6 +322,39 @@ Errors:
 
 - `404` if the product does not exist.
 
+### GET `/products/{id}/history`
+
+Returns the recorded price history for a product.
+
+Example:
+
+```http
+GET /products/1/history
+```
+
+Query params:
+
+- `limit`: maximum number of history points. Default `100`.
+- `offset`: pagination offset. Default `0`.
+
+Response:
+
+```json
+[
+  {
+    "id": 1,
+    "product_id": 1,
+    "price": 499999.0,
+    "currency": "ARS",
+    "recorded_at": "2026-05-13T12:00:00Z"
+  }
+]
+```
+
+Errors:
+
+- `404` if the product does not exist.
+
 ## Data model
 
 The API works against a `products` table with these columns:
@@ -340,9 +369,20 @@ The API works against a `products` table with these columns:
 
 The persistence layer uses `ON CONFLICT (url)` to update existing prices and scrape timestamps.
 
+Price observations are stored in `price_history`:
+
+- `id`
+- `product_id`
+- `price`
+- `currency`
+- `recorded_at`
+
+`price_history.product_id` references `products.id` with `ON DELETE CASCADE`.
+
 ## Notes
 
 - `/products/cheapest/` uses `DISTINCT ON (store)`, which is PostgreSQL-specific.
+- `/products/{id}/history` is intended for price charts and dashboard visualizations.
 - Swagger is generated automatically from FastAPI metadata and `response_model` declarations.
 - The main scraper defaults to `SCRABBY_SEARCH_QUERY` or `placas de video`; you can also pass the query as CLI arguments.
-- Mercado Libre may return `401`/`403` from its API depending on access policy. Set `MERCADOLIBRE_ACCESS_TOKEN`; if it expires, the scraper can refresh it using `MERCADOLIBRE_REFRESH_TOKEN`, `MERCADOLIBRE_CLIENT_ID`, and `MERCADOLIBRE_CLIENT_SECRET`. It also accepts the shorter env names `ACCESS_TOKEN`, `REFRESH_TOKEN`, `APP_ID`, and `CLIENT_SECRET`.
+- Mercado Libre API access is currently disabled in the scraper. The active implementation uses the public search page HTML and parses embedded `ld+json` product data until API authorization is available.

@@ -40,12 +40,23 @@ def save_products(products: list[dict]) -> int:
                         DO UPDATE SET 
                             price = EXCLUDED.price,
                             scraped_at = NOW()
+                        RETURNING id
                     """, (
                         p.get("store"),
                         p.get("name"),
                         p.get("price"),
                         p.get("currency", "ARS"),
                         p.get("url"),
+                    ))
+
+                    product_id = cur.fetchone()[0]
+                    cur.execute("""
+                        INSERT INTO price_history (product_id, price, currency)
+                        VALUES (%s, %s, %s)
+                    """, (
+                        product_id,
+                        p.get("price"),
+                        p.get("currency", "ARS"),
                     ))
                     inserted += 1
     finally:

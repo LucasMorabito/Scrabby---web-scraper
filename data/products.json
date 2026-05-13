@@ -2,14 +2,21 @@
     {
         "store": "fravega",
         "name": "Placa de Video 6GB Asus RTX3050 Dual",
-        "price": 697399.0,
+        "price": 581199.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-6gb-asus-rtx3050-dual/"
     },
     {
         "store": "fravega",
+        "name": "Placa de Video 6GB RTX3050 MSI LP 6G OC",
+        "price": 597899.0,
+        "currency": "ARS",
+        "url": "https://www.fravega.com/p/placa-de-video-6gb-rtx3050-msi-lp-6g-oc/"
+    },
+    {
+        "store": "fravega",
         "name": "Placa de Video 6GB RTX3050 Gigabyte Windforce Oc V2 GDDR6",
-        "price": 710799.0,
+        "price": 605799.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-6gb-rtx3050-gigabyte-windforce-oc-v2-gddr6/"
     },
@@ -22,31 +29,17 @@
     },
     {
         "store": "fravega",
-        "name": "Placa de Video Gigabyte 8GB RTX5050 Windforce V2 Oc",
-        "price": 832799.0,
-        "currency": "ARS",
-        "url": "https://www.fravega.com/p/placa-de-video-gigabyte-8gb-rtx5050-windforce-v2-oc/"
-    },
-    {
-        "store": "fravega",
-        "name": "Placa De Video MSI Geforce Rtx 5060 8gb Cyclone Oc 912-V812-205",
-        "price": 867215.59,
-        "currency": "ARS",
-        "url": "https://www.fravega.com/p/placa-de-video-msi-geforce-rtx-5060-8gb-cyclone-oc-912-v812-205/"
-    },
-    {
-        "store": "fravega",
         "name": "Placa de Video Asus 8GB RTX5050 Dual OC GDDR6",
-        "price": 868899.0,
+        "price": 814599.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-asus-8gb-rtx5050-dual-oc-gddr6/"
     },
     {
         "store": "fravega",
-        "name": "Placa de Video Gigabyte AMD Radeon RX 7600 GAMING OC 8GB",
-        "price": 878099.0,
+        "name": "Placa De Video MSI Geforce Rtx 5060 8gb Cyclone Oc 912-V812-205",
+        "price": 820778.87,
         "currency": "ARS",
-        "url": "https://www.fravega.com/p/placa-de-video-gigabyte-amd-radeon-rx-7600-gaming-oc-8gb/"
+        "url": "https://www.fravega.com/p/placa-de-video-msi-geforce-rtx-5060-8gb-cyclone-oc-912-v812-205/"
     },
     {
         "store": "fravega",
@@ -58,107 +51,121 @@
     {
         "store": "fravega",
         "name": "Placa de Video MSI 8GB RTX5060 Cyclone OC",
-        "price": 1001299.0,
+        "price": 938799.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-msi-8gb-rtx5060-cyclone-oc/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video 8GB RTX9060XT Gigabyte Gaming Oc",
-        "price": 1059899.0,
+        "price": 993599.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-8gb-rtx9060xt-gigabyte-gaming-oc/"
     },
     {
         "store": "fravega",
         "name": "Placa De Video Nvidia Msi 5060 Ti Ventus 2x Plus 8gb Gddr7 912-V536-024",
-        "price": 1133499.0,
+        "price": 1021692.62,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-nvidia-msi-5060-ti-ventus-2x-plus-8gb-gddr7-912-v536-024/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video MSI 8GB RTX5060 Ti Ventus 2x OC Plus GDDR7",
-        "price": 1183399.0,
+        "price": 1109399.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-msi-8gb-rtx5060-ti-ventus-2x-oc-plus-gddr7/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video 8GB RX 9060XT Asus Prime Oc",
-        "price": 1195099.0,
+        "price": 1126599.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-8gb-rx-9060xt-asus-prime-oc/"
     },
     {
         "store": "fravega",
-        "name": "Placa De Video Geforce MSI Rtx 5060 Ti 8gb Gaming Trio Oc 9 912-V536-022",
-        "price": 1197139.53,
-        "currency": "ARS",
-        "url": "https://www.fravega.com/p/placa-de-video-geforce-msi-rtx-5060-ti-8gb-gaming-trio-oc-9-912-v536-022/"
-    },
-    {
-        "store": "fravega",
         "name": "Placa de Video 8GB RTX 5060 Ti Gigabyte Windforce Oc",
-        "price": 1202999.0,
+        "price": 1127799.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-8gb-rtx-5060-ti-gigabyte-windforce-oc/"
     },
     {
         "store": "fravega",
+        "name": "Placa De Video Geforce MSI Rtx 5060 Ti 8gb Gaming Trio Oc 9 912-V536-022",
+        "price": 1133036.4,
+        "currency": "ARS",
+        "url": "https://www.fravega.com/p/placa-de-video-geforce-msi-rtx-5060-ti-8gb-gaming-trio-oc-9-912-v536-022/"
+    },
+    {
+        "store": "fravega",
         "name": "Placa de Video 8GB RTX5060 Ti Gigabyte Eagle Oc ",
-        "price": 1233499.0,
+        "price": 1156399.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-8gb-rtx5060-ti-gigabyte-eagle-oc-/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video MSI 8GB RTX5060 Ti Gaming OC GDDR7",
-        "price": 1250099.0,
+        "price": 1171999.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-msi-8gb-rtx5060-ti-gaming-oc-gddr7/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video 8Gb Rtx 5060 Ti Gigabyte Aero Oc ",
-        "price": 1294399.0,
+        "price": 1213499.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-8gb-rtx-5060-ti-gigabyte-aero-oc-/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video MSI 8GB RTX5060 Ti Gaming Trio Oc GDDR7",
-        "price": 1344199.0,
+        "price": 1260199.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-msi-8gb-rtx5060-ti-gaming-trio-oc-gddr7/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video Asus 8GB RTX5060 TI Prime Oc GDDR7",
-        "price": 1353699.0,
+        "price": 1269099.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-asus-8gb-rtx5060-ti-prime-oc-gddr7/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video 8GB RTX5060 MSI Gaming Ti Oc White",
-        "price": 1359399.0,
+        "price": 1274399.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-8gb-rtx5060-msi-gaming-ti-oc-white/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video 16GB RTX9060XT Gigabyte Gaming Oc GDDR6",
-        "price": 1477399.0,
+        "price": 1385099.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-16gb-rtx9060xt-gigabyte-gaming-oc-gddr6/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video MSI 16GB RTX5060 Ti Ventus 2x OC GDDR7 Plus",
-        "price": 1623299.0,
+        "price": 1521899.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-msi-16gb-rtx5060-ti-ventus-2x-oc-gddr7-plus/"
+    },
+    {
+        "store": "fravega",
+        "name": "Placa de Video MSI GeForce RTX 5070 12G SHADOW 2X OC GDDR7 192-bit 912-V532-011",
+        "price": 1631687.9,
+        "currency": "ARS",
+        "url": "https://www.fravega.com/p/placa-de-video-msi-geforce-rtx-5070-12g-shadow-2x-oc-gddr7-192-bit-912-v532-011/"
+    },
+    {
+        "store": "fravega",
+        "name": "Placa de Video 12GB MSI RTX5070 Ventus 2x OC",
+        "price": 1670399.0,
+        "currency": "ARS",
+        "url": "https://www.fravega.com/p/placa-de-video-12gb-msi-rtx5070-ventus-2x-oc/"
     },
     {
         "store": "fravega",
@@ -169,52 +176,31 @@
     },
     {
         "store": "fravega",
-        "name": "Placa de Video 12GB MSI RTX5070 Ventus 2x OC",
-        "price": 1781799.0,
-        "currency": "ARS",
-        "url": "https://www.fravega.com/p/placa-de-video-12gb-msi-rtx5070-ventus-2x-oc/"
-    },
-    {
-        "store": "fravega",
-        "name": "Placa de Video MSI GeForce RTX 5070 12G SHADOW 2X OC GDDR7 192-bit 912-V532-011",
-        "price": 1810203.08,
-        "currency": "ARS",
-        "url": "https://www.fravega.com/p/placa-de-video-msi-geforce-rtx-5070-12g-shadow-2x-oc-gddr7-192-bit-912-v532-011/"
-    },
-    {
-        "store": "fravega",
-        "name": "Placa de Video MSI GeForce RTX 5070 12G VENTUS 3X OC GDDR7 192-bit 912-V532-205",
-        "price": 1818764.63,
-        "currency": "ARS",
-        "url": "https://www.fravega.com/p/placa-de-video-msi-geforce-rtx-5070-12g-ventus-3x-oc-gddr7-192-bit-912-v532-205/"
-    },
-    {
-        "store": "fravega",
         "name": "Placa de Video MSI 12BG RTX5070 Shadow 3x OC",
-        "price": 1820599.0,
+        "price": 1706799.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-msi-12bg-rtx5070-shadow-3x-oc/"
     },
     {
         "store": "fravega",
-        "name": "Placa de Video Geforce RTX 3060Ti 8GB PNY XLR8 Revel Epic",
-        "price": 1859999.0,
+        "name": "Placa de Video Asus 12GB RTX5070 Prime GDDR7",
+        "price": 1725599.0,
         "currency": "ARS",
-        "url": "https://www.fravega.com/p/placa-de-video-geforce-rtx-3060ti-8gb-pny-xlr8-revel-epic/"
+        "url": "https://www.fravega.com/p/placa-de-video-asus-12gb-rtx5070-prime-gddr7/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video 12GB RTX 5070 Gigabyte Windforce Oc Sff",
-        "price": 1885199.0,
+        "price": 1767399.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-12gb-rtx-5070-gigabyte-windforce-oc-sff/"
     },
     {
         "store": "fravega",
-        "name": "Placa de Video Asus 12GB RTX5070 Prime GDDR7",
-        "price": 1917299.0,
+        "name": "Placa de Video MSI 12GB RTX5070 Gaming Trio",
+        "price": 1820599.0,
         "currency": "ARS",
-        "url": "https://www.fravega.com/p/placa-de-video-asus-12gb-rtx5070-prime-gddr7/"
+        "url": "https://www.fravega.com/p/placa-de-video-msi-12gb-rtx5070-gaming-trio/"
     },
     {
         "store": "fravega",
@@ -225,36 +211,29 @@
     },
     {
         "store": "fravega",
-        "name": "Placa de Video MSI 12GB RTX5070 Gaming Trio",
-        "price": 1941899.0,
-        "currency": "ARS",
-        "url": "https://www.fravega.com/p/placa-de-video-msi-12gb-rtx5070-gaming-trio/"
-    },
-    {
-        "store": "fravega",
         "name": "Placa de Video Asus 16GB RX9070XT Prime OC GDDR6",
-        "price": 2094499.0,
+        "price": 1963599.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-asus-16gb-rx9070xt-prime-oc-gddr6/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video 16GB RX9070 Gigabyte Gaming Oc GDDR6",
-        "price": 2147399.0,
+        "price": 2013199.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-16gb-rx9070-gigabyte-gaming-oc-gddr6/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video Gigabyte 16GB RX9070XT Aorus E",
-        "price": 2525899.0,
+        "price": 2368099.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-gigabyte-16gb-rx9070xt-aorus-e/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video MSI GeForce RTX 5070 Ti 16G SHADOW 3X OC GDDR7 256-bit 912-V531-465",
-        "price": 2708188.1,
+        "price": 2441117.13,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-msi-geforce-rtx-5070-ti-16g-shadow-3x-oc-gddr7-256-bit-912-v531-465/"
     },
@@ -268,14 +247,14 @@
     {
         "store": "fravega",
         "name": "Placa de Video MSI 16GB RTX5080 Trio Gaming GDDR7",
-        "price": 4394699.0,
+        "price": 4120099.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-msi-16gb-rtx5080-trio-gaming-gddr7/"
     },
     {
         "store": "fravega",
         "name": "Placa de Video 16GB RTX5080 Gigabyte Gaming Oc GDDR7",
-        "price": 4438799.0,
+        "price": 4161399.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/p/placa-de-video-16gb-rtx5080-gigabyte-gaming-oc-gddr7/"
     },

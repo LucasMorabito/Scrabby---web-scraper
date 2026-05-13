@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from api.dependencies import get_db
-from api.schemas.product import ProductResponse
+from api.schemas.product import PriceHistoryResponse, ProductResponse
 from api.schemas.store import StoreResponse
 
 
@@ -142,6 +142,70 @@ def get_cheapest_products(db=Depends(get_db)):
 
         cur.execute(query_sql)
         return _fetch_as_dicts(cur)
+
+    finally:
+        cur.close()
+
+
+@router.get("/{id}/history", response_model=list[PriceHistoryResponse])
+def get_product_price_history(
+    id: int,
+    limit: int = 100,
+    offset: int = 0,
+    db=Depends(get_db),
+):
+    cur = db.cursor()
+
+    try:
+        query_sql = """
+            WITH product_exists AS (
+                SELECT id
+                FROM products
+                WHERE id = %s
+            ),
+            history AS (
+                SELECT
+                    h.id,
+                    h.product_id,
+                    h.price,
+                    h.currency,
+                    h.recorded_at
+                FROM price_history h
+                JOIN product_exists p ON p.id = h.product_id
+                ORDER BY h.recorded_at ASC
+                LIMIT %s OFFSET %s
+            )
+            SELECT
+                id,
+                product_id,
+                price,
+                currency,
+                recorded_at
+            FROM history
+            UNION ALL
+            SELECT
+                NULL AS id,
+                p.id AS product_id,
+                NULL AS price,
+                NULL AS currency,
+                NULL AS recorded_at
+            FROM product_exists p
+            WHERE NOT EXISTS (SELECT 1 FROM history)
+        """
+
+        cur.execute(query_sql, (id, limit, offset))
+        results = _fetch_as_dicts(cur)
+
+        if not results:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=PRODUCT_NOT_FOUND,
+            )
+
+        if results[0]["id"] is None:
+            return []
+
+        return results
 
     finally:
         cur.close()

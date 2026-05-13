@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 import unittest
 from unittest.mock import patch
 
@@ -23,6 +24,14 @@ STORE_COLUMNS = [
     ("last_scraped",),
 ]
 
+PRICE_HISTORY_COLUMNS = [
+    ("id",),
+    ("product_id",),
+    ("price",),
+    ("currency",),
+    ("recorded_at",),
+]
+
 
 class FakeCursor:
     def __init__(self, rows=None):
@@ -34,6 +43,8 @@ class FakeCursor:
         self.executed.append((query, params))
         if "COUNT(*) as total" in query:
             self.description = STORE_COLUMNS
+        elif "price_history" in query:
+            self.description = PRICE_HISTORY_COLUMNS
         else:
             self.description = PRODUCT_COLUMNS
 
@@ -101,6 +112,7 @@ class ApiTests(unittest.TestCase):
         paths = openapi_response.json()["paths"]
         self.assertIn("/products/cheapest/", paths)
         self.assertIn("/products/stores/", paths)
+        self.assertIn("/products/{id}/history", paths)
         self.assertIn("/products/{id}", paths)
 
     def test_health_endpoint_is_available(self):
@@ -174,6 +186,39 @@ class ApiTests(unittest.TestCase):
         body = response.json()
         self.assertEqual(body["id"], 1)
         self.assertEqual(body["store"], "fravega")
+
+    def test_get_product_price_history_returns_history(self):
+        recorded_at = datetime(2026, 5, 13, 12, 0, tzinfo=timezone.utc)
+        self.override_db([
+            (10, 1, 499999.0, "ARS", recorded_at),
+            (11, 1, 489999.0, "ARS", recorded_at),
+        ])
+
+        response = self.client.get("/products/1/history")
+
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertEqual(len(body), 2)
+        self.assertEqual(body[0]["id"], 10)
+        self.assertEqual(body[0]["product_id"], 1)
+        self.assertEqual(body[0]["price"], 499999.0)
+
+    def test_get_product_price_history_returns_empty_for_product_without_history(self):
+        self.override_db([
+            (None, 1, None, None, None)
+        ])
+
+        response = self.client.get("/products/1/history")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [])
+
+    def test_get_product_price_history_returns_404_when_product_is_missing(self):
+        self.override_db([])
+
+        response = self.client.get("/products/999/history")
+
+        self.assert_error_response(response, 404, "Product not found")
 
     def test_products_allows_legacy_rows_without_url(self):
         self.override_db([
