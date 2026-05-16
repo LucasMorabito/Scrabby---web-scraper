@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Iniciar sesión — Scrabby{% endblock %}
+{% block title %}Crear cuenta — Scrabby{% endblock %}
 
 {% block content %}
 <section class="flex min-h-[75vh] items-center justify-center py-8 px-4">
@@ -8,19 +8,31 @@
         <div class="p-6 sm:p-8">
             
             <h2 class="text-3xl font-extrabold tracking-tight text-slate-50 text-center mb-6">
-                Iniciar sesión
+                Crear cuenta
             </h2>
             
             {% if error %}
+                {# 🛠️ MOTOR DE TRADUCCIÓN FRONTIER: Intercepta y sanitiza las alertas del backend #}
+                {% set error_lower = error|lower %}
+                {% set error_es = error %}
+                
+                {% if 'already exists' in error_lower or 'already taken' in error_lower or 'registered' in error_lower %}
+                    {% set error_es = 'El nombre de usuario ya se encuentra registrado.' %}
+                {% elif 'do not match' in error_lower or 'match' in error_lower %}
+                    {% set error_es = 'Las contraseñas ingresadas no coinciden.' %}
+                {% elif 'short' in error_lower or 'length' in error_lower %}
+                    {% set error_es = 'La contraseña es demasiado corta o no cumple los requisitos.' %}
+                {% endif %}
+
                 <div class="rounded-xl border border-red-500/40 bg-red-950/30 p-3 text-sm text-red-300 mb-4 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
-                    <span>{{ error }}</span>
+                    <span>{{ error_es }}</span>
                 </div>
             {% endif %}
             
-            <form action="/users/login" method="post" class="space-y-5">
+            <form action="/users/register" method="post" class="space-y-5">
                 
                 <div>
                     <label class="block text-sm font-semibold tracking-wide text-slate-400 mb-1.5" for="username">
@@ -30,7 +42,8 @@
                         type="text"
                         id="username"
                         name="username"
-                        placeholder="Ingresa tu usuario"
+                        placeholder="Elige tu nombre de usuario"
+                        value="{{ username or '' }}"
                         required
                         class="h-11 w-full rounded-md border border-slate-700 bg-slate-950 px-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
                     />
@@ -44,7 +57,21 @@
                         type="password"
                         id="password"
                         name="password"
-                        placeholder="••••••••"
+                        placeholder="Crea una contraseña segura"
+                        required
+                        class="h-11 w-full rounded-md border border-slate-700 bg-slate-950 px-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
+                    />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold tracking-wide text-slate-400 mb-1.5" for="confirm_password">
+                        Confirmar contraseña
+                    </label>
+                    <input
+                        type="password"
+                        id="confirm_password"
+                        name="confirm_password"
+                        placeholder="Repite tu contraseña"
                         required
                         class="h-11 w-full rounded-md border border-slate-700 bg-slate-950 px-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
                     />
@@ -55,15 +82,15 @@
                         type="submit" 
                         class="inline-flex h-11 w-full items-center justify-center rounded-xl bg-violet-600 font-bold text-white shadow-lg shadow-violet-950/50 transition hover:bg-violet-500 hover:-translate-y-0.5"
                     >
-                        Ingresar
+                        Registrarse
                     </button>
                 </div>
             </form>
 
             <p class="text-center text-sm text-slate-400 mt-6">
-                ¿No tienes cuenta?
-                <a href="/users/register" class="font-bold text-cyan-400 transition hover:text-cyan-300 ml-1">
-                    Regístrate aquí
+                ¿Ya tienes cuenta?
+                <a href="/users/login" class="font-bold text-cyan-400 transition hover:text-cyan-300 ml-1">
+                    Inicia sesión aquí
                 </a>
             </p>
             

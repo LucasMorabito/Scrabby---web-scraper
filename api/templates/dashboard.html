@@ -1,16 +1,129 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-<body>
-    <h1>Dashboard</h1>
-    <p>Bienvenido, {{ username }}</p>
+{% extends "base.html" %}
 
-    <form action="/users/logout" method="post">
-    <button type="submit">Logout</button>
-    </form>
-</body>
-</html>
+{% block title %}Panel — Scrabby{% endblock %}
+
+{% block content %}
+<div class="flex min-h-[75vh] flex-col gap-6 max-w-6xl mx-auto">
+    
+    <div class="flex flex-col gap-4 rounded-2xl bg-slate-950/40 border border-slate-800/60 p-6 shadow-xl backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-50">
+                Bienvenido{% if username %}, <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-400">{{ username }}</span>{% endif %}
+            </h1>
+            <p class="text-sm text-slate-400 mt-1">Este es tu panel de control y monitoreo de GPUs favoritas.</p>
+        </div>
+        <form action="/users/logout" method="post" class="self-start sm:self-auto">
+            <button type="submit" class="inline-flex h-9 items-center justify-center rounded-xl border border-red-500/40 bg-red-950/20 px-4 text-xs font-semibold text-red-400 transition hover:bg-red-950/50 hover:text-red-300">
+                Cerrar sesión
+            </button>
+        </form>
+    </div>
+
+    <div class="rounded-2xl bg-slate-950/20 border border-slate-800/60 shadow-2xl backdrop-blur-sm overflow-hidden">
+        <div class="p-6">
+            <h2 class="text-xl font-bold text-slate-100 tracking-tight flex items-center gap-2 mb-4">
+                <span class="h-2 w-2 rounded-full bg-violet-500 shadow shadow-violet-500/80"></span>
+                Mis GPUs Favoritas
+            </h2>
+
+            {% if error %}
+                <div class="rounded-xl border border-red-500/40 bg-red-950/30 p-4 text-sm text-red-300 mb-4">
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span>{{ error }}</span>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if favoritos %}
+                <div class="overflow-x-auto rounded-xl border border-slate-800/80 bg-slate-950/40">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-800 bg-slate-900/60 text-xs font-bold uppercase tracking-wider text-slate-400">
+                                <th class="px-5 py-3">Tienda</th>
+                                <th class="px-5 py-3">Producto</th>
+                                <th class="px-5 py-3">Precio Actual</th>
+                                <th class="px-5 py-3">Último Scrapeo</th>
+                                <th class="px-5 py-3 text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y divide-slate-800/40 text-slate-300">
+                            {% for gpu in favoritos %}
+                                {% set store_lower = gpu.store|lower %}
+                                {% set badge_color = 'border-slate-700 text-slate-400 bg-slate-900/30' %}
+                                {% set store_label = gpu.store|capitalize %}
+
+                                {% if store_lower == 'fravega' or 'fravega' in store_lower %}
+                                    {% set badge_color = 'border-blue-500/40 text-blue-400 bg-blue-950/20' %}
+                                    {% set store_label = 'Frávega' %}
+                                {% elif store_lower == 'mercadolibre' or ('mercado' in store_lower and 'libre' in store_lower) %}
+                                    {% set badge_color = 'border-amber-400/40 text-amber-400 bg-amber-950/20' %}
+                                    {% set store_label = 'Mercado Libre' %}
+                                {% elif store_lower == 'mexx' or 'mexx' in store_lower %}
+                                    {% set badge_color = 'border-emerald-500/40 text-emerald-400 bg-emerald-950/20' %}
+                                    {% set store_label = 'Mexx' %}
+                                {% elif store_lower == 'quantum' or 'quantum' in store_lower %}
+                                    {% set badge_color = 'border-pink-500/40 text-pink-400 bg-pink-950/20' %}
+                                    {% set store_label = 'Quantum' %}
+                                {% endif %}
+
+                                <tr x-data="{ visible: true }" x-show="visible" x-transition.duration.300ms class="hover:bg-slate-900/30 transition">
+                                    
+                                    <td class="px-5 py-4 whitespace-nowrap">
+                                        <span class="inline-flex rounded-full border {{ badge_color }} px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide">
+                                            {{ store_label }}
+                                        </span>
+                                    </td>
+                                    
+                                    <td class="px-5 py-4 font-medium text-slate-200 max-w-xs md:max-w-md truncate" title="{{ gpu.name }}">
+                                        {{ gpu.name }}
+                                    </td>
+                                    
+                                    <td class="px-5 py-4 whitespace-nowrap font-extrabold text-cyan-400">
+                                        {{ gpu.currency if gpu.currency else '$' }} {{ "{:,.0f}".format(gpu.price).replace(",", ".") }}
+                                    </td>
+                                    
+                                    <td class="px-5 py-4 whitespace-nowrap text-xs text-slate-500">
+                                        {{ gpu.scraped_at }}
+                                    </td>
+                                    
+                                    <td class="px-5 py-4 whitespace-nowrap text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a href="{{ gpu.url }}" target="_blank" rel="noopener noreferrer" class="inline-flex h-8 items-center justify-center rounded-lg bg-violet-600 px-3 text-xs font-bold text-white transition hover:bg-violet-500">
+                                                Ver tienda
+                                            </a>
+                                            
+                                            <button 
+                                                @click="fetch('/users/dashboard/favorites/{{ gpu.id }}', {method: 'DELETE'}).then(res => { if(res.ok) visible = false })"
+                                                class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700 bg-slate-900/40 text-slate-400 transition hover:border-red-500 hover:text-red-400 hover:bg-red-950/20"
+                                                title="Eliminar de favoritos"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="rounded-xl border border-cyan-500/30 bg-cyan-950/10 p-8 text-center text-cyan-200/80">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-10 w-10 text-cyan-400/60 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    <p class="font-medium text-base text-slate-200">Aún no tienes placas de video favoritas guardadas.</p>
+                    <p class="text-xs text-slate-400 mt-1">Explora el catálogo y usa el botón de favoritos para agregarlas a tu monitor.</p>
+                    <a href="/products" class="inline-flex h-9 items-center justify-center rounded-xl bg-slate-900 border border-slate-700 px-4 text-xs font-bold text-cyan-400 transition hover:border-cyan-500 mt-4">
+                        Ir al Catálogo
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

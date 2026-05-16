@@ -1,5 +1,6 @@
+import random
+import urllib.parse
 import requests
-
 
 BASE_URL = "https://www.fravega.com/api/v2"
 
@@ -10,6 +11,13 @@ ZONES = [
     "2", "25", "28", "29", "30"
 ]
 
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0",
+]
+
+# La llave maestra de GraphQL (Extrae el EAN si existe)
 GRAPHQL_QUERY = """
 query GetItems($filters: Filters, $presentationFilters: PresentationFilters, $pagination: Pagination, $sorting: SortOption) {
   items(
@@ -23,6 +31,11 @@ query GetItems($filters: Filters, $presentationFilters: PresentationFilters, $pa
       item {
         title
         slug
+        gtin {
+          ... on EAN {
+            number
+          }
+        }
       }
       pricing {
         salePrice
@@ -33,20 +46,20 @@ query GetItems($filters: Filters, $presentationFilters: PresentationFilters, $pa
 """
 
 def scrape(keyword: str, size: int = 20) -> list[dict]:
+    safe_keyword = urllib.parse.quote_plus(keyword)
+    
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "User-Agent": random.choice(USER_AGENTS),
         "content-type": "application/json",
         "origin": "https://www.fravega.com",
-        "referer": f"https://www.fravega.com/l/?keyword={keyword.replace(' ', '+')}",
+        "referer": f"https://www.fravega.com/l/?keyword={safe_keyword}",
+        "Accept-Language": "es-AR,es;q=0.9,en-US;q=0.8,en;q=0.7",
     }
 
     payload = {
         "operationName": "GetItems",
         "variables": {
-            "filters": {
-                "keywords": keyword,
-                "zones": ZONES
-            },
+            "filters": {"keywords": keyword, "zones": ZONES},
             "presentationFilters": {
                 "priceChannel": "fravega-ecommerce",
                 "cockadeTag": "listing",
@@ -59,26 +72,55 @@ def scrape(keyword: str, size: int = 20) -> list[dict]:
         "query": GRAPHQL_QUERY
     }
 
-    r = requests.post(BASE_URL, json=payload, headers=headers, timeout=15)
-    r.raise_for_status()
-    data = r.json()
+    try:
+        r = requests.post(BASE_URL, json=payload, headers=headers, timeout=15)
+        r.raise_for_status()
+        data = r.json()
+    except Exception as e:
+        print(f"Error de conexión con GraphQL Frávega: {e}")
+        return []
+
+    if "errors" in data:
+        print(f"Error interno en GraphQL de Frávega: {data['errors'][0].get('message')}")
+        return []
 
     products = []
     for result in data.get("data", {}).get("items", {}).get("results", []):
         item = result.get("item", {})
         pricing = result.get("pricing", {})
+        
+        title = item.get("title")
+        sale_price = pricing.get("salePrice")
         slug = item.get("slug", "")
+        
+        # Extraemos el EAN (si el vendedor se dignó a cargarlo)
+        gtin_data = item.get("gtin") or {}
+        item_number = gtin_data.get("number", "")
+        
+        if not title or not sale_price:
+            continue
+            
+        # 🚀 LA MAGIA DEL FALLBACK:
+        if item_number:
+            # Plan A: URL Directa
+            product_url = f"https://www.fravega.com/p/{slug}-{item_number}/"
+        else:
+            # Plan B: Búsqueda exacta (Graceful Degradation)
+            exact_title_encoded = urllib.parse.quote_plus(title)
+            product_url = f"https://www.fravega.com/l/?keyword={exact_title_encoded}"
+            
         products.append({
             "store": "fravega",
-            "name": item.get("title"),
-            "price": pricing.get("salePrice"),
+            "name": title,
+            "price": sale_price,
             "currency": "ARS",
-            "url": f"https://www.fravega.com/p/{slug}/" if slug else None,
+            "url": product_url, 
         })
+        
     return products
-
 
 if __name__ == "__main__":
     products = scrape("placas de video")
-    for p in products:
-        print(p["price"], p["currency"], p["name"])
+    print(f"Encontrados: {len(products)}\n")
+    for p in products[:5]:
+        print(f"${p['price']} {p['currency']} - {p['name']}\nLink: {p['url']}\n")

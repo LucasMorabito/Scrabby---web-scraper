@@ -78,6 +78,18 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+For local test development with unittest:
+
+```bash
+python -m unittest discover tests
+```
+
+For local test development with pytest:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
 ## Run the scraper
 
 ```bash
@@ -145,6 +157,16 @@ Local base URL:
 ```text
 http://127.0.0.1:8000
 ```
+
+User endpoints:
+
+- `GET /users/login`: login form.
+- `POST /users/login`: login and JWT cookie creation.
+- `GET /users/register`: register form.
+- `POST /users/register`: user creation.
+- `GET /users/dashboard`: protected dashboard view.
+- `GET /users/dashboard/data`: authenticated dashboard data with favorite GPUs.
+- `POST /users/logout`: logout and cookie cleanup.
 
 ### GET `/products/`
 
@@ -378,6 +400,15 @@ Price observations are stored in `price_history`:
 - `recorded_at`
 
 `price_history.product_id` references `products.id` with `ON DELETE CASCADE`.
+
+User favorites are stored in `user_favorites`:
+
+- `id`
+- `user_id`
+- `product_id`
+- `created_at`
+
+`user_favorites` links users and products and enforces one favorite per product per user through `uq_user_favorites_user_product`.
 
 ## Notes
 

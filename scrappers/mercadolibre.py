@@ -1,161 +1,33 @@
 import json
-
+import random
+import urllib.parse
 import requests
-
 from bs4 import BeautifulSoup
 
-
 SEARCH_URL = "https://listado.mercadolibre.com.ar/{query}"
-USER_AGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/120.0.0.0 Safari/537.36"
-)
 
-# Mercado Libre API integration is intentionally disabled until the app is
-# authorized for the intended API usage.
-#
-# import os
-# from dotenv import load_dotenv
-#
-# load_dotenv()
-#
-# API_URL = "https://api.mercadolibre.com/sites/MLA/search"
-# TOKEN_URL = "https://api.mercadolibre.com/oauth/token"
-# _ACCESS_TOKEN_CACHE = None
-#
-#
-# class MercadoLibreAuthError(RuntimeError):
-#     pass
-#
-#
-# def _env(*names: str) -> str | None:
-#     for name in names:
-#         value = os.getenv(name)
-#         if value:
-#             return value
-#
-#     return None
+# Ampliamos la lista para rotar la huella digital y evadir bloqueos básicos
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36"
+]
 
 
 def _headers(accept: str = "text/html") -> dict[str, str]:
+    # Elegimos un User-Agent al azar en cada petición
     return {
         "Accept": accept,
-        "User-Agent": USER_AGENT,
+        "User-Agent": random.choice(USER_AGENTS),
+        "Accept-Language": "es-AR,es;q=0.9,en-US;q=0.8,en;q=0.7", # Agregamos esto para parecer más reales
     }
-
-# def _get_access_token() -> str | None:
-#     return _ACCESS_TOKEN_CACHE or _env(
-#         "MERCADOLIBRE_ACCESS_TOKEN",
-#         "ML_ACCESS_TOKEN",
-#         "ACCESS_TOKEN",
-#     )
-#
-#
-# def refresh_access_token() -> str:
-#     global _ACCESS_TOKEN_CACHE
-#
-#     refresh_token = _env(
-#         "MERCADOLIBRE_REFRESH_TOKEN",
-#         "ML_REFRESH_TOKEN",
-#         "REFRESH_TOKEN",
-#     )
-#     client_id = _env("MERCADOLIBRE_CLIENT_ID", "ML_CLIENT_ID", "APP_ID", "CLIENT_ID")
-#     client_secret = _env(
-#         "MERCADOLIBRE_CLIENT_SECRET",
-#         "ML_CLIENT_SECRET",
-#         "CLIENT_SECRET",
-#     )
-#
-#     if not refresh_token or not client_id or not client_secret:
-#         raise MercadoLibreAuthError(
-#             "Faltan MERCADOLIBRE_REFRESH_TOKEN, APP_ID o CLIENT_SECRET"
-#         )
-#
-#     response = requests.post(
-#         TOKEN_URL,
-#         data={
-#             "grant_type": "refresh_token",
-#             "client_id": client_id,
-#             "client_secret": client_secret,
-#             "refresh_token": refresh_token,
-#         },
-#         timeout=15,
-#         headers={
-#             "Accept": "application/json",
-#             "User-Agent": USER_AGENT,
-#         },
-#     )
-#     response.raise_for_status()
-#     data = response.json()
-#
-#     access_token = data.get("access_token")
-#     if not access_token:
-#         raise MercadoLibreAuthError("Mercado Libre no devolvio access_token")
-#
-#     _ACCESS_TOKEN_CACHE = access_token
-#     return access_token
 
 
 def fetch_html(url: str) -> str:
     response = requests.get(url, timeout=15, headers=_headers())
     response.raise_for_status()
     return response.text
-
-
-# def fetch_api_results(query: str, limit: int = 50) -> list[dict]:
-#     params = {"q": query, "limit": limit}
-#     response = requests.get(
-#         API_URL,
-#         params=params,
-#         timeout=15,
-#         headers=_headers("application/json"),
-#     )
-#
-#     if response.status_code == 401:
-#         try:
-#             refresh_access_token()
-#         except (MercadoLibreAuthError, requests.RequestException):
-#             return []
-#
-#         response = requests.get(
-#             API_URL,
-#             params=params,
-#             timeout=15,
-#             headers=_headers("application/json"),
-#         )
-#
-#     if response.status_code in {401, 403}:
-#         return []
-#
-#     response.raise_for_status()
-#     data = response.json()
-#     return data.get("results", [])
-#
-#
-# def parse_products_api(results: list[dict]) -> list[dict]:
-#     products = []
-#
-#     for item in results:
-#         if not isinstance(item, dict):
-#             continue
-#
-#         title = item.get("title")
-#         price = item.get("price")
-#         url = item.get("permalink")
-#
-#         if not title or price is None or not url:
-#             continue
-#
-#         products.append({
-#             "store": "mercadolibre",
-#             "name": title,
-#             "price": price,
-#             "currency": item.get("currency_id") or "ARS",
-#             "url": url,
-#         })
-#
-#     return products
 
 
 def parse_products_ld_json(html: str) -> list[dict]:
@@ -166,21 +38,20 @@ def parse_products_ld_json(html: str) -> list[dict]:
         raw = script.string or script.get_text()
         if not raw or not raw.strip():
             continue
+            
         try:
             data = json.loads(raw)
         except json.JSONDecodeError:
             continue
 
-        # Buscamos el que tiene @graph con lista de productos
         if not isinstance(data, dict) or "@graph" not in data:
             continue
 
         products = []
         for item in data["@graph"]:
-            if not isinstance(item, dict):
+            if not isinstance(item, dict) or item.get("@type") != "Product":
                 continue
-            if item.get("@type") != "Product":
-                continue
+                
             offers = item.get("offers", {})
             products.append({
                 "store": "mercadolibre",
@@ -189,18 +60,26 @@ def parse_products_ld_json(html: str) -> list[dict]:
                 "currency": offers.get("priceCurrency"),
                 "url": offers.get("url"),
             })
-        return products
+            
+        if products: # Si encontramos productos en este script, los devolvemos y cortamos el bucle
+            return products
 
     return []
 
 
 def scrape_search(query: str = "placas de video", limit: int = 50) -> list[dict]:
-    url = SEARCH_URL.format(query=query.replace(" ", "-"))
+    # urllib.parse.quote asegura que cualquier símbolo raro en la búsqueda se procese bien en la URL
+    safe_query = urllib.parse.quote(query.replace(" ", "-"))
+    url = SEARCH_URL.format(query=safe_query)
+    
     html = fetch_html(url)
-    return parse_products_ld_json(html)[:limit]
+    products = parse_products_ld_json(html)
+    
+    # Aseguramos devolver exactamente hasta el límite solicitado
+    return products[:limit]
 
 
 if __name__ == "__main__":
-    products = scrape_search("placas de video")
+    products = scrape_search("rtx 3060 ti")
     for p in products:
-        print(p["price"], p["currency"], p["name"])
+        print(f"${p['price']} {p['currency']} - {p['name']}")
