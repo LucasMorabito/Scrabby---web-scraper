@@ -65,7 +65,7 @@ def build_page_links(request: Request, page: int, total_pages: int, per_page: in
 def get_products(
     request: Request,
     search: str | None = None,
-    store: str | None = None,
+    store: list[str] | None = Query(None),
     page: int = Query(1, ge=1),
     per_page: int = Query(20, ge=1, le=100),
     limit: int | None = Query(None, ge=1),
@@ -87,7 +87,7 @@ def get_products(
     if search:
         query = query.filter(Product.name.ilike(f"%{search}%"))
     if store:
-        query = query.filter(Product.store == store)
+        query = query.filter(Product.store.in_(store))
 
     total_products = query.count()
     total_pages = max((total_products + per_page - 1) // per_page, 1)

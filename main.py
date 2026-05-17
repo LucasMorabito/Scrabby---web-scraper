@@ -2,16 +2,19 @@ import argparse
 import json
 import os
 
-from database.crud import save_products # <-- Importamos de la nueva ubicación
+from database.crud import save_products 
 from scrappers.fravega import scrape as scrape_fravega
 from scrappers.mercadolibre import scrape_search as scrape_ml
 from scrappers.mexx import scrape as scrape_mexx
 from scrappers.quantumhardstore import scrape as scrape_quantum
+from scrappers.tech710 import scrape as scrape_710tech
+from scrappers.armytech import scrape as scrape_armytech
+from scrappers.rockethard import scrape as scrape_rockethard
+
 
 DEFAULT_SEARCH_QUERY = os.getenv("SCRABBY_SEARCH_QUERY", "placas de video")
 DEFAULT_RESULT_LIMIT = int(os.getenv("SCRABBY_RESULT_LIMIT", "50"))
-# Lo pasamos a variable de entorno para no tener que tocar el código por la inflación
-MINIMUM_PRICE = float(os.getenv("SCRABBY_MIN_PRICE", "200000"))
+MINIMUM_PRICE = float(os.getenv("SCRABBY_MIN_PRICE", "100000"))
 
 
 def parse_args():
@@ -101,7 +104,37 @@ def main():
         print(f"Error Quantum Hardstore: {e.__class__.__name__} - {e}")
         quantum_results = []
 
-    all_results = fravega_results + ml_results + mexx_results + quantum_results
+    print("Obteniendo datos de 710Tech...")
+    try:
+        tech710_results = scrape_710tech(keyword=search_query, size=limit)
+    except Exception as e:
+        print(f"Error 710Tech: {e.__class__.__name__} - {e}")
+        tech710_results = []
+
+    print("Obteniendo datos de ArmyTech...")
+    try:
+        armytech_results = scrape_armytech(keyword=search_query, size=limit)
+    except Exception as e:
+        print(f"Error ArmyTech: {e.__class__.__name__} - {e}")
+        armytech_results = []
+
+    print("Obteniendo datos de Rocket Hard...")
+    try:
+        rockethard_results = scrape_rockethard(keyword=search_query, size=limit)
+    except Exception as e:
+        print(f"Error Rocket Hard: {e.__class__.__name__} - {e}")
+        rockethard_results = []
+
+    # Consolidamos el pool completo con las 7 fuentes distribuidas
+    all_results = (
+        fravega_results + 
+        ml_results + 
+        mexx_results + 
+        quantum_results + 
+        tech710_results +
+        armytech_results +
+        rockethard_results
+    )
     
     clean_results = [
         normalize_product(p)

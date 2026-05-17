@@ -1,4 +1,5 @@
 import json
+import os
 import re
 from urllib.parse import urljoin
 
@@ -7,7 +8,7 @@ from curl_cffi import requests as cffi_requests
 
 BASE_URL = "https://quantumhardstore.com"
 SEARCH_URL = f"{BASE_URL}/search/"
-PRECIO_MINIMO = 150000
+PRECIO_MINIMO = float(os.getenv("SCRABBY_MIN_PRICE", 100000))
 BLACKLIST = [
     "adaptador",
     "cable",

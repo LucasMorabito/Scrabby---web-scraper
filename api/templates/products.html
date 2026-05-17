@@ -39,11 +39,73 @@
             <form method="GET" class="flex w-full flex-col gap-3 md:w-auto md:flex-row md:items-center">
                 <input type="hidden" name="page" value="1" />
                 <input type="hidden" name="per_page" value="{{ pagination.per_page }}" />
-                {% if store %}
-                    <input type="hidden" name="store" value="{{ store }}" />
-                {% endif %}
                 <input type="hidden" name="order_by" value="{{ order_by }}" />
                 <input type="hidden" name="order_dir" value="{{ order_dir }}" />
+
+                <div x-data="{ dropdownOpen: false }" class="relative w-full md:w-48" @click.away="dropdownOpen = false">
+                    <button
+                        type="button"
+                        @click="dropdownOpen = !dropdownOpen"
+                        class="inline-flex h-11 w-full items-center justify-between rounded-md border border-slate-700 bg-slate-950 px-4 text-sm text-slate-100 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
+                    >
+                        <span>Tiendas</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 transition-transform duration-200" :class="dropdownOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    <div
+                        x-show="dropdownOpen"
+                        x-cloak
+                        class="absolute left-0 mt-2 z-30 w-full rounded-md border border-slate-700 bg-slate-950 p-4 shadow-xl flex flex-col gap-3 max-h-64 overflow-y-auto"
+                        x-transition:enter="transition ease-out duration-150"
+                        x-transition:enter-start="opacity-0 transform scale-95"
+                        x-transition:enter-end="opacity-100 transform scale-100"
+                        x-transition:leave="transition ease-in duration-100"
+                        x-transition:leave-start="opacity-100 transform scale-100"
+                        x-transition:leave-end="opacity-0 transform scale-95"
+                    >
+                        <button
+                            type="button"
+                            @click="const cbs = $el.parentElement.querySelectorAll('input[name=\'store\']'); const target = Array.from(cbs).some(c => !c.checked); cbs.forEach(c => c.checked = target);"
+                            class="text-xs text-left text-cyan-400 hover:text-cyan-300 font-bold border-b border-slate-800 pb-2 mb-1"
+                        >
+                            Seleccionar todas
+                        </button>
+
+                        {% set selected_stores = request.query_params.getlist('store') %}
+                        {% set no_stores_selected = selected_stores|length == 0 %}
+                        
+                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
+                            <input type="checkbox" name="store" value="fravega" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if 'fravega' in selected_stores or no_stores_selected %}checked{% endif %}>
+                            <span>Fravega</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
+                            <input type="checkbox" name="store" value="mercadolibre" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if 'mercadolibre' in selected_stores or no_stores_selected %}checked{% endif %}>
+                            <span>Mercado Libre</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
+                            <input type="checkbox" name="store" value="mexx" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if 'mexx' in selected_stores or no_stores_selected %}checked{% endif %}>
+                            <span>Mexx</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
+                            <input type="checkbox" name="store" value="quantum" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if 'quantum' in selected_stores or no_stores_selected %}checked{% endif %}>
+                            <span>Quantum</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
+                            <input type="checkbox" name="store" value="rockethard" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if 'rockethard' in selected_stores or no_stores_selected %}checked{% endif %}>
+                            <span>Rocket Hard</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
+                            <input type="checkbox" name="store" value="710tech" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if '710tech' in selected_stores or no_stores_selected %}checked{% endif %}>
+                            <span>710Tech</span>
+                        </label>
+                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
+                            <input type="checkbox" name="store" value="armytech" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if 'armytech' in selected_stores or no_stores_selected %}checked{% endif %}>
+                            <span>ArmyTech</span>
+                        </label>
+                    </div>
+                </div>
 
                 <input
                     type="text"
@@ -72,10 +134,10 @@
             {% set store_label = p.store|capitalize %}
 
             {% if store_lower == 'fravega' or 'fravega' in store_lower %}
-                {% set card_border = 'border-blue-500' %}
-                {% set card_bg = 'bg-blue-950/30' %}
-                {% set badge_class = 'border-blue-500 text-blue-300' %}
-                {% set price_class = 'text-blue-400' %}
+                {% set card_border = 'border-violet-500' %}
+                {% set card_bg = 'bg-violet-950/30' %}
+                {% set badge_class = 'border-violet-500 text-violet-300' %}
+                {% set price_class = 'text-violet-400' %}
                 {% set store_label = 'Fravega' %}
             {% elif store_lower == 'mercadolibre' or ('mercado' in store_lower and 'libre' in store_lower) %}
                 {% set card_border = 'border-amber-400' %}
@@ -95,6 +157,24 @@
                 {% set badge_class = 'border-pink-500 text-pink-300' %}
                 {% set price_class = 'text-pink-400' %}
                 {% set store_label = 'Quantum' %}
+            {% elif store_lower == 'rockethard' or 'rockethard' in store_lower %}
+                {% set card_border = 'border-blue-500' %}
+                {% set card_bg = 'bg-blue-950/30' %}
+                {% set badge_class = 'border-blue-500 text-blue-300' %}
+                {% set price_class = 'text-blue-400' %}
+                {% set store_label = 'Rocket Hard' %}
+            {% elif store_lower == '710tech' or '710' in store_lower %}
+                {% set card_border = 'border-red-500' %}
+                {% set card_bg = 'bg-red-950/30' %}
+                {% set badge_class = 'border-red-500 text-red-300' %}
+                {% set price_class = 'text-red-400' %}
+                {% set store_label = '710Tech' %}
+            {% elif store_lower == 'armytech' or 'armytech' in store_lower %}
+                {% set card_border = 'border-yellow-500' %}
+                {% set card_bg = 'bg-yellow-950/30' %}
+                {% set badge_class = 'border-yellow-500 text-yellow-300' %}
+                {% set price_class = 'text-yellow-400' %}
+                {% set store_label = 'ArmyTech' %}
             {% endif %}
 
             <article
@@ -153,7 +233,6 @@
                                     if (ok) {
                                         guardado = true;
                                     } else {
-                                        // 🛠️ PARCHE TÁCTICO: Si el estado es 401, tiramos el mensaje amigable
                                         if (status === 401) {
                                             throw new Error('Primero tienes que iniciar sesión para guardar favoritos.');
                                         }
@@ -163,7 +242,6 @@
                                 })
                                 .catch(err => {
                                     console.error('Error:', err);
-                                    // 🛠️ SETEAMOS LA VARIABLE GLOBAL: Alpine dibuja el banner y lo apaga a los 5 segundos
                                     errorMsg = err.message;
                                     setTimeout(() => { errorMsg = '' }, 5000);
                                 })
