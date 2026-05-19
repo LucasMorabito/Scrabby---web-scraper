@@ -12,7 +12,7 @@ from scrappers.armytech import scrape as scrape_armytech
 from scrappers.rockethard import scrape as scrape_rockethard
 
 
-DEFAULT_SEARCH_QUERY = os.getenv("SCRABBY_SEARCH_QUERY", "placas de video")
+DEFAULT_SEARCH_QUERY = os.getenv("SCRABBY_SEARCH_QUERY", "placa de video")
 DEFAULT_RESULT_LIMIT = int(os.getenv("SCRABBY_RESULT_LIMIT", "50"))
 MINIMUM_PRICE = float(os.getenv("SCRABBY_MIN_PRICE", "100000"))
 
@@ -55,6 +55,15 @@ def is_valid_product(product, min_price):
 def normalize_product(product):
     normalized = dict(product)
     normalized["price"] = parse_price(product.get("price"))
+    
+    if "name" in normalized and normalized["name"]:
+        clean_name = str(normalized["name"]).encode("utf-8", errors="ignore").decode("utf-8")
+        normalized["name"] = clean_name[:255]
+        
+    if "url" in normalized and normalized["url"]:
+        clean_url = str(normalized["url"]).encode("utf-8", errors="ignore").decode("utf-8")
+        normalized["url"] = clean_url[:512]
+        
     return normalized
 
 
@@ -135,19 +144,34 @@ def main():
         armytech_results +
         rockethard_results
     )
-    
+    print("\n--- PRODUCTOS OBTENIDOS POR TIENDA ---")
+    print(f"Frávega: {len(fravega_results)}")
+    print(f"Mercado Libre: {len(ml_results)}")
+    print(f"Mexx: {len(mexx_results)}")
+    print(f"Quantum Hardstore: {len(quantum_results)}")
+    print(f"710Tech: {len(tech710_results)}")
+    print(f"ArmyTech: {len(armytech_results)}")
+    print(f"Rocket Hard: {len(rockethard_results)}")
+
+    print(f"\nTotal bruto recolectado: {len(all_results)}")
     clean_results = [
         normalize_product(p)
         for p in all_results
         if is_valid_product(p, min_price)
     ]
     
+    print(f"Total válido luego de filtros: {len(clean_results)}")
+    print(f"Productos descartados: {len(all_results) - len(clean_results)}")
+    
     sorted_results = sorted(clean_results, key=lambda x: x["price"])
 
     if sorted_results:
         save_to_json(sorted_results)
-        inserted = save_products(sorted_results)
-        print(f"Guardados en base de datos: {inserted} productos")
+        try:
+            inserted = save_products(sorted_results)
+            print(f"Guardados en base de datos: {inserted} productos")
+        except Exception as db_error:
+            print(f"\nError crítico al insertar en la Base de Datos: {db_error}")
 
         print("\n--- RESUMEN DE BÚSQUEDA ---")
         print(f"Total de productos válidos: {len(sorted_results)}")

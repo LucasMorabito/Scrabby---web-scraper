@@ -7,6 +7,14 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/47943-placa-de-video-geforce-gt-1030-4gb-msi-oc-low-profile.html"
     },
     {
+        "store": "quantum",
+        "name": "Placa de Video ASUS NVIDIA GeForce Phoenix PH-GT1030 O 2GB GDDR5",
+        "price": 204894.85,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-asus-nvidia-geforce-phoenix-ph-gt1030-o-2gb-gddr5-o0flb/",
+        "scraped_at": "2026-05-18T23:59:13.461292+00:00"
+    },
+    {
         "store": "mexx",
         "name": "Placa De Video Intel Arc A380 6Gb Asrock Challenger Itx Oc",
         "price": 259219.0,
@@ -35,11 +43,35 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/51220-placa-de-video-geforce-rtx-3050-6gb-inno3d-twin-x2.html"
     },
     {
+        "store": "quantum",
+        "name": "Micro Amd (Am5) Ryzen 5 8400F Sin Video",
+        "price": 359451.09,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/micro-amd-am5-ryzen-5-8400f-sin-video-11wtt/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "armytech",
+        "name": "Placa De Video Asus Geforce Rtx 3050 Dual Oc 6gb",
+        "price": 359999.0,
+        "currency": "ARS",
+        "url": "https://www.armytech.com.ar/placas-de-video/5127-placa-de-video-asus-geforce-rtx-3050-dual-oc-6gb.html",
+        "scraped_at": "2026-05-18T23:59:17.273855+00:00"
+    },
+    {
         "store": "mexx",
         "name": "Placa De Video GeForce RTX 3050 6Gb Msi LP Oc",
         "price": 380059.0,
         "currency": "ARS",
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/50388-placa-de-video-geforce-rtx-3050-6gb-msi-lp-oc.html"
+    },
+    {
+        "store": "rockethard",
+        "name": "Placa De Video Asus Dual Rtx 3050 O6gb",
+        "price": 424783.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-nvidia/placa-de-video-asus-dual-rtx-3050-o6gb-163524.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
     },
     {
         "store": "mexx",
@@ -49,11 +81,59 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/51068-placa-de-video-geforce-rtx-3050-6gb-zotac-twin-edge-oc.html"
     },
     {
+        "store": "quantum",
+        "name": "Micro Amd (Am5) Ryzen 7 8400F Sin Video",
+        "price": 469472.62,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/micro-amd-am5-ryzen-7-8400f-sin-video-18if0/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de video EVGA GeForce RTX 3070 XC3 Ultra 8GB (OUTLET)",
+        "price": 479011.98,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-evga-geforce-rtx-3070-xc3-ultra-8gb-outlet-ftfkl/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "armytech",
+        "name": "Placa De Video Asus Geforce Rtx 5050 Dual Oc 8gb",
+        "price": 524240.18,
+        "currency": "ARS",
+        "url": "https://www.armytech.com.ar/placas-de-video/5935-placa-de-video-asus-geforce-rtx-5050-dual-oc-8gb.html",
+        "scraped_at": "2026-05-18T23:59:17.273855+00:00"
+    },
+    {
+        "store": "armytech",
+        "name": "Placa De Video Msi Geforce Rtx 5050 Ventus 2x Oc 8gb",
+        "price": 542393.67,
+        "currency": "ARS",
+        "url": "https://www.armytech.com.ar/placas-de-video/5971-placa-de-video-msi-geforce-rtx-5050-ventus-2x-oc-8gb.html",
+        "scraped_at": "2026-05-18T23:59:17.273855+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Zotac Gaming Rtx 5050 Solo 8gb Gddr6",
+        "price": 542778.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-zotac-gaming-rtx-5050-solo-8gb-gddr6-195790.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
         "store": "mexx",
         "name": "Placa De Video GeForce RTX 5050 8Gb Zotac Twin Edge Oc",
         "price": 545999.0,
         "currency": "ARS",
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/50689-placa-de-video-geforce-rtx-5050-8gb-zotac-twin-edge-oc.html"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO ZOTAC RTX 5050 8GB SOLO",
+        "price": 550221.05,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-zotac-rtx-5050-8gb-solo-1a00t/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
     },
     {
         "store": "mexx",
@@ -77,11 +157,43 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/50859-placa-de-video-geforce-rtx-5050-8gb-gigabyte-windforce-oc-v2.html"
     },
     {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO ZOTAC RTX 5050 8GB TWIN EDGE",
+        "price": 566501.01,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-zotac-rtx-5050-8gb-twin-edge-134eb/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Sapphire Pulse Rx 7600 Oc 8gb",
+        "price": 568615.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-sapphire-pulse-rx-7600-oc-8gb-195592.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO SAPPHIRE PULSE RX 7600 OC 8GB",
+        "price": 580500.59,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-sapphire-pulse-rx-7600-oc-8gb-18ce6/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
         "store": "fravega",
         "name": "Placa de Video 6GB Asus RTX3050 Dual",
         "price": 581199.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/l/?keyword=Placa+de+Video+6GB+Asus+RTX3050+Dual"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Radeon Rx 7600 Gaming Oc 8gb",
+        "price": 586621.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-radeon-rx-7600-gaming-oc-8gb-195727.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
     },
     {
         "store": "mexx",
@@ -98,11 +210,43 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/50619-placa-de-video-geforce-rtx-5050-8gb-gigabyte-oc-low-profile.html"
     },
     {
+        "store": "710tech",
+        "name": "Placa De Video Asrock Rx 7600 8gb Steel Legend",
+        "price": 592533.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-asrock-rx-7600-8gb-steel-legend-196387.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
         "store": "fravega",
         "name": "Placa de Video 6GB RTX3050 MSI LP 6G OC",
         "price": 597899.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/l/?keyword=Placa+de+Video+6GB+RTX3050+MSI+LP+6G+OC"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE AMD Radeon RX 7600 GAMING OC 8G",
+        "price": 598882.93,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-amd-radeon-rx-7600-gaming-oc-8g-17arq/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video PowerColor Fighter AMD Radeo RX 7600 8GB GDDR6",
+        "price": 601975.82,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-powercolor-fighter-amd-radeo-rx-7600-8gb-gddr6-1eddt/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO ASROCK RX7600 8GB OC STEEL LEGEND WHITE ARGB",
+        "price": 604919.54,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-asrock-rx7600-8gb-oc-steel-legend-white-argb-116rr/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
     },
     {
         "store": "fravega",
@@ -112,11 +256,51 @@
         "url": "https://www.fravega.com/l/?keyword=Placa+de+Video+6GB+RTX3050+Gigabyte+Windforce+Oc+V2+GDDR6"
     },
     {
+        "store": "quantum",
+        "name": "Placa de Video ASUS NVIDIA GeForce DUAL RTX5050 O8GB GDDR6",
+        "price": 606862.8,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-asus-nvidia-geforce-dual-rtx5050-o8gb-gddr6-flaos/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "rockethard",
+        "name": "Placa De Video Msi Ventus Geforce Rtx 5050 8g 2x Oc",
+        "price": 618471.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-nvidia/placa-de-video-msi-ventus-geforce-rtx-5050-8g-2x-oc-163504.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
+    },
+    {
         "store": "mexx",
         "name": "Placa De Video Geforce RTX 5060 8Gb Inno3D Twin X2",
         "price": 623519.0,
         "currency": "ARS",
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/51221-placa-de-video-geforce-rtx-5060-8gb-inno3d-twin-x2.html"
+    },
+    {
+        "store": "rockethard",
+        "name": "Placa De Video Asus Prime Rtx 5050 O8gb",
+        "price": 638178.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-nvidia/placa-de-video-asus-prime-rtx-5050-o8gb-163521.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video MSI NVIDIA Geforce RTX 5050 8G GAMING OC",
+        "price": 638615.19,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-msi-nvidia-geforce-rtx-5050-8g-gaming-oc-178gq/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "rockethard",
+        "name": "Placa De Video Zotac Gaming Geforce Rtx 5050 Twin Edge Oc 8gb",
+        "price": 639116.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-nvidia/placa-de-video-zotac-gaming-geforce-rtx-5050-twin-edge-oc-8gb-163127.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
     },
     {
         "store": "mexx",
@@ -140,11 +324,67 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/50975-placa-de-video-geforce-rtx-5060-8gb-gigabyte-eagle-max-oc.html"
     },
     {
+        "store": "armytech",
+        "name": "Placa De Video Asus Radeon Rx 7600 8gb Dual Oc",
+        "price": 666487.93,
+        "currency": "ARS",
+        "url": "https://www.armytech.com.ar/placas-de-video/1988-placa-de-video-asus-radeon-rx-7600-8gb-dual-oc-4711387020456.html",
+        "scraped_at": "2026-05-18T23:59:17.273855+00:00"
+    },
+    {
         "store": "mexx",
         "name": "Placa De Video Geforce RTX 5050 8Gb Msi Ventus 2X Oc",
         "price": 670999.0,
         "currency": "ARS",
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/50212-placa-de-video-geforce-rtx-5050-8gb-msi-ventus-2x-oc.html"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Rtx 5060 Eagle Oc 8gb",
+        "price": 672498.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-rtx-5060-eagle-oc-8gb-195685.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Asrock Rx9060xt 8gb Oc Steel Legend White",
+        "price": 673417.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-asrock-rx9060xt-8gb-oc-steel-legend-white-195769.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Rtx 5060 Eagle Oc Ice 8gb (white)",
+        "price": 679162.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-rtx-5060-eagle-oc-ice-8gb-white-195687.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE NVIDIA GeForce RTX 5060 EAGLE OC 8G",
+        "price": 681719.81,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-nvidia-geforce-rtx-5060-eagle-oc-8g-1u6a2/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO ASROCK RX9060XT 8GB OC STEEL LEGEND WHITE",
+        "price": 682651.65,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-asrock-rx9060xt-8gb-oc-steel-legend-white-zksk9/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "rockethard",
+        "name": "Placa De Video Gigabyte Rtx 5050 Gaming Oc 8gb",
+        "price": 683509.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-nvidia/placa-de-video-gigabyte-rtx-5050-gaming-oc-8gb-163525.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
     },
     {
         "store": "mexx",
@@ -154,11 +394,51 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/51034-placa-de-video-geforce-rtx-5060-8gb-msi-gaming-trio-oc-white.html"
     },
     {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE NVIDIA GeForce RTX 5060 EAGLE OC ICE 8G",
+        "price": 693357.44,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-nvidia-geforce-rtx-5060-eagle-oc-ice-8g-16vkt/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "rockethard",
+        "name": "Placa De Video Asus Dual Amd Radeon Rx7600 O8gb Evo",
+        "price": 701094.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-radeon/placa-de-video-asus-dual-amd-radeon-rx7600-o8gb-evo-163492.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
+    },
+    {
         "store": "mexx",
         "name": "Placa De Video GeForce RTX 5060 8Gb Msi Cyclone Oc",
         "price": 707119.0,
         "currency": "ARS",
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/50507-placa-de-video-geforce-rtx-5060-8gb-msi-cyclone-oc.html"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Rtx 9060xt Gaming Oc 8gb",
+        "price": 726413.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-rtx-9060xt-gaming-oc-8gb-195734.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "armytech",
+        "name": "Placa De Video Amd Radeon Rx 9060 Xt 16gb Gddr6 Powercolor Reaper",
+        "price": 729999.0,
+        "currency": "ARS",
+        "url": "https://www.armytech.com.ar/placas-de-video/5972-placa-de-video-amd-radeon-rx-9060-xt-16gb-gddr6-powercolor-reaper.html",
+        "scraped_at": "2026-05-18T23:59:17.272851+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO GIGABYTE RADEON RX 9060XT GAMING OC 8GB",
+        "price": 741596.66,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-radeon-rx-9060xt-gaming-oc-8gb-1i8rp/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
     },
     {
         "store": "mexx",
@@ -182,6 +462,14 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/50465-placa-de-video-geforce-rtx-5060-ti-8gb-msi-shadow-2x-oc-plus.html"
     },
     {
+        "store": "armytech",
+        "name": "Placa De Video Geforce Rtx 5060 Ti 8gb Gigabyte Windforce Gddr7",
+        "price": 774415.49,
+        "currency": "ARS",
+        "url": "https://www.armytech.com.ar/placas-de-video/5626-placa-de-video-geforce-rtx-5060-ti-8gb-gigabyte-windforce-gddr7.html",
+        "scraped_at": "2026-05-18T23:59:17.273855+00:00"
+    },
+    {
         "store": "fravega",
         "name": "Placa de Video MSI 8GB RTX5050 Shadow 2x OC",
         "price": 788399.0,
@@ -194,6 +482,14 @@
         "price": 795000.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/l/?keyword=CM2+HD+Racing+Dash"
+    },
+    {
+        "store": "rockethard",
+        "name": "Placa De Video Gigabyte Rtx 5060 Eagle Oc 8gb",
+        "price": 799446.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-nvidia/placa-de-video-gigabyte-rtx-5060-eagle-oc-8gb-163036.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
     },
     {
         "store": "mexx",
@@ -238,6 +534,14 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/49647-placa-de-video-geforce-rtx-5060-ti-8gb-gigabyte-gaming-oc.html"
     },
     {
+        "store": "quantum",
+        "name": "Placa de Video Powercolor Reaper AMD Radeon RX 9060 XT 16GB GDDR6",
+        "price": 857615.03,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-powercolor-reaper-amd-radeon-rx-9060-xt-16gb-gddr6-qg8y7/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
         "store": "mexx",
         "name": "Placa De Video GeForce RTX 5060 Ti 8Gb Gigabyte Eagle Oc",
         "price": 860999.0,
@@ -245,11 +549,99 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/49645-placa-de-video-geforce-rtx-5060-ti-8gb-gigabyte-eagle-oc.html"
     },
     {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE NVIDIA GeForce RTX 5060 Ti WINDFORCE OC 8G",
+        "price": 865411.91,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-nvidia-geforce-rtx-5060-ti-windforce-oc-8g-189uh/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video MSI NVIDIA GeForce RTX 5060 Ti 8G SHADOW 2",
+        "price": 872801.05,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-msi-nvidia-geforce-rtx-5060-ti-8g-shadow-2-1g403/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE NVIDIA GeForce RTX 5060 Ti EAGLE OC 8G",
+        "price": 881067.33,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-nvidia-geforce-rtx-5060-ti-eagle-oc-8g-kdmg7/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Rtx 5060ti Aero 8gb",
+        "price": 881148.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-rtx-5060ti-aero-8gb-195691.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE NVIDIA GeForce RTX 5060 Ti AERO OC 8G",
+        "price": 899566.02,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-nvidia-geforce-rtx-5060-ti-aero-oc-8g-19248/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Sapphire Pulse Rx 9060 Xt Gaming Oc 16gb",
+        "price": 903847.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-sapphire-pulse-rx-9060-xt-gaming-oc-16gb-195603.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE NVIDIA GeForce RTX 5060 Ti GAMING OC 8G",
+        "price": 911531.85,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-nvidia-geforce-rtx-5060-ti-gaming-oc-8g-12oyl/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Rtx 9060xt Gaming Oc 16gb",
+        "price": 918159.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-rtx-9060xt-gaming-oc-16gb-195733.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO SAPPHIRE PULSE RX 9060 XT GAMING OC 16GB",
+        "price": 922738.87,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-sapphire-pulse-rx-9060-xt-gaming-oc-16gb-6v655/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
         "store": "mexx",
         "name": "Placa De Video Radeon RX 9060 XT 16Gb Asrock Challenger Oc",
         "price": 925939.0,
         "currency": "ARS",
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/50614-placa-de-video-radeon-rx-9060-xt-16gb-asrock-challenger-oc.html"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE NVIDIA GeForce RTX 5060 Ti EAGLE OC ICE 8G",
+        "price": 929524.34,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-nvidia-geforce-rtx-5060-ti-eagle-oc-ice-8g-14dui/",
+        "scraped_at": "2026-05-18T23:59:13.461292+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO GIGABYTE RADEON RX 9060XT GAMING OC 16GB",
+        "price": 930749.57,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-radeon-rx-9060xt-gaming-oc-16gb-uh0zj/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
     },
     {
         "store": "fravega",
@@ -266,6 +658,14 @@
         "url": "https://www.fravega.com/l/?keyword=Placa+de+Video+MSI+8GB+RTX5060+Cyclone+OC"
     },
     {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE NVIDIA GeForce RTX 5060 Ti EAGLE MAX OC 8G",
+        "price": 942174.38,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-nvidia-geforce-rtx-5060-ti-eagle-max-oc-8g-1s4sb/",
+        "scraped_at": "2026-05-18T23:59:13.461292+00:00"
+    },
+    {
         "store": "mexx",
         "name": "Placa De Video GeForce RTX 5060 Ti 8Gb Msi Gaming Trio Oc White",
         "price": 950999.0,
@@ -280,11 +680,43 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/49554-placa-de-video-geforce-rtx-5060-ti-8gb-asus-tuf-gaming-oc.html"
     },
     {
+        "store": "710tech",
+        "name": "Placa De Video Asus Prime Rtx 5060ti O8gb",
+        "price": 987146.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-asus-prime-rtx-5060ti-o8gb-195744.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video ASUS AMD Radeon PRIME-RX9060XT O16G GDDR6",
+        "price": 990725.87,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-asus-amd-radeon-prime-rx9060xt-o16g-gddr6-1xq8p/",
+        "scraped_at": "2026-05-18T23:59:13.461292+00:00"
+    },
+    {
         "store": "fravega",
         "name": "Placa de Video 8GB RTX9060XT Gigabyte Gaming Oc",
         "price": 993599.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/l/?keyword=Placa+de+Video+8GB+RTX9060XT+Gigabyte+Gaming+Oc"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO ASUS PRIME RTX 5060TI O 8GB",
+        "price": 1000683.8,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-asus-prime-rtx-5060ti-o-8gb-1aomb/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "rockethard",
+        "name": "Placa De Video Zotac Rtx 5060 Ti 16gb Twin Edge Oc White",
+        "price": 1093906.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-nvidia/placa-de-video-zotac-rtx-5060-ti-16gb-twin-edge-oc-white-163729.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
     },
     {
         "store": "fravega",
@@ -336,11 +768,43 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/49766-placa-de-video-radeon-rx-9070-16gb-gigabyte-gaming-oc.html"
     },
     {
+        "store": "710tech",
+        "name": "Placa De Video Asus Prime Rx 9070 O16g Evo",
+        "price": 1250385.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-asus-prime-rx-9070-o16g-evo-195751.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Asus Prime Rx9070 O16g",
+        "price": 1259109.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-asus-prime-rx9070-o16g-195750.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
         "store": "fravega",
         "name": "Placa de Video MSI 8GB RTX5060 Ti Gaming Trio Oc GDDR7",
         "price": 1260199.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/l/?keyword=Placa+de+Video+MSI+8GB+RTX5060+Ti+Gaming+Trio+Oc+GDDR7"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Asrock Rx9070xt 16gb Challenger",
+        "price": 1266077.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-asrock-rx9070xt-16gb-challenger-195770.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video ASUS AMD Radeon PRIME RX9070 O16G EVO",
+        "price": 1267532.02,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-asus-amd-radeon-prime-rx9070-o16g-evo-1yc60/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
     },
     {
         "store": "fravega",
@@ -350,11 +814,60 @@
         "url": "https://www.fravega.com/l/?keyword=Placa+de+Video+8GB+RTX5060+MSI+Gaming+Ti+Oc+White"
     },
     {
-        "store": "mexx",
-        "name": "Placa De Video GeForce RTX 5070 12Gb Gigabyte Windforce Oc SFF",
-        "price": 1320999.0,
+        "store": "710tech",
+        "name": "Placa De Video Zotac Rtx 5070 Solid Oc 12gb Gddr7",
+        "price": 1276489.0,
         "currency": "ARS",
-        "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/49557-placa-de-video-geforce-rtx-5070-12gb-gigabyte-windforce-oc-sff.html"
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-zotac-rtx-5070-solid-oc-12gb-gddr7-196350.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO ASUS PRIME RX 9070 O 16GB",
+        "price": 1285428.05,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-asus-prime-rx-9070-o-16gb-zb1bw/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "rockethard",
+        "name": "Placa De Video Asus Prime Radeon Rx 9070 16gb Oc",
+        "price": 1285667.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-radeon/placa-de-video-asus-prime-radeon-rx-9070-16gb-oc-162772.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO ASROCK RX9070XT 16GB CHALLENGER",
+        "price": 1292541.71,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-asrock-rx9070xt-16gb-challenger-1yelm/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO ZOTAC RTX 5070 12GB SOLID OC GDDR7",
+        "price": 1303170.92,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-zotac-rtx-5070-12gb-solid-oc-gddr7-mr4xo/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Asrock Rx9070xt 16gb Steel Legend Dark",
+        "price": 1312116.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-asrock-rx9070xt-16gb-steel-legend-dark-195772.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Rtx 5070 Eagle Oc 12gb",
+        "price": 1322578.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-rtx-5070-eagle-oc-12gb-195701.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
     },
     {
         "store": "mexx",
@@ -364,11 +877,83 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/51312-placa-de-video-geforce-rtx-5070-12gb-zotac-solid-oc.html"
     },
     {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO ASROCK RX9070XT 16GB STEEL LEGEND DARK",
+        "price": 1330109.94,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-asrock-rx9070xt-16gb-steel-legend-dark-1jbsn/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Radeon Rx 9070 Gaming 16gb",
+        "price": 1340471.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-radeon-rx-9070-gaming-16gb-195736.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Rtx 5070 Eagle Oc Ice 12gb (white)",
+        "price": 1345231.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-rtx-5070-eagle-oc-ice-12gb-white-195702.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Radeon Rtx 9070 Gaming Oc 16gb",
+        "price": 1352167.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-radeon-rtx-9070-gaming-oc-16gb-195735.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE NVIDIA GeForce RTX 5070 EAGLE OC ICE SFF 12G",
+        "price": 1354689.0,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-nvidia-geforce-rtx-5070-eagle-oc-ice-sff-12g-cllhr/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO GIGABYTE RTX 5070 EAGLE OC 12GB",
+        "price": 1362387.43,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-rtx-5070-eagle-oc-12gb-qfm4j/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE NVIDIA GeForce RTX 5070 EAGLE OC SFF 12G",
+        "price": 1365640.44,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-nvidia-geforce-rtx-5070-eagle-oc-sff-12g-1e3p2/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
         "store": "mexx",
         "name": "Placa De Video Radeon RX 9070 XT 16Gb Asrock Challenger",
         "price": 1365999.0,
         "currency": "ARS",
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/50615-placa-de-video-radeon-rx-9070-xt-16gb-asrock-challenger.html"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE AMD Radeon RX 9070 GAMING 16G",
+        "price": 1368489.68,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-amd-radeon-rx-9070-gaming-16g-1tzvh/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE AMD Radeon RX 9070 GAMING OC 16GB",
+        "price": 1370709.41,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-amd-radeon-rx-9070-gaming-oc-16gb-lhsbf/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
     },
     {
         "store": "mexx",
@@ -385,6 +970,22 @@
         "url": "https://www.fravega.com/l/?keyword=Placa+de+Video+16GB+RTX9060XT+Gigabyte+Gaming+Oc+GDDR6"
     },
     {
+        "store": "quantum",
+        "name": "Placa de Video ASUS NVIDIA GeForce DUAL RTX5070 O12G GDDR7",
+        "price": 1393833.52,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-asus-nvidia-geforce-dual-rtx5070-o12g-gddr7-i9ydr/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Rtx 5070 Aero Oc 12gb",
+        "price": 1403551.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-rtx-5070-aero-oc-12gb-195699.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
         "store": "mexx",
         "name": "Placa De Video GeForce RTX 5070 12Gb Msi Gaming Trio Oc",
         "price": 1420999.0,
@@ -399,11 +1000,140 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/49781-placa-de-video-radeon-rx-9070-xt-16gb-gigabyte-gaming-oc.html"
     },
     {
-        "store": "fravega",
-        "name": "Placa de Video MSI GeForce RTX 5070 12G SHADOW 2X OC GDDR7 192-bit 912-V532-011",
-        "price": 1631687.9,
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE NVIDIA GeForce RTX 5070 AERO OC 12G",
+        "price": 1435389.7,
         "currency": "ARS",
-        "url": "https://www.fravega.com/l/?keyword=Placa+de+Video+MSI+GeForce+RTX+5070+12G+SHADOW+2X+OC+GDDR7+192-bit+912-V532-011"
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-nvidia-geforce-rtx-5070-aero-oc-12g-1wmqa/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "armytech",
+        "name": "Placa De Video Geforce Rtx 5070 12gb Msi World Of Warcraft Midnight Void Edition",
+        "price": 1440102.3,
+        "currency": "ARS",
+        "url": "https://www.armytech.com.ar/placas-de-video/6001-placa-de-video-geforce-rtx-5070-12gb-msi-world-of-warcraft-midnight-void-edition.html",
+        "scraped_at": "2026-05-18T23:59:17.272851+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Sapphire Pulse Rx 9070 Xt 16gb",
+        "price": 1447687.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-sapphire-pulse-rx-9070-xt-16gb-195600.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte  Radeon Rx 9070xt 16gb",
+        "price": 1459575.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte--radeon-rx-9070xt-16gb-195740.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Radeon Rtx 9070 Xt Gaming Oc 16gb",
+        "price": 1472844.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-radeon-rtx-9070-xt-gaming-oc-16gb-195738.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Radeon Rx 9070 Xt Gaming 16gb",
+        "price": 1477673.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-radeon-rx-9070-xt-gaming-16gb-195739.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO SAPPHIRE PULSE RX 9070 XT 16GB",
+        "price": 1477947.33,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-sapphire-pulse-rx-9070-xt-16gb-5n713/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "rockethard",
+        "name": "Placa De Video Msi Geforce Rtx 5070 12g World Of Of Warcraft Midnight Void Edition Oc",
+        "price": 1481131.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-nvidia/placa-de-video-msi-geforce-rtx-5070-12g-world-of-of-warcraft-midnight-void-edition-oc-163637.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE AMD Radeon RX 9070 XT GAMING OC ICE 16G",
+        "price": 1486510.97,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-amd-radeon-rx-9070-xt-gaming-oc-ice-16g-1w6xw/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video Powercolor Reaper AMD Radeon RX 9070 XT 16GB GDDR6",
+        "price": 1500825.81,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-powercolor-reaper-amd-radeon-rx-9070-xt-16gb-gddr6-19293/",
+        "scraped_at": "2026-05-18T23:59:12.205020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video Powercolor Hellhound AMD Radeon RX 9070 XT 16GB GDDR6",
+        "price": 1504859.5,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-powercolor-hellhound-amd-radeon-rx-9070-xt-16gb-gddr6-1kiwt/",
+        "scraped_at": "2026-05-18T23:59:12.205020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE AMD Radeon RX 9070 XT GAMING 16G",
+        "price": 1508560.03,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-amd-radeon-rx-9070-xt-gaming-16g-1tk1d/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE AMD Radeon RX 9070 XT GAMING OC 16GB",
+        "price": 1517176.38,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-amd-radeon-rx-9070-xt-gaming-oc-16gb-mtznx/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "Placa de Video GIGABYTE AORUS GeForce RTX 5070 MASTER 12G",
+        "price": 1554373.67,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-aorus-geforce-rtx-5070-master-12g-1gqta/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte  Radeon Rtx 9070xt Aorus Elite 16gb",
+        "price": 1577681.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte--radeon-rtx-9070xt-aorus-elite-16gb-195737.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Gigabyte Rtx 5070 Aorus 12gb Gdrr7",
+        "price": 1596455.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-gigabyte-rtx-5070-aorus-12gb-gdrr7-195700.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO GIGABYTE RADEON RX 9070XT AORUS ELITE 16GB",
+        "price": 1599315.12,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-radeon-rx-9070xt-aorus-elite-16gb-1ehss/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
     },
     {
         "store": "fravega",
@@ -428,10 +1158,25 @@
     },
     {
         "store": "fravega",
+        "name": "Placa de Video MSI GeForce RTX 5070 12G SHADOW 2X OC GDDR7 192-bit 912-V532-011",
+        "price": 1713272.29,
+        "currency": "ARS",
+        "url": "https://www.fravega.com/l/?keyword=Placa+de+Video+MSI+GeForce+RTX+5070+12G+SHADOW+2X+OC+GDDR7+192-bit+912-V532-011"
+    },
+    {
+        "store": "fravega",
         "name": "Placa de Video Asus 12GB RTX5070 Prime GDDR7",
         "price": 1725599.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/l/?keyword=Placa+de+Video+Asus+12GB+RTX5070+Prime+GDDR7"
+    },
+    {
+        "store": "armytech",
+        "name": "Placa De Video Asus Radeon Rx 9070 Xt 16gb Tuf Gaming Oc",
+        "price": 1747317.72,
+        "currency": "ARS",
+        "url": "https://www.armytech.com.ar/placas-de-video/6137-placa-de-video-asus-radeon-rx-9070-xt-16gb-tuf-gaming-oc.html",
+        "scraped_at": "2026-05-18T23:59:17.273855+00:00"
     },
     {
         "store": "fravega",
@@ -446,6 +1191,14 @@
         "price": 1820599.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/l/?keyword=Placa+de+Video+MSI+12GB+RTX5070+Gaming+Trio"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO GIGABYTE RTX 5070TI WF3 OC V2 16GB",
+        "price": 1923034.82,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-gigabyte-rtx-5070ti-wf3-oc-v2-16gb-v2lgn/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
     },
     {
         "store": "fravega",
@@ -476,6 +1229,14 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/51225-placa-de-video-geforce-rtx-5080-16gb-inno3d-x3.html"
     },
     {
+        "store": "rockethard",
+        "name": "Placa De Video Msi Geforce Rtx 5080 Inspire 3x Oc 16gb Gddr7",
+        "price": 2953015.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-nvidia/placa-de-video-msi-geforce-rtx-5080-inspire-3x-oc-16gb-gddr7-163797.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
+    },
+    {
         "store": "mexx",
         "name": "Placa De Video GeForce RTX 5080 16Gb Msi Gaming Trio Oc",
         "price": 3053899.0,
@@ -483,11 +1244,67 @@
         "url": "https://www.mexx.com.ar/productos-rubro/placas-de-video/48751-placa-de-video-geforce-rtx-5080-16gb-msi-gaming-trio-oc.html"
     },
     {
+        "store": "rockethard",
+        "name": "Placa De Video Msi Geforce Rtx 5080 Gaming Trio Oc 16g",
+        "price": 3081416.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-nvidia/placa-de-video-msi-geforce-rtx-5080-gaming-trio-oc-16g-162688.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
+    },
+    {
+        "store": "710tech",
+        "name": "Placa De Video Asus Tuf Rtx 5080 O16gb Gaming",
+        "price": 3213614.0,
+        "currency": "ARS",
+        "url": "https://710tech.com.ar/placas-de-video/nuevo/placa-de-video-asus-tuf-rtx-5080-o16gb-gaming-195782.html",
+        "scraped_at": "2026-05-18T23:59:14.620445+00:00"
+    },
+    {
+        "store": "quantum",
+        "name": "PLACA DE VIDEO ASUS TUF RTX 5080 O16GB GAMING",
+        "price": 3280786.88,
+        "currency": "ARS",
+        "url": "https://quantumhardstore.com/productos/placa-de-video-asus-tuf-rtx-5080-o16gb-gaming-1wznk/",
+        "scraped_at": "2026-05-18T23:59:12.204020+00:00"
+    },
+    {
         "store": "fravega",
         "name": "Placa Video Msi Amd Radeon Rx 6900 Xt Gaming Z Trio 16gb Rgb",
         "price": 3599999.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/l/?keyword=Placa+Video+Msi+Amd+Radeon+Rx+6900+Xt+Gaming+Z+Trio+16gb+Rgb"
+    },
+    {
+        "store": "rockethard",
+        "name": "Placa De Video Asus Rog Astral Rtx 5080 O16gb White",
+        "price": 3875508.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-nvidia/placa-de-video-asus-rog-astral-rtx-5080-o16gb-white-163658.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
+    },
+    {
+        "store": "armytech",
+        "name": "Placa De Video Geforce Rtx 5080 Asus 16gb Gddr7 Noctua Edition",
+        "price": 3890102.78,
+        "currency": "ARS",
+        "url": "https://www.armytech.com.ar/placas-de-video/5999-placa-de-video-geforce-rtx-5080-asus-16gb-gddr7-noctua-edition.html",
+        "scraped_at": "2026-05-18T23:59:17.272851+00:00"
+    },
+    {
+        "store": "armytech",
+        "name": "Placa De Video Geforce Rtx 5080 Asus Rog Astral 16gb Gddr7 Hatsune Miku",
+        "price": 4033279.84,
+        "currency": "ARS",
+        "url": "https://www.armytech.com.ar/placas-de-video/6062-placa-de-video-geforce-rtx-5080-asus-rog-astral-16gb-gddr7-hatsune-miku.html",
+        "scraped_at": "2026-05-18T23:59:17.272851+00:00"
+    },
+    {
+        "store": "armytech",
+        "name": "Placa De Video Geforce Rtx 5080 Asus Rog Astral 16gb Gddr7 White",
+        "price": 4078383.17,
+        "currency": "ARS",
+        "url": "https://www.armytech.com.ar/placas-de-video/6042-placa-de-video-geforce-rtx-5080-asus-rog-astral-16gb-gddr7-white.html",
+        "scraped_at": "2026-05-18T23:59:17.272851+00:00"
     },
     {
         "store": "fravega",
@@ -509,5 +1326,13 @@
         "price": 5449999.0,
         "currency": "ARS",
         "url": "https://www.fravega.com/l/?keyword=Placa+Video+Msi+Amd+Radeon+Rx+6900+Xt+Gaming+X+Trio+16gb+Rgb"
+    },
+    {
+        "store": "rockethard",
+        "name": "Placa De Video Msi Geforce Rtx 5090 32gb Lightning Z",
+        "price": 8714748.0,
+        "currency": "ARS",
+        "url": "https://rockethard.com.ar/hardware/placa-de-video-nvidia/placa-de-video-msi-geforce-rtx-5090-32gb-lightning-z-163638.html",
+        "scraped_at": "2026-05-18T23:59:18.131568+00:00"
     }
 ]

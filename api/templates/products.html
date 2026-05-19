@@ -39,10 +39,9 @@
             <form method="GET" class="flex w-full flex-col gap-3 md:w-auto md:flex-row md:items-center">
                 <input type="hidden" name="page" value="1" />
                 <input type="hidden" name="per_page" value="{{ pagination.per_page }}" />
-                <input type="hidden" name="order_by" value="{{ order_by }}" />
-                <input type="hidden" name="order_dir" value="{{ order_dir }}" />
+                <input type="hidden" name="order_by" value="price" />
 
-                <div x-data="{ dropdownOpen: false }" class="relative w-full md:w-48" @click.away="dropdownOpen = false">
+                <div x-data="{ dropdownOpen: false }" class="relative w-full md:w-44" @click.away="dropdownOpen = false">
                     <button
                         type="button"
                         @click="dropdownOpen = !dropdownOpen"
@@ -107,11 +106,54 @@
                     </div>
                 </div>
 
+                <div x-data="{ sortOpen: false, currentOrder: '{{ order_dir }}' }" class="relative w-full md:w-44" @click.away="sortOpen = false">
+                    <input type="hidden" name="order_dir" :value="currentOrder" />
+                    <button
+                        type="button"
+                        @click="sortOpen = !sortOpen"
+                        class="inline-flex h-11 w-full items-center justify-between rounded-md border border-slate-700 bg-slate-950 px-4 text-sm text-slate-100 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
+                    >
+                        <span x-text="currentOrder === 'asc' ? 'Menor precio' : 'Mayor precio'"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 transition-transform duration-200" :class="sortOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    <div
+                        x-show="sortOpen"
+                        x-cloak
+                        class="absolute left-0 mt-2 z-30 w-full rounded-md border border-slate-700 bg-slate-950 p-2 shadow-xl flex flex-col gap-1"
+                        x-transition:enter="transition ease-out duration-150"
+                        x-transition:enter-start="opacity-0 transform scale-95"
+                        x-transition:enter-end="opacity-100 transform scale-100"
+                        x-transition:leave="transition ease-in duration-100"
+                        x-transition:leave-start="opacity-100 transform scale-100"
+                        x-transition:leave-end="opacity-0 transform scale-95"
+                    >
+                        <button
+                            type="button"
+                            @click="currentOrder = 'asc'; sortOpen = false; $nextTick(() => $el.form.submit())"
+                            class="w-full text-left rounded px-3 py-2 text-sm text-slate-300 hover:bg-slate-900 hover:text-slate-100 transition"
+                            :class="currentOrder === 'asc' ? 'bg-slate-900 text-cyan-400 font-semibold' : ''"
+                        >
+                            Menor precio
+                        </button>
+                        <button
+                            type="button"
+                            @click="currentOrder = 'desc'; sortOpen = false; $nextTick(() => $el.form.submit())"
+                            class="w-full text-left rounded px-3 py-2 text-sm text-slate-300 hover:bg-slate-900 hover:text-slate-100 transition"
+                            :class="currentOrder === 'desc' ? 'bg-slate-900 text-cyan-400 font-semibold' : ''"
+                        >
+                            Mayor precio
+                        </button>
+                    </div>
+                </div>
+
                 <input
                     type="text"
                     name="search"
                     placeholder="Buscar RTX 3060, RX 7600..."
-                    class="h-11 w-full rounded-md border border-slate-700 bg-slate-950 px-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 md:w-80"
+                    class="h-11 w-full rounded-md border border-slate-700 bg-slate-950 px-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 md:w-72"
                     value="{{ request.query_params.get('search', '') }}"
                 />
                 <button

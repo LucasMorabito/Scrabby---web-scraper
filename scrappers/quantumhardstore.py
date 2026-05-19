@@ -1,10 +1,11 @@
 import json
 import os
 import re
+from datetime import datetime, timezone
 from urllib.parse import urljoin
+import requests
 
 from bs4 import BeautifulSoup
-from curl_cffi import requests as cffi_requests
 
 BASE_URL = "https://quantumhardstore.com"
 SEARCH_URL = f"{BASE_URL}/search/"
@@ -74,11 +75,11 @@ def parse_precio(texto: str | int | float | None) -> float | None:
 
 
 def fetch_html(keyword: str, page: int) -> str:
-    response = cffi_requests.get(
+    search_keyword = "video" if keyword.lower() in ["placa de video", "placas de video"] else keyword
+    response = requests.get(
         SEARCH_URL,
-        params={"q": keyword, "page": page},
+        params={"q": search_keyword, "page": page},
         headers=HEADERS,
-        impersonate="chrome120",
         timeout=15,
     )
     response.raise_for_status()
@@ -113,47 +114,35 @@ def _price_from_variant(variant: dict) -> float | None:
 def parse_products(html: str, limit: int = 50) -> list[dict]:
     soup = BeautifulSoup(html, "html.parser")
     products = []
-
-    for articulo in soup.select("article.js-item-product"):
-        link_tag = articulo.select_one("a.js-product-item-image-link-private") or articulo.select_one(
-            "a.js-item-name"
-        )
-        if not link_tag:
-            continue
-
+    for articulo in soup.select("a.q-pcard"):
         nombre = normalizar_texto(
-            link_tag.get("title")
-            or link_tag.get("aria-label")
-            or link_tag.get_text(" ", strip=True)
+            articulo.get("title")
+            or articulo.get("aria-label")
+            or ""
         )
-        url_prod = urljoin(BASE_URL, link_tag.get("href", ""))
-
+        url_prod = articulo.get("href", "")
+        if not url_prod.startswith("http"):
+            url_prod = BASE_URL + url_prod
         variants = _variants_from_article(articulo)
         if not variants:
             continue
-
         variant = variants[0]
         if variant.get("available") is False or variant.get("stock") == 0:
             continue
-
         precio = _price_from_variant(variant)
-        if not nombre or precio is None or not url_prod:
+        if not nombre or precio is None:
             continue
-
         if es_valido(nombre, precio):
-            products.append(
-                {
-                    "store": "quantum",
-                    "name": nombre,
-                    "price": precio,
-                    "currency": "ARS",
-                    "url": url_prod,
-                }
-            )
-
+            products.append({
+                "store": "quantum",
+                "name": nombre,
+                "price": precio,
+                "currency": "ARS",
+                "url": url_prod,
+                "scraped_at": datetime.now(timezone.utc).isoformat(),
+            })
         if len(products) >= limit:
             break
-
     return products
 
 
