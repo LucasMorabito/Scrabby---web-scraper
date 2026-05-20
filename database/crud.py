@@ -1,6 +1,6 @@
-from database.database import SessionLocal
+from datetime import datetime, timezone
+from database.connection import SessionLocal
 from database.models import Product
-
 
 def save_products(products: list[dict]) -> int:
     if not products:
@@ -12,10 +12,16 @@ def save_products(products: list[dict]) -> int:
         inserted_count = 0
 
         for p in products:
-            url = p["url"]
+            url = p.get("url")
+            if not url:
+                continue
+                
+            if "scraped_at" not in p:
+                p["scraped_at"] = datetime.now(timezone.utc).isoformat()
+
             if url in existing_products:
                 db_product = existing_products[url]
-                db_product.price = p["price"]
+                db_product.price = p.get("price")
                 db_product.scraped_at = p["scraped_at"]
             else:
                 new_prod = Product(**p)
