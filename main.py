@@ -66,9 +66,6 @@ def normalize_product(product):
         clean_url = str(normalized["url"]).encode("utf-8", errors="ignore").decode("utf-8")
         normalized["url"] = clean_url[:512]
         
-    if "scraped_at" not in normalized:
-        normalized["scraped_at"] = datetime.now(timezone.utc).isoformat()
-        
     return normalized
 
 
