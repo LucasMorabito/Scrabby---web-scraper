@@ -1,60 +1,55 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Numeric, Index, UniqueConstraint
-from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship
-from database.database import Base
+from datetime import datetime, timezone
+from database.connection import SessionLocal
+from database.models import Product
 
-class Product(Base):
-    __tablename__ = "products"
-    id = Column(Integer, primary_key=True)
-    store = Column(String(100), index=True)
-    name = Column(String, nullable=False)
-    price = Column(Numeric(12, 2), nullable=False, index=True)
-    currency = Column(String(10), server_default="ARS")
-    url = Column(String, unique=True, nullable=False)
-    scraped_at = Column(
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=func.now(),
-        onupdate=func.now(),
-        index=True
-        )
+PRODUCT_FIELDS = {"store", "name", "price", "currency", "url", "scraped_at"}
 
-    history = relationship("PriceHistory", back_populates="product", cascade="all, delete-orphan")
-    favorited_by = relationship("UserFavorite", back_populates="product", cascade="all, delete-orphan")
+def _to_product_dict(p: dict) -> dict:
+    """Filtra solo los campos que acepta el modelo Product."""
+    result = {k: v for k, v in p.items() if k in PRODUCT_FIELDS}
+    
+    # Garantiza que scraped_at siempre sea un datetime, no un string
+    scraped_at = result.get("scraped_at")
+    if scraped_at is None:
+        result["scraped_at"] = datetime.now(timezone.utc)
+    elif isinstance(scraped_at, str):
+        try:
+            result["scraped_at"] = datetime.fromisoformat(scraped_at)
+        except ValueError:
+            result["scraped_at"] = datetime.now(timezone.utc)
+    
+    return result
 
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True)
-    username = Column(String(150), unique=True, nullable=False)
-    password_hash = Column(String, nullable=False)
-    is_active = Column(Boolean, nullable=False, server_default="true")
-    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+def save_products(products: list[dict]) -> int:
+    if not products:
+        return 0
 
-    favorites = relationship("UserFavorite", back_populates="user", cascade="all, delete-orphan")
+    db = SessionLocal()
+    try:
+        existing_products = {p.url: p for p in db.query(Product).all()}
+        inserted_count = 0
 
-class PriceHistory(Base):
-    __tablename__ = "price_history"
-    id = Column(Integer, primary_key=True)
-    product_id = Column(Integer, ForeignKey("products.id", ondelete="CASCADE"), nullable=False)
-    price = Column(Numeric(12, 2), nullable=False)
-    currency = Column(String(10))
-    recorded_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    product = relationship("Product", back_populates="history")
+        for p in products:
+            url = p.get("url")
+            if not url:
+                continue
 
-    __table_args__ = (
-        Index("ix_price_history_product_id_recorded_at", "product_id", "recorded_at"),
-    )
+            clean = _to_product_dict(p)
 
-class UserFavorite(Base):
-    __tablename__ = "user_favorites"
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
-    product_id = Column(Integer, ForeignKey("products.id", ondelete="CASCADE"), nullable=False, index=True)
-    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+            if url in existing_products:
+                db_product = existing_products[url]
+                db_product.price = clean.get("price")
+                db_product.scraped_at = clean["scraped_at"]
+            else:
+                new_prod = Product(**clean)
+                db.add(new_prod)
+                existing_products[url] = new_prod
+                inserted_count += 1
 
-    user = relationship("User", back_populates="favorites")
-    product = relationship("Product", back_populates="favorited_by")
-
-    __table_args__ = (
-        UniqueConstraint("user_id", "product_id", name="uq_user_favorites_user_product"),
-    )
+        db.commit()
+        return inserted_count
+    except Exception as e:
+        db.rollback()
+        raise e
+    finally:
+        db.close()
