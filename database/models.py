@@ -1,7 +1,6 @@
 from datetime import datetime, timezone
 from database.database import SessionLocal
-from database.models import Product
-
+    
 PRODUCT_FIELDS = {"store", "name", "price", "currency", "url", "scraped_at"}
 
 def _to_product_dict(p: dict) -> dict:
