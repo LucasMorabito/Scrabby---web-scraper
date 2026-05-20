@@ -170,8 +170,8 @@ def main():
     if sorted_results:
         save_to_json(sorted_results)
         try:
-            inserted = save_products(sorted_results)
-            print(f"Guardados en base de datos: {inserted} productos")
+            inserted, updated = save_products(sorted_results)
+            print(f"Base de datos: {inserted} nuevos insertados, {updated} precios actualizados.")
         except Exception as db_error:
             print(f"\nError crítico al insertar en la Base de Datos: {db_error}")
 

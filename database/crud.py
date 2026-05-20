@@ -10,6 +10,7 @@ def save_products(products: list[dict]) -> int:
     try:
         existing_products = {p.url: p for p in db.query(Product).all()}
         inserted_count = 0
+        updated_count = 0
 
         for p in products:
             url = p.get("url")
@@ -23,14 +24,16 @@ def save_products(products: list[dict]) -> int:
                 db_product = existing_products[url]
                 db_product.price = p.get("price")
                 db_product.scraped_at = p["scraped_at"]
+                updated_count += 1
             else:
                 new_prod = Product(**p)
                 db.add(new_prod)
                 existing_products[url] = new_prod
                 inserted_count += 1
+                updated_count += 1
 
         db.commit()
-        return inserted_count
+        return inserted_count, updated_count
     except Exception as e:
         db.rollback()
         raise e
