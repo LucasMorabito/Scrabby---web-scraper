@@ -2,7 +2,7 @@ name: Scrabby Daily Run
 
 on:
   schedule:
-    - cron: '0 10 * * *' 
+    - cron: '0 10 * * *' # Se ejecuta a las 10:00 UTC (07:00 AM de Argentina)
   
   workflow_dispatch: 
 
@@ -15,9 +15,9 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Construir la imagen
-        run: docker build -t scrabby-bot .
+        run: docker build --no-cache -t scrabby-bot .
       
       - name: Iniciar Scraping
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: docker run -e DATABASE_URL="$DATABASE_URL" scrabby-bot
+        run: docker run --rm -e DATABASE_URL="$DATABASE_URL" scrabby-bot
