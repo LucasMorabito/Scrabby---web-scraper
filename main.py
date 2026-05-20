@@ -52,6 +52,8 @@ def is_valid_product(product, min_price):
     return not any(word in title for word in blacklist)
 
 
+from datetime import datetime, timezone
+
 def normalize_product(product):
     normalized = dict(product)
     normalized["price"] = parse_price(product.get("price"))
@@ -63,6 +65,9 @@ def normalize_product(product):
     if "url" in normalized and normalized["url"]:
         clean_url = str(normalized["url"]).encode("utf-8", errors="ignore").decode("utf-8")
         normalized["url"] = clean_url[:512]
+        
+    if "scraped_at" not in normalized:
+        normalized["scraped_at"] = datetime.now(timezone.utc).isoformat()
         
     return normalized
 
