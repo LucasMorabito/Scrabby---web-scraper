@@ -6,6 +6,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from api.dependencies import get_db
+from api.limiter import limiter
 from api.schemas.product import PriceHistoryResponse, ProductResponse
 from api.schemas.store import StoreResponse
 from api.security import get_current_username
@@ -62,6 +63,7 @@ def build_page_links(request: Request, page: int, total_pages: int, per_page: in
 
 
 @router.get("/", response_model=list[ProductResponse])
+@limiter.limit("30/minute")
 def get_products(
     request: Request,
     search: str | None = None,
@@ -153,7 +155,8 @@ def get_products(
 
 
 @router.get("/compare/", response_model=dict[str, list[ProductResponse]])
-def compare_products(query: str, db: Session = Depends(get_db)):
+@limiter.limit("30/minute")
+def compare_products(request: Request, query: str, db: Session = Depends(get_db)):
     results = db.query(Product).filter(Product.name.ilike(f"%{query}%")).order_by(Product.price.asc()).all()
 
     if not results:

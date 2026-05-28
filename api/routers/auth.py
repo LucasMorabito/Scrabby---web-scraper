@@ -1,3 +1,4 @@
+import os
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, status
@@ -8,6 +9,7 @@ from sqlalchemy.exc import IntegrityError
 
 from database.database import SessionLocal # <-- Importamos la nueva fábrica de sesiones
 from api.dependencies import get_db
+from api.limiter import limiter
 from api.schemas.auth import DashboardDataResponse
 from api.security import (
     ACCESS_TOKEN_COOKIE_NAME,
@@ -27,10 +29,14 @@ router = APIRouter()
 templates = Jinja2Templates(directory="api/templates")
 
 
+def _cookie_secure() -> bool:
+    return os.getenv("RENDER") is not None
+
+
 def redirect_to_login(clear_session: bool = False):
     response = RedirectResponse(url="/users/login", status_code=status.HTTP_303_SEE_OTHER)
     if clear_session:
-        response.delete_cookie(ACCESS_TOKEN_COOKIE_NAME)
+        response.delete_cookie(ACCESS_TOKEN_COOKIE_NAME, secure=_cookie_secure(), samesite="lax")
     return response
 
 
@@ -81,6 +87,7 @@ def register_page(request: Request):
 
 
 @router.post("/register", response_class=HTMLResponse)
+@limiter.limit("5/minute")
 def register(
     request: Request,
     username: Annotated[str, Form()],
@@ -148,6 +155,7 @@ def dashboard_data(request: Request, db: Session = Depends(get_db)):
 
 
 @router.post("/login")
+@limiter.limit("5/minute")
 def login(
     request: Request,
     username: Annotated[str, Form()],
@@ -167,7 +175,12 @@ def login(
 
     response = RedirectResponse(url="/users/dashboard", status_code=status.HTTP_303_SEE_OTHER)
     response.set_cookie(
-        key=ACCESS_TOKEN_COOKIE_NAME, value=token, httponly=True, max_age=TOKEN_SECONDS_EXPIRE, samesite="lax"
+        key=ACCESS_TOKEN_COOKIE_NAME,
+        value=token,
+        httponly=True,
+        secure=_cookie_secure(),
+        max_age=TOKEN_SECONDS_EXPIRE,
+        samesite="lax",
     )
 
     return response

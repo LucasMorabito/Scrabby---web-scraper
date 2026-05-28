@@ -1,14 +1,27 @@
+import os
+
 from fastapi import FastAPI, HTTPException, Request, status, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi.errors import RateLimitExceeded
+from fastapi.responses import HTMLResponse
 
 
 from api.core.handlers import register_exception_handlers
 from api.routers import auth, products
 from api.security import get_current_username
 from api.dependencies import get_db 
+from api.limiter import limiter
+
+
+DEFAULT_ALLOWED_ORIGINS = "http://localhost:8000,http://127.0.0.1:8000,http://localhost:3000,http://127.0.0.1:3000"
+
+
+def get_allowed_origins() -> list[str]:
+    origins = os.getenv("ALLOWED_ORIGINS", DEFAULT_ALLOWED_ORIGINS)
+    return [origin.strip() for origin in origins.split(",") if origin.strip()]
 
 
 app = FastAPI(
@@ -17,11 +30,21 @@ app = FastAPI(
     version="1.0.0"
 )
 
+async def custom_rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    return templates.TemplateResponse(
+        request=request,
+        name="error429.html",
+        status_code=429
+    )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, custom_rate_limit_handler)
+
 
 # --- MIDDLEWARES ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=get_allowed_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

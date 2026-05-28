@@ -17,3 +17,5 @@ services:
         value: HS256
       - key: TOKEN_SECONDS_EXPIRE
         value: 900
+      - key: ALLOWED_ORIGINS
+        sync: false

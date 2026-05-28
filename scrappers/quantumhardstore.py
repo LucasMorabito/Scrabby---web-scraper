@@ -114,15 +114,17 @@ def _price_from_variant(variant: dict) -> float | None:
 def parse_products(html: str, limit: int = 50) -> list[dict]:
     soup = BeautifulSoup(html, "html.parser")
     products = []
-    for articulo in soup.select("a.q-pcard"):
+    for articulo in soup.select("a.q-pcard, article.js-item-product"):
+        link = articulo if articulo.name == "a" else articulo.select_one("a[href]")
         nombre = normalizar_texto(
-            articulo.get("title")
+            (link.get("title") if link else None)
+            or (link.get("aria-label") if link else None)
+            or articulo.get("title")
             or articulo.get("aria-label")
             or ""
         )
-        url_prod = articulo.get("href", "")
-        if not url_prod.startswith("http"):
-            url_prod = BASE_URL + url_prod
+        url_prod = link.get("href", "") if link else articulo.get("href", "")
+        url_prod = urljoin(BASE_URL, url_prod)
         variants = _variants_from_article(articulo)
         if not variants:
             continue
