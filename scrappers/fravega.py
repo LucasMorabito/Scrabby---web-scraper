@@ -1,20 +1,15 @@
-import random
 import urllib.parse
-import requests
+
+from scrappers.http_client import create_stealth_http_client
 
 BASE_URL = "https://www.fravega.com/api/v2"
+HTTP_CLIENT = create_stealth_http_client()
 
 ZONES = [
     "03143339-1672-49fd-b5fc-6be4ed38f529",
     "086dfc51-259b-48b8-9413-6a38a48e8d02",
     "11a46c8a-6860-478f-8321-276aba2a61a3",
     "2", "25", "28", "29", "30"
-]
-
-USER_AGENTS = [
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0",
 ]
 
 # La llave maestra de GraphQL (Extrae el EAN si existe)
@@ -49,11 +44,13 @@ def scrape(keyword: str, size: int = 20) -> list[dict]:
     safe_keyword = urllib.parse.quote_plus(keyword)
     
     headers = {
-        "User-Agent": random.choice(USER_AGENTS),
+        "Accept": "application/json, text/plain, */*",
         "content-type": "application/json",
         "origin": "https://www.fravega.com",
         "referer": f"https://www.fravega.com/l/?keyword={safe_keyword}",
-        "Accept-Language": "es-AR,es;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
     }
 
     payload = {
@@ -73,7 +70,7 @@ def scrape(keyword: str, size: int = 20) -> list[dict]:
     }
 
     try:
-        r = requests.post(BASE_URL, json=payload, headers=headers, timeout=15)
+        r = HTTP_CLIENT.post(BASE_URL, json=payload, headers=headers, timeout=15)
         r.raise_for_status()
         data = r.json()
     except Exception as e:

@@ -55,7 +55,7 @@ class MercadoLibreScraperTests(unittest.TestCase):
 
         self.assertEqual(parse_products_ld_json(html), [])
 
-    @patch("scrappers.mercadolibre.requests.get")
+    @patch("scrappers.mercadolibre.HTTP_CLIENT.get")
     def test_fetch_html_uses_manual_search_headers_without_authorization(self, mock_get):
         response = Mock()
         response.text = SEARCH_HTML
@@ -66,7 +66,9 @@ class MercadoLibreScraperTests(unittest.TestCase):
 
         self.assertEqual(html, SEARCH_HTML)
         headers = mock_get.call_args.kwargs["headers"]
-        self.assertIn("User-Agent", headers)
+        from scrappers.mercadolibre import HTTP_CLIENT
+
+        self.assertIn("User-Agent", HTTP_CLIENT.session.headers)
         self.assertEqual(headers["Accept"], "text/html")
         self.assertNotIn("Authorization", headers)
 
