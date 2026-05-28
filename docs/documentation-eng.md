@@ -1,292 +1,227 @@
-# Scrabby Technical Documentation
+# Scrabby — Technical Documentation
 
-## 1. System Overview
+## Table of Contents
 
-### Introduction
-
-Scrabby is a backend system developed in Python that implements a complete pipeline for scraping, processing, and exposing hardware price data in near real-time.
-
-The system integrates multiple e-commerce sources, normalizes the collected data, and exposes it through a REST API, enabling queries, comparisons, and price analysis across different stores.
-
-Additionally, it includes a JWT-based authentication system with session management using HTTP-only cookies, designed for a simple web-based flow.
-
-This project was developed as part of a backend learning process, focusing on applying real-world practices such as modular architecture, data validation, authentication, and deployment.
-
----
-
-### Problem Statement
-
-The system addresses the need to centralize and compare product prices (mainly GPUs) across different online stores.
-
-Currently, it collects data from Frávega and Mercado Libre, normalizes it, filters out irrelevant results (such as accessories or inconsistent pricing), and makes it available through an API.
+* [Overview](#overview)
+* [Architecture](#architecture)
+* [Technology Stack](#technology-stack)
+* [Database](#database)
+* [API](#api)
+* [Security](#security)
+* [Error Handling](#error-handling)
+* [Deployment](#deployment)
+* [Testing](#testing)
+* [Design Decisions](#design-decisions)
 
 ---
 
-### Current Scope
+# Overview
 
-The system currently supports:
+## Introduction
 
-- Automated scraping pipeline execution  
-- Product persistence in PostgreSQL  
-- Product querying via REST endpoints  
-- Filtering, sorting, and pagination  
-- Price comparison across stores  
-- Aggregated summaries by store  
-- Identification of the cheapest product per store  
-- Web-based authentication flow  
-- JWT generation and validation  
-- Session management using HTTP-only cookies  
-- Access to a protected dashboard  
+Scrabby is a Python-based backend system that implements a complete scraping, processing, and price exposure pipeline for PC hardware products.
 
-Not yet included:
+The platform aggregates data from multiple e-commerce sources, normalizes product information, stores historical price variations, and exposes the data through a REST API for querying and comparison.
 
-- User registration  
-- Refresh tokens  
-- Database migrations  
-- Advanced observability  
-- Full authentication testing  
+The project also includes:
+
+* JWT authentication
+* HTTP-only session cookies
+* Rate limiting protections
+* Standardized API error handling
+* PostgreSQL persistence with optimized bulk upserts
 
 ---
 
-## 2. Architecture
+## Current Sources
 
-### Project Structure
+Currently integrated stores:
 
-The system is organized into modular components with clear responsibilities:
-
-- `api/main.py`: initializes the FastAPI app, registers routers, and defines the health check  
-- `api/routers/products.py`: product REST endpoints and SQL queries  
-- `api/routers/auth.py`: authentication routes and template rendering  
-- `api/services/auth.py`: authentication business logic  
-- `api/security.py`: JWT handling and security configuration  
-- `utils/security.py`: password hashing and verification (bcrypt)  
-- `api/schemas/`: Pydantic models for validation and serialization  
-- `api/dependencies.py`: database connection per request  
-- `database/database.py`: scraping persistence logic  
-- `scrappers/`: external data scrapers  
-- `api/templates/`: HTML templates  
-- `api/static/`: static files (currently unused)  
-- `tests/`: automated tests  
+* Frávega
+* Mercado Libre
+* Mexx
+* Quantum Hardstore
+* 710Tech
+* ArmyTech
+* Rocket Hard
 
 ---
 
-### System Flow
+## Current Features
 
-The system operates in three main flows:
+### Scraping Pipeline
 
-#### 1. Scraping
-- External sources are queried  
-- Data is parsed and normalized  
-- Irrelevant results are filtered  
-- Data is stored in JSON and PostgreSQL  
+* Multi-store scraping
+* TLS impersonation using `curl_cffi`
+* Retry & backoff strategies
+* Product normalization and filtering
 
-#### 2. API
-- FastAPI receives requests  
-- Database connection is injected  
-- SQL queries are executed  
-- Results are transformed into dictionaries  
-- Pydantic validates responses  
+### Persistence Layer
 
-#### 3. Authentication
-- User submits login form  
-- Credentials are validated against the database  
-- JWT is generated with `sub` claim  
-- Token is stored in HTTP-only cookie  
-- Token is validated for protected routes  
+* Bulk upserts with PostgreSQL
+* Historical price tracking
+* ORM models with SQLAlchemy
 
----
+### API Features
 
-## 3. Tech Stack
+* Product listing and filtering
+* Pagination
+* Store comparison
+* Cheapest product detection
+* HTML + JSON dual responses
 
-The system uses:
+### Authentication & Security
 
-- **Python**: main programming language  
-- **FastAPI**: web framework and REST API  
-- **Uvicorn**: ASGI server  
-- **PostgreSQL**: relational database  
-- **psycopg2**: database access  
-- **Pydantic**: data validation and typing  
-- **Requests**: HTTP client for scraping  
-- **BeautifulSoup**: HTML parsing  
-- **Jinja2**: template rendering  
-- **python-jose**: JWT handling  
-- **Passlib (bcrypt)**: password hashing  
-- **python-dotenv**: environment variables  
-- **unittest + TestClient**: testing  
-- **Render**: deployment platform  
+* JWT authentication
+* Secure session cookies
+* Rate limiting with SlowAPI
+* CORS protection
 
 ---
 
-## 4. Database
+# Architecture
 
-### `products` Table
+## Project Structure
 
-Core table that stores scraped products.
+```text
+api/
+├── routers/
+├── services/
+├── core/
+├── templates/
+├── limiter.py
+└── security.py
 
-Main fields:
-- `id`: unique identifier  
-- `store`: source store  
-- `name`: product name  
-- `price`: product price  
-- `currency`: currency  
-- `url`: unique product identifier  
-- `scraped_at`: last update timestamp  
+database/
+├── models.py
+├── crud.py
+└── database.py
 
-An `ON CONFLICT (url)` strategy is used to prevent duplicates and keep data updated.
+scrappers/
+├── http_client.py
+└── ...
 
----
+tests/
+```
 
-### `users` Table
+## Request Flow
 
-Handles authentication.
+### 1. Scraping
 
-Fields:
-- `id`  
-- `username`  
-- `password_hash`  
-- `is_active`  
-- `created_at`  
+The system performs concurrent requests against multiple stores using a centralized HTTP client configured with TLS impersonation.
 
----
+### 2. Processing
 
-## 5. REST API
+Products are normalized, filtered, and deduplicated in memory.
 
-Main endpoints:
+### 3. Persistence
 
-- `GET /health` → system status  
-- `GET /products/` → product listing with filters  
-- `GET /products/compare/` → grouped comparison by store  
-- `GET /products/stores/` → store summary  
-- `GET /products/cheapest/` → cheapest product per store  
-- `GET /products/{id}` → product detail  
+Data is inserted using PostgreSQL bulk upserts:
 
-Authentication endpoints:
+```sql
+INSERT ... ON CONFLICT DO UPDATE
+```
 
-- `GET /users/login` → login form  
-- `POST /users/login` → login + JWT  
-- `GET /users/dashboard` → protected view  
-- `POST /users/logout` → logout  
+Historical prices are registered during the same transaction.
 
----
+### 4. API Exposure
 
-## 6. Authentication System
+FastAPI exposes the processed data through REST endpoints protected by:
 
-### Flow
-
-1. User submits credentials  
-2. Credentials are validated against the database  
-3. JWT is generated with `sub` claim  
-4. Token is stored in an HTTP-only cookie  
-5. Token is validated on protected requests  
+* Rate limiting
+* Authentication middleware
+* Exception handlers
+* CORS validation
 
 ---
 
-### Security
+# Technology Stack
 
-- Password hashing with bcrypt  
-- JWT signed using `SECRET_KEY`  
-- Configurable expiration  
-- Cookie settings: `httponly=True`, `samesite=lax`  
-
----
-
-## 7. Error Handling
-
-- `HTTPException` for API errors  
-- `400` → invalid parameters  
-- `404` → resource not found  
-- `401` → invalid login (HTML response)  
-
-Authentication uses HTML responses instead of JSON for user-facing flows.
-
----
-
-## 8. Templates and Static Files
-
-Jinja2 is used for:
-
-- `login.html`  
-- `dashboard.html`  
-
-Static files exist but are not yet mounted using `StaticFiles`.
+| Technology    | Purpose             |
+| ------------- | ------------------- |
+| Python        | Main language       |
+| FastAPI       | Backend framework   |
+| PostgreSQL    | Database            |
+| SQLAlchemy    | ORM                 |
+| Alembic       | Database migrations |
+| curl_cffi     | TLS impersonation   |
+| SlowAPI       | Rate limiting       |
+| BeautifulSoup | HTML parsing        |
+| Jinja2        | HTML rendering      |
+| PyJWT         | Authentication      |
+| Passlib       | Password hashing    |
+| Docker        | Containerization    |
+| Render        | Deployment          |
 
 ---
 
-## 9. Deployment
+# Security
 
-### Render
+## Authentication
 
-Configuration includes:
+* JWT-based sessions
+* HTTP-only cookies
+* SameSite protection
+* Dynamic Secure flag in production
 
-- `uvicorn api.main:app`  
-- environment variables (`DATABASE_URL`, `SECRET_KEY`)  
-- health check endpoint `/health`  
+## API Protection
 
----
-
-### Docker
-
-The current Docker setup runs the scraper, not the API.
-
----
-
-## 10. Testing
-
-Testing stack:
-
-- `unittest`  
-- `FastAPI TestClient`  
-
-Covered areas:
-- health check  
-- parameter validation  
-- product endpoints  
-
-Not covered:
-- authentication  
-- JWT  
-- scraping  
+* Strict CORS policy
+* Rate limiting
+* Brute-force mitigation
+* Abuse prevention for public endpoints
 
 ---
 
-## 11. Design Decisions
+# Deployment
 
-- **Raw SQL over ORM** to maintain control and simplicity in the MVP  
-- **JWT stored in HTTP-only cookies** for a simpler web-based authentication flow  
-- Modular separation (`routers`, `services`, `utils`) for maintainability  
-- FastAPI chosen for strong typing, validation, and auto-generated docs  
-- **Upsert strategy using URL** to prevent duplicates  
+## API
 
----
+The API is deployed on Render using:
 
-## 12. Future Improvements
+```yaml
+uvicorn api.main:app
+```
 
-### Architecture
-- Add migrations (Alembic)  
-- Introduce a data access layer  
+## Scheduled Scraping
 
-### Security
-- Enable `secure=True` in cookies  
-- Add CSRF protection  
-
-### Features
-- Price history tracking  
-- More stores  
-- Configurable scraping  
-
-### Testing
-- Authentication tests  
-- JWT validation tests  
-
-### DevOps
-- Structured logging  
-- Observability  
-- Full CI/CD pipeline  
+GitHub Actions runs periodic scraping jobs inside isolated Docker containers.
 
 ---
 
-## Conclusion
+# Testing
 
-Scrabby provides a solid foundation for a modern backend system, integrating scraping, persistence, REST API, and authentication.
+Run the test suite with:
 
-The project demonstrates an understanding of the full backend lifecycle, from data acquisition to secure data exposure, and establishes a scalable base for future improvements.
+```bash
+python -m unittest discover tests
+```
+
+The test environment mocks HTTP requests to avoid hitting real stores during CI execution.
+
+---
+
+# Design Decisions
+
+## SQLAlchemy + PostgreSQL Dialect Features
+
+The project uses PostgreSQL-specific optimizations such as:
+
+* `ON CONFLICT`
+* `RETURNING`
+* Bulk operations
+
+This allows efficient persistence without loading the full dataset into memory.
+
+## Centralized HTTP Client
+
+A shared HTTP client keeps a consistent TLS/browser fingerprint across all scrapers, reducing anti-bot blocks.
+
+## Dual Response Strategy
+
+Endpoints such as `/products/` dynamically return:
+
+* HTML templates for browsers
+* JSON responses for API consumers
+
+based on the request headers.

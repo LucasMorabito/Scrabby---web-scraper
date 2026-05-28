@@ -1,291 +1,401 @@
-# Documentación técnica de Scrabby
+# Scrabby — Documentación Técnica
 
-## 1. Descripción general del sistema
+## Tabla de Contenidos
 
-### Introducción
+* [Descripción General](#descripción-general)
+* [Arquitectura](#arquitectura)
+* [Stack Tecnológico](#stack-tecnológico)
+* [Base de Datos](#base-de-datos)
+* [API REST](#api-rest)
+* [Seguridad](#seguridad)
+* [Manejo de Errores](#manejo-de-errores)
+* [Despliegue](#despliegue)
+* [Testing](#testing)
+* [Decisiones de Diseño](#decisiones-de-diseño)
+
+---
+
+# Descripción General
+
+## Introducción
 
 Scrabby es un sistema backend desarrollado en Python que implementa un pipeline completo de scraping, procesamiento y exposición de datos de precios de hardware en tiempo casi real.
 
-El sistema integra múltiples fuentes de e-commerce, normaliza la información obtenida y la expone mediante una API REST, permitiendo consultas, comparaciones y análisis de precios entre distintas tiendas.
+La plataforma integra múltiples fuentes de e-commerce, normaliza la información obtenida y la expone mediante una API REST para realizar consultas, comparaciones y análisis de precios entre distintas tiendas.
 
-Además, incorpora un sistema de autenticación basado en JWT con manejo de sesión mediante cookies HTTP-only, orientado a un flujo web simple.
+El proyecto también incorpora:
 
-Este proyecto fue desarrollado como parte de un proceso de formación en backend, con foco en aplicar prácticas reales de la industria como diseño modular, validación de datos, manejo de autenticación y despliegue.
-
----
-
-### Problema que resuelve
-
-El sistema aborda la necesidad de centralizar y comparar precios de productos (principalmente GPUs) provenientes de distintas tiendas online.
-
-Actualmente obtiene datos desde Frávega y Mercado Libre, los normaliza, filtra resultados irrelevantes (como accesorios o precios inconsistentes), y los pone a disposición mediante una API.
+* Autenticación basada en JWT
+* Manejo de sesión mediante cookies HTTP-only
+* Protección contra abuso mediante Rate Limiting
+* Manejo estandarizado de errores
+* Persistencia optimizada en PostgreSQL
 
 ---
 
-### Alcance actual
+## Tiendas Integradas
 
-Actualmente, el sistema permite:
+Actualmente el sistema obtiene datos desde:
 
-- Ejecutar un pipeline de scraping automatizado
-- Persistir productos en PostgreSQL
-- Consultar productos mediante endpoints REST
-- Filtrar, ordenar y paginar resultados
-- Comparar precios entre tiendas
-- Obtener resúmenes agregados por store
-- Identificar el producto más barato por tienda
-- Autenticarse mediante login web
-- Generar y validar JWT
-- Gestionar sesión mediante cookies HTTP-only
-- Acceder a un dashboard protegido
-
-No se incluyen aún:
-- Registro de usuarios
-- Refresh tokens
-- Migraciones de base de datos
-- Observabilidad avanzada
-- Testing completo del sistema de autenticación
+* Frávega
+* Mercado Libre
+* Mexx
+* Quantum Hardstore
+* 710Tech
+* ArmyTech
+* Rocket Hard
 
 ---
 
-## 2. Arquitectura
+## Funcionalidades Actuales
 
-### Organización del proyecto
+### Pipeline de Scraping
 
-El sistema está estructurado en módulos con responsabilidades claras:
+* Scraping distribuido multi-tienda
+* Suplantación TLS mediante `curl_cffi`
+* Estrategias de retry y backoff
+* Filtrado y normalización de productos
 
-- `api/main.py`: inicializa la aplicación FastAPI, registra routers y define el health check.
-- `api/routers/products.py`: endpoints REST de productos, incluyendo lógica de consulta SQL.
-- `api/routers/auth.py`: endpoints web de autenticación y renderizado de templates.
-- `api/services/auth.py`: lógica de negocio de autenticación (validación de usuario y password).
-- `api/security.py`: manejo de JWT, cookies y configuración de seguridad.
-- `utils/security.py`: hashing y verificación de contraseñas con bcrypt.
-- `api/schemas/`: modelos Pydantic para validación y serialización.
-- `api/dependencies.py`: manejo de conexión a base de datos por request.
-- `database/database.py`: persistencia del pipeline de scraping.
-- `scrappers/`: scrapers de fuentes externas.
-- `api/templates/`: vistas HTML (login y dashboard).
-- `api/static/`: archivos estáticos (actualmente no utilizados).
-- `tests/`: pruebas automatizadas de la API.
+### Persistencia
 
----
+* Bulk Upserts sobre PostgreSQL
+* Historial automático de precios
+* Persistencia ORM con SQLAlchemy
 
-### Flujo del sistema
+### API REST
 
-El flujo principal se divide en tres partes:
+* Listado y búsqueda de productos
+* Paginación avanzada
+* Comparación entre tiendas
+* Obtención de productos más baratos
+* Respuestas duales HTML + JSON
 
-#### 1. Scraping
-- Se consultan fuentes externas
-- Se parsean y normalizan los datos
-- Se filtran resultados irrelevantes
-- Se guardan en JSON y PostgreSQL
+### Seguridad y Autenticación
 
-#### 2. API
-- FastAPI recibe requests
-- Se inyecta conexión a DB
-- Se ejecutan queries SQL
-- Se transforman resultados a dict
-- Pydantic valida la respuesta
-
-#### 3. Autenticación
-- Usuario envía formulario de login
-- Se valida contra la base de datos
-- Se genera JWT con claim `sub`
-- Se guarda en cookie HTTP-only
-- Se valida en cada acceso al dashboard
+* JWT Authentication
+* Cookies seguras (`HttpOnly`, `SameSite`, `Secure`)
+* Rate Limiting con SlowAPI
+* Política CORS estricta
 
 ---
 
-## 3. Stack tecnológico
+# Arquitectura
 
-El sistema utiliza:
+## Organización del Proyecto
 
-- **Python**: lenguaje principal
-- **FastAPI**: framework web y API REST
-- **Uvicorn**: servidor ASGI
-- **PostgreSQL**: base de datos relacional
-- **psycopg2**: acceso a base de datos
-- **Pydantic**: validación y tipado de datos
-- **Requests**: consumo de fuentes externas
-- **BeautifulSoup**: parsing HTML
-- **Jinja2**: renderizado de templates
-- **python-jose**: manejo de JWT
-- **Passlib (bcrypt)**: hashing de contraseñas
-- **python-dotenv**: manejo de variables de entorno
-- **unittest + TestClient**: testing
-- **Render**: despliegue
+```text
+api/
+├── routers/
+├── services/
+├── core/
+├── templates/
+├── limiter.py
+└── security.py
 
----
+database/
+├── models.py
+├── crud.py
+└── database.py
 
-## 4. Base de datos
+scrappers/
+├── http_client.py
+└── ...
 
-### Tabla `products`
-
-La tabla central del sistema, almacena productos scrapeados.
-
-Campos principales:
-- `id`: identificador único
-- `store`: tienda de origen
-- `name`: nombre del producto
-- `price`: precio
-- `currency`: moneda
-- `url`: identificador único del producto
-- `scraped_at`: timestamp de actualización
-
-Se utiliza `ON CONFLICT (url)` para evitar duplicados y mantener los datos actualizados.
+tests/
+```
 
 ---
 
-### Tabla `users`
+## Flujo del Sistema
 
-Gestiona autenticación.
+### 1. Recolección de Datos
 
-Campos:
-- `id`
-- `username`
-- `password_hash`
-- `is_active`
-- `created_at`
+El sistema ejecuta scraping concurrente sobre múltiples tiendas utilizando un cliente HTTP centralizado configurado con TLS Impersonation.
+
+### 2. Procesamiento
+
+Los productos son:
+
+* Normalizados
+* Filtrados
+* Deduplicados en memoria
+
+antes de persistirse.
+
+### 3. Persistencia
+
+Los datos se almacenan mediante Bulk Upserts utilizando características específicas de PostgreSQL:
+
+```sql
+INSERT ... ON CONFLICT DO UPDATE
+```
+
+Durante la misma transacción también se registra el historial de precios.
+
+### 4. Exposición de API
+
+FastAPI expone la información mediante endpoints REST protegidos por:
+
+* Rate Limiting
+* Middleware de autenticación
+* Exception Handlers
+* Validación CORS
+
+---
+
+# Stack Tecnológico
+
+| Tecnología       | Uso                    |
+| ---------------- | ---------------------- |
+| Python           | Lenguaje principal     |
+| FastAPI          | Framework backend      |
+| Uvicorn          | Servidor ASGI          |
+| PostgreSQL       | Base de datos          |
+| SQLAlchemy       | ORM                    |
+| Alembic          | Migraciones            |
+| psycopg2-binary  | Driver PostgreSQL      |
+| curl_cffi        | TLS Impersonation      |
+| SlowAPI          | Rate Limiting          |
+| BeautifulSoup    | Parsing HTML           |
+| Jinja2           | Renderizado HTML       |
+| PyJWT            | JWT Authentication     |
+| Passlib (bcrypt) | Hashing de contraseñas |
+| Docker           | Contenedorización      |
+| Render           | Despliegue             |
 
 ---
 
-## 5. API REST
+# Base de Datos
 
-Endpoints principales:
+## Tabla `products`
 
-- `GET /health` → estado del sistema  
-- `GET /products/` → listado con filtros  
-- `GET /products/compare/` → comparación por tienda  
-- `GET /products/stores/` → resumen por store  
-- `GET /products/cheapest/` → producto más barato por tienda  
-- `GET /products/{id}` → detalle de producto  
+Almacena el estado actual de cada producto scrapeado.
 
-Endpoints de autenticación:
+Características principales:
 
-- `GET /users/login` → formulario HTML  
-- `POST /users/login` → login + JWT  
-- `GET /users/dashboard` → vista protegida  
-- `POST /users/logout` → cierre de sesión  
+* Deduplicación por URL
+* Actualización automática de precios
+* Timestamp de scraping
+* Índices para optimizar búsquedas
 
 ---
 
-## 6. Sistema de autenticación
+## Tabla `price_history`
 
-### Flujo
-
-1. Usuario envía credenciales
-2. Se valida contra DB
-3. Se genera JWT con `sub`
-4. Se guarda en cookie HTTP-only
-5. Se valida en cada request protegida
+Registra automáticamente cada variación de precio detectada durante los procesos de actualización.
 
 ---
+
+## Tabla `users`
+
+Gestiona credenciales y acceso al dashboard administrativo.
+
+---
+
+## Tabla `user_favorites`
+
+Implementa una relación muchos-a-muchos entre usuarios y productos favoritos.
+
+---
+
+# API REST
+
+## Endpoints Principales
+
+| Método | Endpoint              | Descripción                       |
+| ------ | --------------------- | --------------------------------- |
+| GET    | `/health`             | Estado general del sistema        |
+| GET    | `/health/db`          | Estado de conexión con PostgreSQL |
+| GET    | `/products/`          | Listado paginado de productos     |
+| GET    | `/products/compare/`  | Comparación entre tiendas         |
+| GET    | `/products/stores/`   | Resumen por tienda                |
+| GET    | `/products/cheapest/` | Producto más barato por tienda    |
+
+---
+
+## Endpoints de Usuario
+
+| Método   | Endpoint                          | Descripción         |
+| -------- | --------------------------------- | ------------------- |
+| GET/POST | `/users/login`                    | Inicio de sesión    |
+| POST     | `/users/register`                 | Registro de usuario |
+| GET      | `/users/dashboard`                | Dashboard protegido |
+| POST     | `/users/dashboard/favorites/{id}` | Agregar favorito    |
+| DELETE   | `/users/dashboard/favorites/{id}` | Eliminar favorito   |
+| POST     | `/users/logout`                   | Cierre de sesión    |
+
+---
+
+# Seguridad
+
+## Autenticación
+
+La autenticación se implementa mediante JWT almacenado en cookies seguras:
+
+* `HttpOnly`
+* `SameSite="lax"`
+* `Secure=True` en producción
+
+---
+
+## Protección de API
+
+### CORS Estricto
+
+La API únicamente acepta requests provenientes de dominios definidos en:
+
+```env
+ALLOWED_ORIGINS
+```
+
+---
+
+### Rate Limiting
+
+Protección contra abuso:
+
+* Login: `5 requests/min`
+* Registro: `3 requests/min`
+* Endpoints públicos: `30 requests/min`
+
+---
+
+## Mitigación Anti-Bot
+
+El sistema utiliza TLS Impersonation y fingerprints consistentes para reducir bloqueos automáticos por parte de tiendas objetivo.
+
+---
+
+# Manejo de Errores
+
+La API implementa handlers globales para devolver respuestas consistentes.
+
+## Formato estándar
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": 404,
+    "message": "Product not found"
+  },
+  "method": "GET",
+  "path": "/products/99",
+  "timestamp": "2026-05-09T01:41:34"
+}
+```
+
+---
+
+## Manejo de Error 429
+
+Cuando se excede el límite de peticiones:
+
+* Clientes API reciben JSON
+* Navegadores reciben una vista HTML amigable (`error429.html`)
+
+---
+
+# Despliegue
+
+## API
+
+La API se despliega en Render utilizando:
+
+```yaml
+uvicorn api.main:app
+```
+
+---
+
+## Scraping Programado
+
+GitHub Actions ejecuta procesos automáticos de scraping mediante contenedores Docker efímeros.
+
+---
+
+## Variables de Entorno
+
+### Base de Datos
+
+```env
+DATABASE_URL=
+```
 
 ### Seguridad
 
-- Hashing con bcrypt
-- JWT firmado con `SECRET_KEY`
-- Expiración configurable
-- Cookie con `httponly=True` y `samesite=lax`
+```env
+SECRET_KEY=
+ALGORITHM=
+TOKEN_SECONDS_EXPIRE=
+ALLOWED_ORIGINS=
+```
+
+### Scraping
+
+```env
+SCRABBY_SEARCH_QUERY=
+SCRABBY_RESULT_LIMIT=
+SCRABBY_MIN_PRICE=
+```
+
+### Cliente HTTP
+
+```env
+SCRABBY_TLS_IMPERSONATE=
+SCRABBY_HTTP_TIMEOUT=
+SCRABBY_HTTP_MAX_ATTEMPTS=
+```
 
 ---
 
-## 7. Manejo de errores
+# Testing
 
-- `HTTPException` para errores REST
-- `400` → validación de parámetros
-- `404` → recurso no encontrado
-- `401` → login inválido (HTML)
+La suite de pruebas utiliza:
 
-En autenticación:
-- Se re-renderiza el login en lugar de devolver JSON
+* `unittest`
+* `FastAPI TestClient`
+* Mocking del cliente HTTP
 
----
+## Ejecutar tests
 
-## 8. Templates y estáticos
-
-Se usa Jinja2 para:
-
-- `login.html`
-- `dashboard.html`
-
-Los archivos estáticos existen pero aún no están montados con `StaticFiles`.
+```bash
+python -m unittest discover tests
+```
 
 ---
 
-## 9. Deploy
+# Decisiones de Diseño
 
-### Render
+## SQLAlchemy + PostgreSQL Nativo
 
-Configuración:
-- `uvicorn api.main:app`
-- variables de entorno (`DATABASE_URL`, `SECRET_KEY`)
-- health check `/health`
+El proyecto combina ORM con características avanzadas del dialecto PostgreSQL:
 
----
+* `ON CONFLICT`
+* `RETURNING`
+* Bulk Operations
 
-### Docker
-
-El contenedor actual ejecuta el scraper, no la API.
+Esto permite procesar grandes volúmenes de datos sin consumir memoria innecesariamente.
 
 ---
 
-## 10. Testing
+## Cliente HTTP Centralizado
 
-Se utilizan:
-
-- `unittest`
-- `TestClient`
-
-Incluye:
-- health check
-- validaciones de parámetros
-- endpoints de productos
-
-No incluye:
-- autenticación
-- JWT
-- scraping
+Todas las requests salientes utilizan un cliente HTTP compartido para mantener una huella TLS homogénea y reducir bloqueos anti-bot.
 
 ---
 
-## 11. Decisiones de diseño
+## Respuestas Dual JSON/HTML
 
-- Uso de **SQL directo** en lugar de ORM para mayor control y simplicidad en el MVP.
-- Uso de **JWT en cookies HTTP-only** en lugar de headers para facilitar un flujo web tradicional.
-- Separación en capas (`routers`, `services`, `utils`) para mantener responsabilidades claras.
-- Uso de **FastAPI** por su tipado, validación automática y generación de documentación.
-- Estrategia de **upsert** basada en URL para evitar duplicados.
+Endpoints como `/products/` detectan automáticamente el tipo de cliente mediante los headers HTTP y responden con:
 
----
-
-## 12. Posibles mejoras
-
-### Arquitectura
-- Implementar migraciones (Alembic)
-- Separar capa de acceso a datos
-
-### Seguridad
-- Activar `secure=True` en cookies
-- Agregar protección CSRF
-
-### Funcionalidad
-- Histórico de precios
-- Más tiendas
-- Configuración dinámica de scraping
-
-### Testing
-- Tests de autenticación
-- Tests de JWT
-
-### DevOps
-- Logging estructurado
-- Observabilidad
-- Pipeline CI/CD completo
+* JSON para consumo API
+* HTML renderizado para navegadores
 
 ---
 
-## Conclusión
+# Conclusión
 
-Scrabby representa una base sólida de backend moderno, integrando scraping, persistencia, API REST y autenticación.
+Scrabby es un proyecto backend orientado a la recolección, procesamiento y exposición eficiente de datos de hardware en tiempo real.
 
-El proyecto demuestra comprensión del ciclo completo de desarrollo backend, desde la obtención de datos hasta su exposición segura, y establece una base escalable para futuras mejoras.
+El sistema integra scraping distribuido, persistencia optimizada, autenticación segura y mecanismos de protección típicos de APIs modernas, manteniendo una arquitectura modular preparada para seguir escalando.

@@ -1,419 +1,409 @@
 # Scrabby
 
-Scrabby is a scraper and API for comparing PC component prices across Argentine stores. The project fetches products from multiple sources, filters irrelevant results, saves a local JSON snapshot, stores the data in PostgreSQL, and exposes it through FastAPI.
+Scrabby is a Full Stack price intelligence platform focused on PC hardware tracking across Argentine e-commerce stores.
 
-Documentation: /docs/documentacion-app.md
-## Features
+The system combines large-scale web scraping, PostgreSQL persistence, historical price tracking, authentication, rate limiting, and a REST API built with FastAPI.
 
-- Product scraping from Mercado Libre and Fravega.
-- Result filtering based on minimum price and blacklist keywords.
-- Local snapshot persistence in `data/products.json`.
-- PostgreSQL persistence with `upsert` behavior based on `url`.
-- REST API with interactive Swagger documentation.
+It currently aggregates products from multiple stores including Mercado Libre, Frávega, Mexx, Quantum Hardstore, 710Tech, ArmyTech, and Rocket Hard.
 
-## Architecture
+---
 
-The project is split into two main parts: the scraping pipeline and the API layer.
+# Features
 
-### Scraping pipeline
+## Price Aggregation Engine
 
-1. [main.py](/Scrabby/main.py:1) orchestrates the full process.
-2. [scrappers/fravega.py](/Scrabby/scrappers/fravega.py:1) queries Fravega's API and normalizes products.
-3. [scrappers/mercadolibre.py](/Scrabby/scrappers/mercadolibre.py:1) scrapes Mercado Libre search HTML, reads `ld+json` product data, and normalizes products.
-4. [main.py](/Scrabby/main.py:7) filters results with `is_valid_product`.
-5. [main.py](/Scrabby/main.py:33) saves a local snapshot in `data/products.json`.
-6. [database/database.py](/Scrabby/database/database.py:10) inserts or updates records in the `products` table.
+* Multi-store GPU price scraping.
+* Parallel scraping pipeline.
+* Product normalization and deduplication.
+* Invalid product filtering (accessories, unrealistic prices, duplicates).
+* Historical price tracking.
 
-### API layer
+## Backend API
 
-1. [api/main.py](/Scrabby/api/main.py:1) creates the FastAPI app and registers the router.
-2. [api/routers/products.py](/Scrabby/api/routers/products.py:1) exposes the API endpoints.
-3. [api/dependencies.py](/Scrabby/api/dependencies.py:1) manages one database connection per request.
-4. [api/schemas/product.py](/Scrabby/api/schemas/product.py:1) and [api/schemas/store.py](/Scrabby/api/schemas/store.py:1) define the response models.
+* REST API built with FastAPI.
+* Interactive Swagger/OpenAPI documentation.
+* Pagination, filtering, sorting, and search.
+* Store comparison endpoints.
+* Cheapest-product aggregation endpoints.
+* JSON + HTML dual responses depending on client type.
 
-## Project structure
+## Authentication & Security
+
+* JWT authentication.
+* Session cookies with:
+
+  * `HttpOnly`
+  * `SameSite=Lax`
+  * `Secure` in production
+* Protected dashboard routes.
+* Favorite products system.
+* Global exception handlers.
+* Standardized API error responses.
+* Rate limiting with SlowAPI.
+* Strict CORS configuration.
+
+## Infrastructure
+
+* PostgreSQL + SQLAlchemy ORM.
+* Alembic database migrations.
+* Automated daily scraping with GitHub Actions.
+* Render deployment.
+* TLS impersonation for WAF avoidance using `curl_cffi`.
+
+---
+
+# Live API
+
+Production URL:
+
+```text
+https://scrabby-api.onrender.com
+```
+
+Swagger Documentation:
+
+```text
+https://scrabby-api.onrender.com/docs
+```
+
+---
+
+# Tech Stack
+
+## Backend
+
+* Python
+* FastAPI
+* Uvicorn
+* SQLAlchemy
+* PostgreSQL
+* psycopg2-binary
+* Alembic
+* Pydantic
+
+## Scraping
+
+* curl_cffi
+* BeautifulSoup4
+
+## Security
+
+* PyJWT
+* Passlib (bcrypt)
+* SlowAPI
+
+## Frontend
+
+* Jinja2
+* Tailwind CSS
+* DaisyUI
+* Alpine.js
+
+## DevOps & Deployment
+
+* Docker
+* GitHub Actions
+* Render
+* Supabase PostgreSQL
+
+---
+
+# Architecture
 
 ```text
 Scrabby/
-|-- api/
-|   |-- main.py
-|   |-- dependencies.py
-|   |-- routers/
-|   |   `-- products.py
-|   `-- schemas/
-|       |-- product.py
-|       `-- store.py
-|-- database/
-|   `-- database.py
-|-- data/
-|   `-- products.json
-|-- scrappers/
-|   |-- fravega.py
-|   `-- mercadolibre.py
-|-- utils/
-|-- main.py
-|-- requirements.txt
-`-- Dockerfile
+│
+├── api/
+│   ├── core/
+│   │   └── handlers.py
+│   ├── routers/
+│   │   ├── auth.py
+│   │   └── products.py
+│   ├── services/
+│   ├── templates/
+│   ├── limiter.py
+│   ├── dependencies.py
+│   ├── security.py
+│   └── main.py
+│
+├── database/
+│   ├── database.py
+│   ├── models.py
+│   ├── crud.py
+│   └── migrations/
+│
+├── scrappers/
+│   ├── http_client.py
+│   ├── mercadolibre.py
+│   ├── fravega.py
+│   ├── mexx.py
+│   ├── quantumhardstore.py
+│   ├── armytech.py
+│   ├── rockethard.py
+│   └── tech710.py
+│
+├── tests/
+│
+├── data/
+│   └── products.json
+│
+├── main.py
+├── requirements.txt
+├── Dockerfile
+└── render.yaml
 ```
+
+---
+
+# Installation
 
 ## Requirements
 
-- Python 3.12
-- PostgreSQL
-- `DATABASE_URL` environment variable
+* Python 3.11+
+* PostgreSQL
+* Git
 
-Example:
+---
 
-```env
-DATABASE_URL=postgresql://user:password@localhost:5432/scrabby
-SCRABBY_SEARCH_QUERY=placas de video
-SCRABBY_RESULT_LIMIT=50
+## Clone the repository
+
+```bash
+git clone <repository-url>
+cd Scrabby
 ```
 
-## Installation
+---
+
+## Create virtual environment
+
+### Windows
 
 ```bash
 python -m venv venv
 venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+---
+
+## Install dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-For local test development with unittest:
+---
 
-```bash
-python -m unittest discover tests
+# Environment Variables
+
+Create a `.env` file:
+
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/scrabby
+
+SECRET_KEY=your_secret_key
+ALGORITHM=HS256
+TOKEN_SECONDS_EXPIRE=3600
+
+ALLOWED_ORIGINS=http://127.0.0.1:8000
+
+SCRABBY_SEARCH_QUERY=placas de video
+SCRABBY_RESULT_LIMIT=50
+SCRABBY_MIN_PRICE=100000
+
+SCRABBY_TLS_IMPERSONATE=chrome136
+SCRABBY_HTTP_TIMEOUT=15
+SCRABBY_HTTP_MAX_ATTEMPTS=3
 ```
 
-For local test development with pytest:
+---
+
+# Database Migrations
+
+Apply migrations:
 
 ```bash
-pip install -r requirements-dev.txt
+alembic upgrade head
 ```
 
-## Run the scraper
+Create a new migration:
+
+```bash
+alembic revision -m "describe change"
+```
+
+If the database schema already exists manually:
+
+```bash
+alembic stamp head
+```
+
+---
+
+# Running the Scraper
+
+Default execution:
 
 ```bash
 python main.py
 ```
 
-You can override the default search at runtime:
+Custom search:
 
 ```bash
-python main.py rtx 3060 ti
+python main.py rtx 4070
+```
+
+Custom limit:
+
+```bash
 python main.py "placas de video" --limit 100
 ```
 
-The scraper:
+---
 
-1. Queries the configured stores.
-2. Filters invalid products.
-3. Sorts them by price.
-4. Saves a local JSON file.
-5. Inserts or updates the database.
-6. Records each valid product price in `price_history`.
+# Running the API
 
-## Run the API
+Development server:
 
 ```bash
-venv\Scripts\uvicorn api.main:app --reload
+uvicorn api.main:app --reload
 ```
 
-Swagger UI is available at:
+API documentation:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-## Database schema and migrations
+---
 
-The expected PostgreSQL schema is documented in `schema.sql`. Runtime schema changes are versioned with Alembic under `database/migrations`.
+# Main Endpoints
 
-Detailed notes about the authentication tests, Alembic setup, schema SQL, and Supabase usage are available in `docs/tests-auth-alembic-schema.md`.
+## Health Check
 
-Alembic reads `DATABASE_URL` from the environment or `.env`.
-
-For an empty database:
-
-```bash
-venv\Scripts\python -m alembic upgrade head
+```http
+GET /health
+GET /health/db
 ```
 
-If the Supabase database already has the same `products` and `users` tables created manually, mark the current schema as applied instead of recreating it:
+---
 
-```bash
-venv\Scripts\python -m alembic stamp head
-```
-
-To create the next migration:
-
-```bash
-venv\Scripts\python -m alembic revision -m "describe change"
-```
-
-## Endpoints
-
-Local base URL:
-
-```text
-http://127.0.0.1:8000
-```
-
-User endpoints:
-
-- `GET /users/login`: login form.
-- `POST /users/login`: login and JWT cookie creation.
-- `GET /users/register`: register form.
-- `POST /users/register`: user creation.
-- `GET /users/dashboard`: protected dashboard view.
-- `GET /users/dashboard/data`: authenticated dashboard data with favorite GPUs.
-- `POST /users/logout`: logout and cookie cleanup.
-
-### GET `/products/`
-
-Returns products with filtering, pagination, and sorting.
-
-Query params:
-
-- `search`: partial match against `name`.
-- `store`: filter by store.
-- `limit`: maximum number of results. Default `20`.
-- `offset`: pagination offset. Default `0`.
-- `order_by`: `price`, `name`, or `scraped_at`.
-- `order_dir`: `asc` or `desc`.
-
-Examples:
+## Products
 
 ```http
 GET /products/
-GET /products/?search=rtx
-GET /products/?store=fravega&order_by=name&order_dir=desc
-GET /products/?search=3060&limit=10&offset=20
-```
-
-Response:
-
-```json
-[
-  {
-    "id": 1,
-    "store": "fravega",
-    "name": "RTX 3060 Ti Graphics Card",
-    "price": 499999.0,
-    "currency": "ARS",
-    "url": "https://www.fravega.com/p/example/",
-    "scraped_at": "2026-04-24T10:00:00"
-  }
-]
-```
-
-Errors:
-
-- `400` if `order_by` or `order_dir` are invalid.
-- `404` if no products are found.
-
-### GET `/products/compare/`
-
-Searches products by name and groups them by store.
-
-Example:
-
-```http
-GET /products/compare/?query=rtx%203060
-```
-
-Response:
-
-```json
-{
-  "fravega": [
-    {
-      "id": 1,
-      "store": "fravega",
-      "name": "RTX 3060 Ti Graphics Card",
-      "price": 499999.0,
-      "currency": "ARS",
-      "url": "https://www.fravega.com/p/example/",
-      "scraped_at": "2026-04-24T10:00:00"
-    }
-  ],
-  "mercadolibre": [
-    {
-      "id": 2,
-      "store": "mercadolibre",
-      "name": "RTX 3060 Ti MSI",
-      "price": 515000.0,
-      "currency": "ARS",
-      "url": "https://articulo.mercadolibre.com.ar/example",
-      "scraped_at": "2026-04-24T10:05:00"
-    }
-  ]
-}
-```
-
-Errors:
-
-- `404` if no products are found.
-
-### GET `/products/stores/`
-
-Returns a store-level summary of products.
-
-Example:
-
-```http
+GET /products/compare/
 GET /products/stores/
-```
-
-Response:
-
-```json
-[
-  {
-    "store": "fravega",
-    "total": 12,
-    "last_scraped": "2026-04-24T10:00:00"
-  },
-  {
-    "store": "mercadolibre",
-    "total": 35,
-    "last_scraped": "2026-04-24T10:05:00"
-  }
-]
-```
-
-### GET `/products/cheapest/`
-
-Returns the cheapest product for each store.
-
-Example:
-
-```http
 GET /products/cheapest/
+GET /products/{id}
+GET /products/{id}/history
 ```
 
-Response:
+Features:
 
-```json
-[
-  {
-    "id": 1,
-    "store": "fravega",
-    "name": "RTX 3060 Ti Graphics Card",
-    "price": 499999.0,
-    "currency": "ARS",
-    "url": "https://www.fravega.com/p/example/",
-    "scraped_at": "2026-04-24T10:00:00"
-  },
-  {
-    "id": 2,
-    "store": "mercadolibre",
-    "name": "RTX 3060 Ti MSI",
-    "price": 515000.0,
-    "currency": "ARS",
-    "url": "https://articulo.mercadolibre.com.ar/example",
-    "scraped_at": "2026-04-24T10:05:00"
-  }
-]
-```
+* Pagination
+* Filtering
+* Search
+* Sorting
+* Historical tracking
 
-### GET `/products/{id}`
+---
 
-Returns a specific product by ID.
-
-Example:
+## Authentication
 
 ```http
-GET /products/1
+POST /users/login
+POST /users/register
+POST /users/logout
+GET /users/dashboard
 ```
 
-Response:
+---
+
+# Standardized Error Responses
+
+Example:
 
 ```json
 {
-  "id": 1,
-  "store": "fravega",
-  "name": "RTX 3060 Ti Graphics Card",
-  "price": 499999.0,
-  "currency": "ARS",
-  "url": "https://www.fravega.com/p/example/",
-  "scraped_at": "2026-04-24T10:00:00"
+  "success": false,
+  "error": {
+    "type": "validation_error",
+    "code": 422,
+    "message": "Validation error",
+    "details": []
+  },
+  "method": "GET",
+  "timestamp": "2026-05-09T01:41:34.381132",
+  "path": "/products/"
 }
 ```
 
-Errors:
+---
 
-- `404` if the product does not exist.
+# Security Features
 
-### GET `/products/{id}/history`
+* JWT authentication.
+* Secure cookie handling.
+* Strict CORS policy.
+* Rate limiting.
+* Brute-force protection.
+* Anti-DoS protection.
+* TLS fingerprint impersonation.
+* Global exception handling.
 
-Returns the recorded price history for a product.
+---
 
-Example:
+# Automated Scraping
 
-```http
-GET /products/1/history
+GitHub Actions runs scheduled scraping jobs daily to refresh the production database automatically.
+
+Workflow location:
+
+```text
+.github/workflows/
 ```
 
-Query params:
+---
 
-- `limit`: maximum number of history points. Default `100`.
-- `offset`: pagination offset. Default `0`.
+# Testing
 
-Response:
+Run unit tests:
 
-```json
-[
-  {
-    "id": 1,
-    "product_id": 1,
-    "price": 499999.0,
-    "currency": "ARS",
-    "recorded_at": "2026-05-13T12:00:00Z"
-  }
-]
+```bash
+python -m unittest discover tests
 ```
 
-Errors:
+---
 
-- `404` if the product does not exist.
+# Project Goals
 
-## Data model
+Scrabby was created as a learning-oriented backend engineering project focused on:
 
-The API works against a `products` table with these columns:
+* Scalable API architecture.
+* High-volume data persistence.
+* Real-world scraping challenges.
+* Security best practices.
+* Production deployment workflows.
+* ORM optimization.
+* Modular backend design.
 
-- `id`
-- `store`
-- `name`
-- `price`
-- `currency`
-- `url`
-- `scraped_at`
+---
 
-The persistence layer uses `ON CONFLICT (url)` to update existing prices and scrape timestamps.
+# Author
 
-Price observations are stored in `price_history`:
+Lucas Morabito
+Backend Developer focused on Python and FastAPI.
 
-- `id`
-- `product_id`
-- `price`
-- `currency`
-- `recorded_at`
+Portfolio:
 
-`price_history.product_id` references `products.id` with `ON DELETE CASCADE`.
-
-User favorites are stored in `user_favorites`:
-
-- `id`
-- `user_id`
-- `product_id`
-- `created_at`
-
-`user_favorites` links users and products and enforces one favorite per product per user through `uq_user_favorites_user_product`.
-
-## Notes
-
-- `/products/cheapest/` uses `DISTINCT ON (store)`, which is PostgreSQL-specific.
-- `/products/{id}/history` is intended for price charts and dashboard visualizations.
-- Swagger is generated automatically from FastAPI metadata and `response_model` declarations.
-- The main scraper defaults to `SCRABBY_SEARCH_QUERY` or `placas de video`; you can also pass the query as CLI arguments.
-- Mercado Libre API access is currently disabled in the scraper. The active implementation uses the public search page HTML and parses embedded `ld+json` product data until API authorization is available.
+```text
+https://lucasmorabito.vercel.app/
+```
