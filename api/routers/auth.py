@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
-from database.database import SessionLocal # <-- Importamos la nueva fábrica de sesiones
+from database.database import SessionLocal
 from api.dependencies import get_db
 from api.limiter import limiter
 from api.schemas.auth import DashboardDataResponse
@@ -47,13 +47,12 @@ def _get_active_user_or_redirect(request: Request):
         has_session_cookie = ACCESS_TOKEN_COOKIE_NAME in request.cookies
         return None, redirect_to_login(clear_session=has_session_cookie)
 
-    db = SessionLocal() # <-- Usamos la sesión de SQLAlchemy
+    db = SessionLocal()
     try:
         user = get_user_by_username(username, db)
     finally:
         db.close()
 
-    # Ojo: ahora user es un objeto, usamos notación de punto
     if not user or not user.is_active:
         return None, redirect_to_login(clear_session=True)
 
@@ -209,10 +208,12 @@ def add_favorite(product_id: int, request: Request, db: Session = Depends(get_db
         db.add(new_fav)
         db.commit()
         return {"status": "success", "message": "Producto guardado"}
-    except IntegrityError:
+    except IntegrityError as e:
         db.rollback()
-        # Si da error de integridad es porque ya estaba en favoritos, no hacemos nada
-        return {"status": "success", "message": "Producto guardado"}
+        error_msg = str(e.orig).lower()
+        if "unique constraint" in error_msg or "duplicate key" in error_msg:
+            return {"status": "success", "message": "El producto ya estaba en favoritos"}
+        raise HTTPException(status_code=400, detail="No se pudo guardar el favorito debido a un error de integridad")
 
 
 @router.delete("/dashboard/favorites/{product_id}")

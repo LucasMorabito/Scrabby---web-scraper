@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text, Numeric, DateTime, Boolean, ForeignKey
+from sqlalchemy.sql import func
 from database.database import Base
 
 class Product(Base):
@@ -27,7 +28,7 @@ class UserFavorite(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     product_id = Column(Integer, ForeignKey("products.id"))
-    created_at = Column(DateTime(timezone=True))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class PriceHistory(Base):
     __tablename__ = "price_history"
