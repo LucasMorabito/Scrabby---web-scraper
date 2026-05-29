@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Catalogo de GPUs - Scrabby{% endblock %}
+{% block title %}Catálogo de GPUs - Scrabby{% endblock %}
 
 {% block content %}
 <div x-data="{ errorMsg: '' }" class="relative">
 
+    <!-- Notificación Flotante (Toast) -->
     <div 
         x-show="errorMsg" 
         x-cloak
         @click="errorMsg = ''"
-        class="fixed top-6 right-6 z-50 max-w-md cursor-pointer rounded-xl border border-amber-500/40 bg-slate-950/95 p-4 text-amber-200 shadow-2xl shadow-slate-950/80 backdrop-blur-md flex items-start gap-3 transition-all duration-300"
+        class="fixed top-6 right-6 z-50 max-w-md cursor-pointer rounded-2xl border border-red-500/20 bg-white dark:bg-zinc-900/95 p-4 text-slate-900 dark:text-zinc-200 shadow-2xl backdrop-blur-md flex items-start gap-3 transition-all duration-300"
         x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 transform translate-y-2 sm:translate-y-0 sm:translate-x-4"
         x-transition:enter-end="opacity-100 transform translate-y-0 sm:translate-x-0"
@@ -17,38 +18,42 @@
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
     >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
         <div>
-            <p class="font-bold text-slate-50 text-sm">Acción Restringida</p>
-            <p class="text-xs text-slate-400 mt-0.5" x-text="errorMsg"></p>
+            <p class="font-bold text-slate-900 dark:text-white text-sm">Acción Restringida</p>
+            <p class="text-xs text-slate-500 dark:text-zinc-400 mt-0.5" x-text="errorMsg"></p>
         </div>
     </div>
 
+    <!-- Encabezado y Filtros -->
     <section class="mb-8">
-        <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between bg-white dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-700/50 p-6 sm:p-8 rounded-3xl shadow-sm">
             <div>
-                <p class="text-sm font-semibold uppercase tracking-wide text-cyan-400">Comparador de hardware</p>
-                <h1 class="mt-2 text-3xl font-bold text-slate-50">Catalogo de GPUs</h1>
-                <p class="mt-2 text-sm text-slate-400">
-                    Explora precios scrapeados de tiendas argentinas y filtra por modelo o marca.
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-500/10 border border-brand-200 dark:border-brand-500/20 text-xs font-semibold text-brand-600 dark:text-brand-400 mb-3">
+                    Comparador en Tiempo Real
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Catálogo de GPUs</h1>
+                <p class="mt-2 text-sm text-slate-500 dark:text-zinc-400 max-w-xl">
+                    Explora precios actualizados de tiendas argentinas. Usa los filtros para encontrar el componente exacto que necesitas.
                 </p>
             </div>
 
-            <form method="GET" class="flex w-full flex-col gap-3 md:w-auto md:flex-row md:items-center">
+            <form method="GET" class="flex w-full flex-col gap-3 sm:flex-row lg:w-auto lg:items-center">
                 <input type="hidden" name="page" value="1" />
                 <input type="hidden" name="per_page" value="{{ pagination.per_page }}" />
                 <input type="hidden" name="order_by" value="price" />
 
-                <div x-data="{ dropdownOpen: false }" class="relative w-full md:w-44" @click.away="dropdownOpen = false">
+                <!-- Dropdown Tiendas -->
+                <div x-data="{ dropdownOpen: false }" class="relative w-full sm:w-44" @click.away="dropdownOpen = false">
                     <button
                         type="button"
                         @click="dropdownOpen = !dropdownOpen"
-                        class="inline-flex h-11 w-full items-center justify-between rounded-md border border-slate-700 bg-slate-950 px-4 text-sm text-slate-100 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
+                        class="inline-flex h-11 w-full items-center justify-between rounded-xl border border-slate-300 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-900 px-4 text-sm font-medium text-slate-700 dark:text-zinc-200 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 hover:border-slate-400 dark:hover:border-zinc-500"
                     >
-                        <span>Tiendas</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 transition-transform duration-200" :class="dropdownOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <span>Filtrar Tiendas</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 dark:text-zinc-500 transition-transform duration-200" :class="dropdownOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
@@ -56,7 +61,7 @@
                     <div
                         x-show="dropdownOpen"
                         x-cloak
-                        class="absolute left-0 mt-2 z-30 w-full rounded-md border border-slate-700 bg-slate-950 p-4 shadow-xl flex flex-col gap-3 max-h-64 overflow-y-auto"
+                        class="absolute left-0 mt-2 z-30 w-full sm:w-56 rounded-2xl border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-4 shadow-xl dark:shadow-2xl flex flex-col gap-3 max-h-72 overflow-y-auto"
                         x-transition:enter="transition ease-out duration-150"
                         x-transition:enter-start="opacity-0 transform scale-95"
                         x-transition:enter-end="opacity-100 transform scale-100"
@@ -67,54 +72,50 @@
                         <button
                             type="button"
                             @click="const cbs = $el.parentElement.querySelectorAll('input[name=\'store\']'); const target = Array.from(cbs).some(c => !c.checked); cbs.forEach(c => c.checked = target);"
-                            class="text-xs text-left text-cyan-400 hover:text-cyan-300 font-bold border-b border-slate-800 pb-2 mb-1"
+                            class="text-xs text-left text-brand-600 dark:text-brand-400 hover:text-brand-500 dark:hover:text-brand-300 font-bold border-b border-slate-100 dark:border-zinc-700 pb-2 mb-1 transition-colors"
                         >
-                            Seleccionar todas
+                            Seleccionar / Desmarcar todas
                         </button>
 
                         {% set selected_stores = request.query_params.getlist('store') %}
                         {% set no_stores_selected = selected_stores|length == 0 %}
                         
-                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
-                            <input type="checkbox" name="store" value="fravega" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if 'fravega' in selected_stores or no_stores_selected %}checked{% endif %}>
-                            <span>Fravega</span>
-                        </label>
-                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
-                            <input type="checkbox" name="store" value="mercadolibre" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if 'mercadolibre' in selected_stores or no_stores_selected %}checked{% endif %}>
-                            <span>Mercado Libre</span>
-                        </label>
-                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
-                            <input type="checkbox" name="store" value="mexx" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if 'mexx' in selected_stores or no_stores_selected %}checked{% endif %}>
-                            <span>Mexx</span>
-                        </label>
-                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
-                            <input type="checkbox" name="store" value="quantum" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if 'quantum' in selected_stores or no_stores_selected %}checked{% endif %}>
-                            <span>Quantum</span>
-                        </label>
-                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
-                            <input type="checkbox" name="store" value="rockethard" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if 'rockethard' in selected_stores or no_stores_selected %}checked{% endif %}>
-                            <span>Rocket Hard</span>
-                        </label>
-                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
-                            <input type="checkbox" name="store" value="710tech" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if '710tech' in selected_stores or no_stores_selected %}checked{% endif %}>
-                            <span>710Tech</span>
-                        </label>
-                        <label class="flex items-center gap-2 text-sm font-medium text-slate-300 cursor-pointer hover:text-slate-100">
-                            <input type="checkbox" name="store" value="armytech" class="h-4 w-4 rounded border-slate-700 bg-slate-900 text-cyan-500 focus:ring-cyan-500/20" {% if 'armytech' in selected_stores or no_stores_selected %}checked{% endif %}>
-                            <span>ArmyTech</span>
-                        </label>
+                        {% set tiendas_disponibles = [
+                            ('fravega', 'Frávega'),
+                            ('mercadolibre', 'Mercado Libre'),
+                            ('mexx', 'Mexx'),
+                            ('quantum', 'Quantum'),
+                            ('rockethard', 'Rocket Hard'),
+                            ('710tech', '710Tech'),
+                            ('armytech', 'ArmyTech')
+                        ] %}
+
+                        {% for value, label in tiendas_disponibles %}
+                            <label class="flex items-center gap-3 text-sm font-medium text-slate-700 dark:text-zinc-300 cursor-pointer hover:text-slate-900 dark:hover:text-white transition-colors group">
+                                <div class="relative flex items-center">
+                                    <input type="checkbox" name="store" value="{{ value }}" 
+                                           class="peer h-4 w-4 appearance-none rounded border border-slate-300 dark:border-zinc-600 bg-slate-50 dark:bg-zinc-900 checked:border-brand-500 checked:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 transition-all" 
+                                           {% if value in selected_stores or no_stores_selected %}checked{% endif %}>
+                                    <svg class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-3 w-3 text-white opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <span>{{ label }}</span>
+                            </label>
+                        {% endfor %}
                     </div>
                 </div>
 
-                <div x-data="{ sortOpen: false, currentOrder: '{{ order_dir }}' }" class="relative w-full md:w-44" @click.away="sortOpen = false">
+                <!-- Dropdown Ordenar -->
+                <div x-data="{ sortOpen: false, currentOrder: '{{ order_dir }}' }" class="relative w-full sm:w-44" @click.away="sortOpen = false">
                     <input type="hidden" name="order_dir" :value="currentOrder" />
                     <button
                         type="button"
                         @click="sortOpen = !sortOpen"
-                        class="inline-flex h-11 w-full items-center justify-between rounded-md border border-slate-700 bg-slate-950 px-4 text-sm text-slate-100 outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
+                        class="inline-flex h-11 w-full items-center justify-between rounded-xl border border-slate-300 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-900 px-4 text-sm font-medium text-slate-700 dark:text-zinc-200 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 hover:border-slate-400 dark:hover:border-zinc-500"
                     >
                         <span x-text="currentOrder === 'asc' ? 'Menor precio' : 'Mayor precio'"></span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 transition-transform duration-200" :class="sortOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 dark:text-zinc-500 transition-transform duration-200" :class="sortOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
@@ -122,7 +123,7 @@
                     <div
                         x-show="sortOpen"
                         x-cloak
-                        class="absolute left-0 mt-2 z-30 w-full rounded-md border border-slate-700 bg-slate-950 p-2 shadow-xl flex flex-col gap-1"
+                        class="absolute left-0 mt-2 z-30 w-full rounded-2xl border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-2 shadow-xl dark:shadow-2xl flex flex-col gap-1"
                         x-transition:enter="transition ease-out duration-150"
                         x-transition:enter-start="opacity-0 transform scale-95"
                         x-transition:enter-end="opacity-100 transform scale-100"
@@ -133,129 +134,101 @@
                         <button
                             type="button"
                             @click="currentOrder = 'asc'; sortOpen = false; $nextTick(() => $el.form.submit())"
-                            class="w-full text-left rounded px-3 py-2 text-sm text-slate-300 hover:bg-slate-900 hover:text-slate-100 transition"
-                            :class="currentOrder === 'asc' ? 'bg-slate-900 text-cyan-400 font-semibold' : ''"
+                            class="w-full text-left rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-700 hover:text-slate-900 dark:hover:text-white transition-colors"
+                            :class="currentOrder === 'asc' ? 'bg-slate-50 dark:bg-zinc-900/50 text-brand-600 dark:text-brand-400 font-bold' : ''"
                         >
                             Menor precio
                         </button>
                         <button
                             type="button"
                             @click="currentOrder = 'desc'; sortOpen = false; $nextTick(() => $el.form.submit())"
-                            class="w-full text-left rounded px-3 py-2 text-sm text-slate-300 hover:bg-slate-900 hover:text-slate-100 transition"
-                            :class="currentOrder === 'desc' ? 'bg-slate-900 text-cyan-400 font-semibold' : ''"
+                            class="w-full text-left rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-700 hover:text-slate-900 dark:hover:text-white transition-colors"
+                            :class="currentOrder === 'desc' ? 'bg-slate-50 dark:bg-zinc-900/50 text-brand-600 dark:text-brand-400 font-bold' : ''"
                         >
                             Mayor precio
                         </button>
                     </div>
                 </div>
 
-                <input
-                    type="text"
-                    name="search"
-                    placeholder="Buscar RTX 3060, RX 7600..."
-                    class="h-11 w-full rounded-md border border-slate-700 bg-slate-950 px-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 md:w-72"
-                    value="{{ request.query_params.get('search', '') }}"
-                />
-                <button
-                    type="submit"
-                    class="h-11 rounded-md bg-cyan-500 px-5 text-sm font-bold text-slate-950 shadow-lg shadow-cyan-950/30 transition hover:bg-cyan-400"
-                >
-                    Buscar
-                </button>
+                <!-- Buscador Textual -->
+                <div class="flex w-full sm:w-auto flex-1 gap-3">
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Ej: RTX 3060, RX 7600..."
+                        class="h-11 w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 text-sm text-slate-900 dark:text-zinc-100 outline-none transition placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+                        value="{{ request.query_params.get('search', '') }}"
+                    />
+                    <button
+                        type="submit"
+                        class="h-11 rounded-xl bg-brand-500 px-6 text-sm font-bold text-white shadow-md shadow-brand-500/20 dark:shadow-[0_0_15px_rgba(249,115,22,0.25)] transition hover:bg-brand-600 hover:-translate-y-0.5 focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900 shrink-0"
+                    >
+                        Buscar
+                    </button>
+                </div>
             </form>
         </div>
     </section>
 
-    <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <!-- Grilla de Productos -->
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {% for p in products %}
+            <!-- Normalización de tiendas para etiquetas -->
             {% set store_lower = p.store|lower %}
-            {% set card_border = 'border-slate-700' %}
-            {% set card_bg = 'bg-slate-950/70' %}
-            {% set badge_class = 'border-slate-600 text-slate-300' %}
-            {% set price_class = 'text-slate-100' %}
             {% set store_label = p.store|capitalize %}
-
-            {% if store_lower == 'fravega' or 'fravega' in store_lower %}
-                {% set card_border = 'border-violet-500' %}
-                {% set card_bg = 'bg-violet-950/30' %}
-                {% set badge_class = 'border-violet-500 text-violet-300' %}
-                {% set price_class = 'text-violet-400' %}
-                {% set store_label = 'Fravega' %}
-            {% elif store_lower == 'mercadolibre' or ('mercado' in store_lower and 'libre' in store_lower) %}
-                {% set card_border = 'border-amber-400' %}
-                {% set card_bg = 'bg-amber-950/30' %}
-                {% set badge_class = 'border-amber-400 text-amber-300' %}
-                {% set price_class = 'text-amber-300' %}
-                {% set store_label = 'Mercado Libre' %}
-            {% elif store_lower == 'mexx' or 'mexx' in store_lower %}
-                {% set card_border = 'border-emerald-500' %}
-                {% set card_bg = 'bg-emerald-950/30' %}
-                {% set badge_class = 'border-emerald-500 text-emerald-300' %}
-                {% set price_class = 'text-emerald-400' %}
-                {% set store_label = 'Mexx' %}
-            {% elif store_lower == 'quantum' or 'quantum' in store_lower %}
-                {% set card_border = 'border-pink-500' %}
-                {% set card_bg = 'bg-pink-950/30' %}
-                {% set badge_class = 'border-pink-500 text-pink-300' %}
-                {% set price_class = 'text-pink-400' %}
-                {% set store_label = 'Quantum' %}
-            {% elif store_lower == 'rockethard' or 'rockethard' in store_lower %}
-                {% set card_border = 'border-blue-500' %}
-                {% set card_bg = 'bg-blue-950/30' %}
-                {% set badge_class = 'border-blue-500 text-blue-300' %}
-                {% set price_class = 'text-blue-400' %}
-                {% set store_label = 'Rocket Hard' %}
-            {% elif store_lower == '710tech' or '710' in store_lower %}
-                {% set card_border = 'border-red-500' %}
-                {% set card_bg = 'bg-red-950/30' %}
-                {% set badge_class = 'border-red-500 text-red-300' %}
-                {% set price_class = 'text-red-400' %}
-                {% set store_label = '710Tech' %}
-            {% elif store_lower == 'armytech' or 'armytech' in store_lower %}
-                {% set card_border = 'border-yellow-500' %}
-                {% set card_bg = 'bg-yellow-950/30' %}
-                {% set badge_class = 'border-yellow-500 text-yellow-300' %}
-                {% set price_class = 'text-yellow-400' %}
-                {% set store_label = 'ArmyTech' %}
+            
+            {% if 'fravega' in store_lower %} {% set store_label = 'Frávega' %}
+            {% elif 'mercado' in store_lower or 'libre' in store_lower %} {% set store_label = 'Mercado Libre' %}
+            {% elif 'mexx' in store_lower %} {% set store_label = 'Mexx' %}
+            {% elif 'quantum' in store_lower %} {% set store_label = 'Quantum' %}
+            {% elif 'rocket' in store_lower %} {% set store_label = 'Rocket Hard' %}
+            {% elif '710' in store_lower %} {% set store_label = '710Tech' %}
+            {% elif 'army' in store_lower %} {% set store_label = 'ArmyTech' %}
             {% endif %}
 
             <article
                 x-data="{ guardado: {% if p.id in user_favorites %}true{% else %}false{% endif %}, cargando: false }"
-                class="flex min-h-[260px] flex-col rounded-lg border {{ card_border }} {{ card_bg }} p-5 shadow-xl shadow-slate-950/40 transition hover:-translate-y-0.5 hover:shadow-2xl"
+                class="flex min-h-[280px] flex-col rounded-3xl border border-slate-200 dark:border-zinc-700/50 bg-white dark:bg-zinc-800 p-6 shadow-sm dark:shadow-lg transition duration-300 hover:-translate-y-1 hover:border-brand-500/50 dark:hover:border-brand-500/50 hover:shadow-xl group"
             >
                 <div class="mb-4 flex items-center justify-between gap-3">
-                    <span class="inline-flex rounded-full border {{ badge_class }} px-3 py-1 text-xs font-bold uppercase tracking-wide">
+                    <span class="inline-flex rounded-full border border-slate-200 dark:border-zinc-600 bg-slate-50 dark:bg-zinc-900/50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-300">
                         {{ store_label }}
                     </span>
-                    <span class="h-2 w-2 rounded-full bg-cyan-400 shadow shadow-cyan-400/80"></span>
+                    <span class="flex h-2 w-2 rounded-full bg-brand-500 shadow-[0_0_8px_rgba(249,115,22,0.6)]"></span>
                 </div>
 
-                <h2 class="line-clamp-2 min-h-[3.5rem] text-base font-semibold leading-7 text-slate-100" title="{{ p.name }}">
+                <h2 class="line-clamp-2 h-10 md:h-12 text-sm md:text-base font-bold leading-tight text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors" title="{{ p.name }}">
                     {{ p.name }}
                 </h2>
 
-                <div class="mt-4">
-                    <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Precio detectado</p>
-                    <p class="mt-1 text-2xl font-extrabold {{ price_class }}">
-                        {{ p.currency }} {{ "{:,.0f}".format(p.price).replace(",", ".") }}
+                <div class="mt-4 md:mt-5">
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-zinc-500">Mejor Precio</p>
+                    <p class="mt-1 text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                        <span class="text-lg lg:text-xl text-slate-400 dark:text-zinc-400 mr-0.5">{{ p.currency if p.currency else '$' }}</span>{{ "{:,.0f}".format(p.price).replace(",", ".") }}
                     </p>
                 </div>
 
-                <p class="mt-3 text-xs text-slate-500">Actualizado: {{ p.scraped_at }}</p>
+                <p class="mt-2 text-xs text-slate-400 dark:text-zinc-500 font-medium">Actualizado: {{ p.scraped_at.strftime('%d/%m/%Y %H:%M') if p.scraped_at else 'N/A' }}</p>
 
-                <div class="mt-auto flex flex-col gap-2 pt-5 sm:flex-row">
+                <div class="mt-auto flex flex-col gap-2 pt-6 sm:flex-row xl:flex-col 2xl:flex-row">
                     <a
                         href="{{ p.url }}"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex h-10 flex-1 items-center justify-center rounded-md bg-violet-600 px-4 text-sm font-bold text-white transition hover:bg-violet-500"
+                        class="inline-flex h-10 flex-1 min-w-0 items-center justify-center rounded-xl bg-brand-50 dark:bg-brand-500/10 border border-brand-200 dark:border-brand-500/20 px-2 sm:px-3 text-sm font-bold text-brand-600 dark:text-brand-400 transition hover:bg-brand-500 hover:text-white dark:hover:text-white hover:border-brand-500"
                     >
-                        Ver en tienda
+                        <span class="truncate">Ver Tienda</span>
                     </a>
+                    
+                    <!-- Botón de Favorito -->
                     <button
                         type="button"
-                        class="inline-flex h-10 flex-1 items-center justify-center rounded-md border border-slate-600 px-4 text-sm font-semibold text-slate-200 transition hover:border-cyan-500 hover:text-cyan-300 disabled:cursor-not-allowed disabled:border-violet-500/60 disabled:text-violet-300"
-                        x-text="guardado ? 'Guardado' : (cargando ? 'Guardando...' : 'Favorito')"
+                        class="inline-flex h-10 flex-1 min-w-0 items-center justify-center rounded-xl px-2 sm:px-3 text-sm font-semibold transition-all duration-200 overflow-hidden"
+                        :class="
+                            guardado 
+                                ? 'bg-slate-50 dark:bg-zinc-800/80 text-brand-500 dark:text-brand-400 border border-slate-200 dark:border-zinc-700 cursor-default' 
+                                : 'border border-slate-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-slate-700 dark:text-zinc-200 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 dark:hover:text-brand-400'
+                        "
                         :disabled="cargando || guardado"
                         @click.prevent="
                             if (guardado) return;
@@ -264,77 +237,92 @@
                                 .then(async res => {
                                     const text = await res.text();
                                     let data = {};
-                                    try {
-                                        data = JSON.parse(text);
-                                    } catch (e) {
-                                        console.error('JSON parse error:', e);
-                                    }
+                                    try { data = JSON.parse(text); } catch (e) {}
                                     return { ok: res.ok, status: res.status, data, text };
                                 })
                                 .then(({ ok, status, data, text }) => {
-                                    if (ok) {
-                                        guardado = true;
-                                    } else {
-                                        if (status === 401) {
-                                            throw new Error('Primero tienes que iniciar sesión para guardar favoritos.');
-                                        }
-                                        const detail = data.detail || (data.error && data.error.message) || data.message || text || 'Error HTTP ' + status;
-                                        throw new Error(detail);
+                                    if (ok) guardado = true;
+                                    else {
+                                        if (status === 401) throw new Error('Inicia sesión para guardar favoritos.');
+                                        throw new Error(data.detail || data.message || 'Error al guardar');
                                     }
                                 })
                                 .catch(err => {
-                                    console.error('Error:', err);
                                     errorMsg = err.message;
-                                    setTimeout(() => { errorMsg = '' }, 5000);
+                                    setTimeout(() => { errorMsg = '' }, 4000);
                                 })
-                                .finally(() => {
-                                    cargando = false;
-                                });
+                                .finally(() => { cargando = false; });
                         "
-                    ></button>
+                    >
+                        <!-- Spinner -->
+                        <svg x-show="cargando" x-cloak class="animate-spin h-5 w-5 text-brand-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+
+                        <!-- Texto Guardado -->
+                        <span x-show="!cargando" class="truncate" x-text="guardado ? 'Guardado' : 'Favorito'"></span>
+                    </button>
                 </div>
             </article>
         {% else %}
-            <div class="col-span-full rounded-lg border border-cyan-500/40 bg-cyan-950/30 p-5 text-cyan-100">
-                No se encontraron productos que coincidan con tu busqueda.
+            <!-- Empty State de Búsqueda -->
+            <div class="col-span-full rounded-3xl border border-slate-200 dark:border-zinc-700/50 bg-white dark:bg-zinc-800/50 p-12 text-center flex flex-col items-center justify-center">
+                <div class="h-16 w-16 rounded-2xl bg-slate-50 dark:bg-zinc-900 flex items-center justify-center mb-4 border border-slate-200 dark:border-zinc-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-400 dark:text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">No se encontraron resultados</h3>
+                <p class="text-sm text-slate-500 dark:text-zinc-400 max-w-md">No hemos encontrado placas de video que coincidan con tu búsqueda actual. Intenta probar con términos más generales (ej: "RTX 4060") o modifica los filtros de tienda.</p>
             </div>
         {% endfor %}
     </div>
 
+    <!-- Paginación SaaS -->
     {% if pagination.total_pages > 1 %}
-        <nav class="mt-10 flex flex-col gap-4 rounded-lg border border-slate-800 bg-slate-950/70 p-4 sm:flex-row sm:items-center sm:justify-between" aria-label="Paginacion de productos">
-            <p class="text-sm text-slate-400">
-                Pagina <span class="font-semibold text-slate-100">{{ pagination.page }}</span>
-                de <span class="font-semibold text-slate-100">{{ pagination.total_pages }}</span>
-                - {{ pagination.total_products }} productos
+        <nav class="mt-12 flex flex-col gap-4 rounded-3xl border border-slate-200 dark:border-zinc-700/50 bg-white dark:bg-zinc-800/50 p-4 sm:flex-row sm:items-center sm:justify-between" aria-label="Paginacion de productos">
+            <p class="text-sm text-slate-500 dark:text-zinc-400 font-medium px-2">
+                Mostrando página <span class="font-bold text-slate-900 dark:text-white">{{ pagination.page }}</span>
+                de <span class="font-bold text-slate-900 dark:text-white">{{ pagination.total_pages }}</span>
+                <span class="mx-1.5 text-slate-300 dark:text-zinc-600">|</span> 
+                {{ pagination.total_products }} productos en total
             </p>
 
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap gap-1.5">
                 <a
                     href="{{ pagination.previous_url if pagination.has_previous else '#' }}"
-                    class="rounded-md border px-3 py-2 text-sm font-semibold transition {% if pagination.has_previous %}border-slate-700 text-slate-200 hover:border-cyan-500 hover:text-cyan-300{% else %}pointer-events-none border-slate-800 text-slate-600{% endif %}"
+                    class="inline-flex h-10 items-center justify-center rounded-xl border px-4 text-sm font-semibold transition-colors {% if pagination.has_previous %}border-slate-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-200 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 dark:hover:text-brand-400{% else %}pointer-events-none border-transparent bg-transparent text-slate-400 dark:text-zinc-600{% endif %}"
                 >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
                     Anterior
                 </a>
 
-                {% for link in pagination.page_links %}
-                    {% if link.is_ellipsis %}
-                        <span class="rounded-md border border-slate-800 px-3 py-2 text-sm font-semibold text-slate-600">...</span>
-                    {% else %}
-                        <a
-                            href="{{ link.url }}"
-                            class="rounded-md border px-3 py-2 text-sm font-semibold transition {% if link.is_current %}border-violet-500 bg-violet-600 text-white shadow-md shadow-violet-950/40{% else %}border-slate-700 text-slate-200 hover:border-cyan-500 hover:text-cyan-300{% endif %}"
-                        >
-                            {{ link.number }}
-                        </a>
-                    {% endif %}
-                {% endfor %}
+                <div class="hidden sm:flex gap-1.5 items-center px-2">
+                    {% for link in pagination.page_links %}
+                        {% if link.is_ellipsis %}
+                            <span class="px-2 text-slate-400 dark:text-zinc-600">...</span>
+                        {% else %}
+                            <a
+                                href="{{ link.url }}"
+                                class="inline-flex h-10 w-10 items-center justify-center rounded-xl border text-sm font-bold transition-all {% if link.is_current %}border-brand-500 bg-brand-500 text-white shadow-md shadow-brand-500/20 dark:shadow-[0_0_10px_rgba(249,115,22,0.3)]{% else %}border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-900 text-slate-500 dark:text-zinc-400 hover:border-slate-400 dark:hover:border-zinc-500 hover:text-slate-900 dark:hover:text-white{% endif %}"
+                            >
+                                {{ link.number }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
 
                 <a
                     href="{{ pagination.next_url if pagination.has_next else '#' }}"
-                    class="rounded-md border px-3 py-2 text-sm font-semibold transition {% if pagination.has_next %}border-slate-700 text-slate-200 hover:border-cyan-500 hover:text-cyan-300{% else %}pointer-events-none border-slate-800 text-slate-600{% endif %}"
+                    class="inline-flex h-10 items-center justify-center rounded-xl border px-4 text-sm font-semibold transition-colors {% if pagination.has_next %}border-slate-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-slate-600 dark:text-zinc-200 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 dark:hover:text-brand-400{% else %}pointer-events-none border-transparent bg-transparent text-slate-400 dark:text-zinc-600{% endif %}"
                 >
                     Siguiente
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
                 </a>
             </div>
         </nav>

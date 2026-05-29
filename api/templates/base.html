@@ -18,33 +18,55 @@
           extend: {
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              brand: {
+                50: '#fff7ed',
+                100: '#ffedd5',
+                200: '#fed7aa',
+                300: '#fdba74',
+                400: '#fb923c',
+                500: '#f97316',
+                600: '#ea580c',
+                700: '#c2410c',
+              }
             }
           }
         }
       }
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
-<body class="min-h-screen bg-slate-900 text-slate-100 font-sans antialiased">
-    <header x-data="{ open: false }" class="bg-slate-950 border-b border-violet-800 shadow-lg shadow-violet-950/20">
-        <div class="container mx-auto flex items-center justify-between px-4 py-4">
-            <a href="/" class="text-xl font-extrabold tracking-tight text-violet-400 transition hover:text-cyan-400">
+<body class="min-h-screen flex flex-col bg-zinc-900 text-zinc-200 font-sans antialiased selection:bg-brand-500/30 selection:text-brand-200">
+    
+    <header x-data="{ open: false }" class="sticky top-0 z-50 bg-zinc-900/80 backdrop-blur-md border-b border-zinc-800">
+        <div class="container mx-auto flex items-center justify-between px-4 h-16 max-w-6xl">
+            <button @click="window.scrollTo({top: 0, behavior: 'smooth'})" class="flex items-center gap-2 text-xl font-extrabold tracking-tight text-white transition hover:text-brand-400 group cursor-pointer">
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-white shadow-sm shadow-brand-500/20 transition-all group-hover:shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
+                    </svg>
+                </div>
                 Scrabby
-            </a>
+            </button>
 
-            <nav class="hidden items-center gap-2 lg:flex">
-                <a href="/" class="rounded-md px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-900 hover:text-cyan-400">Inicio</a>
-                <a href="/products" class="rounded-md px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-900 hover:text-cyan-400">Productos</a>
+            <nav class="hidden items-center gap-1 lg:flex">
+                <a href="/" class="rounded-full px-4 py-2 text-sm font-medium text-zinc-400 transition hover:bg-zinc-800 hover:text-white">Inicio</a>
+                <a href="/products" class="rounded-full px-4 py-2 text-sm font-medium text-zinc-400 transition hover:bg-zinc-800 hover:text-white">Catálogo</a>
+                
                 {% if username %}
-                    <a href="/users/dashboard" class="rounded-md px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-900 hover:text-cyan-400">Dashboard</a>
-                    <form action="/users/logout" method="post" class="inline">
-                        <button type="submit" class="rounded-md border border-red-500/70 px-3 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-950/40 hover:text-red-200">
-                            Cerrar sesion
+                    <a href="/users/dashboard" class="ml-2 rounded-full bg-zinc-800 border border-zinc-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-700">Panel</a>
+                    <form action="/users/logout" method="post" class="inline ml-2">
+                        <button type="submit" class="rounded-full px-4 py-2 text-sm font-medium text-zinc-400 transition hover:bg-red-950/40 hover:text-red-400">
+                            Salir
                         </button>
                     </form>
                 {% else %}
-                    <a href="/users/login" class="rounded-md bg-violet-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-violet-950/40 transition hover:bg-violet-500">
+                    <a href="/users/login" class="ml-4 rounded-full bg-brand-500 px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-brand-500/20 transition hover:bg-brand-600 hover:-translate-y-0.5">
                         Ingresar
                     </a>
                 {% endif %}
@@ -53,28 +75,28 @@
             <button
                 type="button"
                 @click="open = !open"
-                class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-slate-700 text-slate-200 transition hover:border-cyan-500 hover:text-cyan-400 lg:hidden"
+                class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-700 text-zinc-400 transition hover:bg-zinc-800 hover:text-white lg:hidden"
                 aria-label="Abrir menu"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
         </div>
 
-        <div x-show="open" x-cloak class="border-t border-violet-900 bg-slate-950 lg:hidden">
-            <div class="container mx-auto flex flex-col gap-2 px-4 py-4">
-                <a href="/" class="rounded-md px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-900 hover:text-cyan-400">Inicio</a>
-                <a href="/products" class="rounded-md px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-900 hover:text-cyan-400">Productos</a>
+        <div x-show="open" x-cloak x-transition class="border-t border-zinc-800 bg-zinc-900 lg:hidden">
+            <div class="container mx-auto flex flex-col gap-1 px-4 py-4">
+                <a href="/" class="rounded-xl px-4 py-3 text-sm font-medium text-zinc-400 transition hover:bg-zinc-800 hover:text-white">Inicio</a>
+                <a href="/products" class="rounded-xl px-4 py-3 text-sm font-medium text-zinc-400 transition hover:bg-zinc-800 hover:text-white">Catálogo</a>
                 {% if username %}
-                    <a href="/users/dashboard" class="rounded-md px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-slate-900 hover:text-cyan-400">Dashboard</a>
-                    <form action="/users/logout" method="post" class="w-full">
-                        <button type="submit" class="w-full rounded-md border border-red-500/70 px-3 py-2 text-left text-sm font-semibold text-red-300 transition hover:bg-red-950/40 hover:text-red-200">
-                            Cerrar sesion
+                    <a href="/users/dashboard" class="rounded-xl bg-zinc-800 px-4 py-3 text-sm font-medium text-white">Panel</a>
+                    <form action="/users/logout" method="post" class="w-full mt-2">
+                        <button type="submit" class="w-full rounded-xl border border-zinc-700 px-4 py-3 text-left text-sm font-medium text-zinc-400 transition hover:bg-red-950/40 hover:text-red-400 hover:border-red-900/50">
+                            Cerrar sesión
                         </button>
                     </form>
                 {% else %}
-                    <a href="/users/login" class="rounded-md bg-violet-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-500">
+                    <a href="/users/login" class="mt-2 rounded-xl bg-brand-500 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-brand-600">
                         Ingresar
                     </a>
                 {% endif %}
@@ -82,8 +104,39 @@
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8">
+    <main class="flex-1 w-full container mx-auto px-4 py-8 lg:py-12 max-w-6xl">
         {% block content %}{% endblock %}
     </main>
+
+    <footer class="border-t border-zinc-800 bg-zinc-950 w-full mt-auto">
+        <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            
+            <button @click="window.scrollTo({top: 0, behavior: 'smooth'})" class="flex items-center gap-2 group transition-all duration-300 outline-none" aria-label="Volver arriba">
+                <div class="flex h-6 w-6 items-center justify-center rounded border border-brand-500/30 bg-brand-500/10 text-brand-500 transition-all duration-300 group-hover:bg-brand-500 group-hover:text-white group-hover:shadow-[0_0_12px_rgba(249,115,22,0.6)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <span class="font-bold text-zinc-300 transition-colors duration-300 group-hover:text-brand-400">Scrabby</span>
+            </button>
+            
+            <p class="text-xs text-zinc-500 font-medium text-center md:text-left">
+                &copy; 2026 Scrabby. Diseño y desarrollo por <span class="text-zinc-400">Lucas Morabito</span>.
+            </p>
+            
+            <div class="flex gap-5">
+                <a href="https://github.com/LucasMorabito" target="_blank" rel="noopener noreferrer" class="text-zinc-500 hover:text-brand-400 transition-all duration-300 hover:-translate-y-1" aria-label="GitHub">
+                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+                <a href="https://www.linkedin.com/in/lucasmorabito/" target="_blank" rel="noopener noreferrer" class="text-zinc-500 hover:text-brand-400 transition-all duration-300 hover:-translate-y-1" aria-label="LinkedIn">
+                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

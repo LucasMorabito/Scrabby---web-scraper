@@ -4,11 +4,23 @@
 
 {% block content %}
 <section class="flex min-h-[75vh] items-center justify-center py-8 px-4">
-    <div class="w-full max-w-md bg-slate-950/40 border border-slate-800/60 rounded-2xl shadow-2xl backdrop-blur-sm overflow-hidden">
-        <div class="p-6 sm:p-8">
+    <div class="w-full max-w-md bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-3xl shadow-xl dark:shadow-2xl relative overflow-hidden transition-colors duration-300">
+        
+        <!-- Efecto de brillo de fondo sutil -->
+        <div class="absolute top-0 left-0 -mt-16 -ml-16 w-64 h-64 bg-brand-500/5 dark:bg-brand-500/10 rounded-full blur-[80px] pointer-events-none"></div>
+
+        <div class="p-6 sm:p-8 relative z-10">
             
-            <h2 class="text-3xl font-extrabold tracking-tight text-slate-50 text-center mb-6">
-                Crear cuenta
+            <div class="flex justify-center mb-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white text-center mb-6">
+                Crear nueva cuenta
             </h2>
             
             {% if error %}
@@ -24,18 +36,18 @@
                     {% set error_es = 'La contraseña es demasiado corta o no cumple los requisitos.' %}
                 {% endif %}
 
-                <div class="rounded-xl border border-red-500/40 bg-red-950/30 p-3 text-sm text-red-300 mb-4 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="rounded-2xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/30 p-3 text-sm text-red-600 dark:text-red-400 mb-6 flex items-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
-                    <span>{{ error_es }}</span>
+                    <span class="font-medium">{{ error_es }}</span>
                 </div>
             {% endif %}
             
             <form action="/users/register" method="post" class="space-y-5">
                 
                 <div>
-                    <label class="block text-sm font-semibold tracking-wide text-slate-400 mb-1.5" for="username">
+                    <label class="block text-sm font-semibold tracking-wide text-slate-700 dark:text-zinc-300 mb-1.5" for="username">
                         Usuario
                     </label>
                     <input
@@ -45,12 +57,12 @@
                         placeholder="Elige tu nombre de usuario"
                         value="{{ username or '' }}"
                         required
-                        class="h-11 w-full rounded-md border border-slate-700 bg-slate-950 px-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
+                        class="h-11 w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-900/50 px-4 text-sm text-slate-900 dark:text-zinc-200 outline-none transition placeholder:text-slate-400 dark:placeholder:text-zinc-600 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                     />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold tracking-wide text-slate-400 mb-1.5" for="password">
+                    <label class="block text-sm font-semibold tracking-wide text-slate-700 dark:text-zinc-300 mb-1.5" for="password">
                         Contraseña
                     </label>
                     <input
@@ -59,12 +71,12 @@
                         name="password"
                         placeholder="Crea una contraseña segura"
                         required
-                        class="h-11 w-full rounded-md border border-slate-700 bg-slate-950 px-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
+                        class="h-11 w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-900/50 px-4 text-sm text-slate-900 dark:text-zinc-200 outline-none transition placeholder:text-slate-400 dark:placeholder:text-zinc-600 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                     />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-semibold tracking-wide text-slate-400 mb-1.5" for="confirm_password">
+                    <label class="block text-sm font-semibold tracking-wide text-slate-700 dark:text-zinc-300 mb-1.5" for="confirm_password">
                         Confirmar contraseña
                     </label>
                     <input
@@ -73,23 +85,23 @@
                         name="confirm_password"
                         placeholder="Repite tu contraseña"
                         required
-                        class="h-11 w-full rounded-md border border-slate-700 bg-slate-950 px-4 text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
+                        class="h-11 w-full rounded-xl border border-slate-300 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-900/50 px-4 text-sm text-slate-900 dark:text-zinc-200 outline-none transition placeholder:text-slate-400 dark:placeholder:text-zinc-600 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
                     />
                 </div>
 
                 <div class="pt-2">
                     <button 
                         type="submit" 
-                        class="inline-flex h-11 w-full items-center justify-center rounded-xl bg-violet-600 font-bold text-white shadow-lg shadow-violet-950/50 transition hover:bg-violet-500 hover:-translate-y-0.5"
+                        class="inline-flex h-11 w-full items-center justify-center rounded-xl bg-brand-500 font-bold text-white shadow-md shadow-brand-500/20 dark:shadow-[0_0_15px_rgba(249,115,22,0.25)] transition hover:bg-brand-600 hover:-translate-y-0.5"
                     >
-                        Registrarse
+                        Completar Registro
                     </button>
                 </div>
             </form>
 
-            <p class="text-center text-sm text-slate-400 mt-6">
+            <p class="text-center text-sm text-slate-500 dark:text-zinc-400 mt-6">
                 ¿Ya tienes cuenta?
-                <a href="/users/login" class="font-bold text-cyan-400 transition hover:text-cyan-300 ml-1">
+                <a href="/users/login" class="font-bold text-brand-600 dark:text-brand-400 transition hover:text-brand-700 dark:hover:text-brand-300 ml-1">
                     Inicia sesión aquí
                 </a>
             </p>
