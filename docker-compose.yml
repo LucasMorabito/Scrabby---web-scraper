@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: scrabby_api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://cache:6379/0
+    depends_on:
+      - cache
+    restart: unless-stopped
+    networks:
+      - scrabby_network
+
+  cache:
+    image: redis:7-alpine
+    container_name: scrabby_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --save 60 1 --loglevel warning
+    restart: unless-stopped
+    networks:
+      - scrabby_network
+
+volumes:
+  redis_data:
+
+networks:
+  scrabby_network:
+    driver: bridge

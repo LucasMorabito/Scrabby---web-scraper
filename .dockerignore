@@ -1,5 +1,21 @@
-.env
+# Entornos virtuales
 venv/
+env/
+.venv/
+
+# Caché de Python
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Variables de entorno
+.env
+
+# Carpetas de IDEs y Git
+.vscode/
+.github/
 .git/
-data/
+
+# Pruebas
+tests/

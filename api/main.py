@@ -1,4 +1,5 @@
 import os
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request, status, Depends
 from fastapi.responses import HTMLResponse
@@ -6,8 +7,10 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi.errors import RateLimitExceeded
-from fastapi.responses import HTMLResponse
 
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+from redis import asyncio as aioredis
 
 from api.core.handlers import register_exception_handlers
 from api.routers import auth, products
@@ -24,12 +27,33 @@ def get_allowed_origins() -> list[str]:
     return [origin.strip() for origin in origins.split(",") if origin.strip()]
 
 
+# --- APP LIFESPAN & SERVICES ---
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+    redis_client = aioredis.from_url(redis_url, encoding="utf8", decode_responses=True)
+    
+    FastAPICache.init(RedisBackend(redis_client), prefix="scrabby-cache")
+    
+    yield
+    
+    await redis_client.close()
+
+
 app = FastAPI(
     title="Scrabby API",
     description="API de comparación de precios de componentes de PC en tiendas argentinas.",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
+
+# --- STATIC FILES & TEMPLATES ---
+app.mount("/static", StaticFiles(directory="api/static"), name="static")
+templates = Jinja2Templates(directory="api/templates")
+
+
+# --- EXCEPTION HANDLERS & RATE LIMITING ---
 async def custom_rate_limit_handler(request: Request, exc: RateLimitExceeded):
     return templates.TemplateResponse(
         request=request,
@@ -39,6 +63,7 @@ async def custom_rate_limit_handler(request: Request, exc: RateLimitExceeded):
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, custom_rate_limit_handler)
+register_exception_handlers(app)
 
 
 # --- MIDDLEWARES ---
@@ -51,14 +76,7 @@ app.add_middleware(
 )
 
 
-# --- ARCHIVOS ESTÁTICOS Y TEMPLATES ---
-app.mount("/static", StaticFiles(directory="api/static"), name="static")
-templates = Jinja2Templates(directory="api/templates")
-
-
-register_exception_handlers(app)
-
-
+# --- CORE ROUTES ---
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
     username = get_current_username(request)
@@ -87,6 +105,7 @@ def database_health_check(db=Depends(get_db)) -> dict[str, str]:
 
     return {"status": "ok"}
 
-# --- ROUTERS ---
+
+# --- API ROUTERS ---
 app.include_router(products.router, prefix="/products", tags=["products"])
 app.include_router(auth.router, prefix="/users", tags=["users"])

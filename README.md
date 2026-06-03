@@ -268,6 +268,40 @@ python main.py "placas de video" --limit 100
 
 ---
 
+# Running With Docker
+
+Build the image:
+
+```bash
+docker build -t scrabby .
+```
+
+Run the scraper with the environment file:
+
+```bash
+docker run --rm --env-file .env scrabby
+```
+
+`.env` is intentionally excluded from the Docker image. Running only `docker run --rm scrabby`
+does not load `DATABASE_URL`, so the container exits before connecting to PostgreSQL.
+
+If PostgreSQL is running on your host machine and `DATABASE_URL` uses `localhost`, change only
+the host part for Docker:
+
+```env
+DATABASE_URL=postgresql://user:password@host.docker.internal:5432/scrabby
+```
+
+For a remote database, keep the remote host in `DATABASE_URL`.
+
+Run the API from the same image:
+
+```bash
+docker run --rm --env-file .env -p 8000:8000 scrabby uvicorn api.main:app --host 0.0.0.0 --port 8000
+```
+
+---
+
 # Running the API
 
 Development server:
