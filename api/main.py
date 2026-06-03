@@ -1,4 +1,5 @@
 import os
+import sentry_sdk
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request, status, Depends
@@ -26,7 +27,19 @@ def get_allowed_origins() -> list[str]:
     origins = os.getenv("ALLOWED_ORIGINS", DEFAULT_ALLOWED_ORIGINS)
     return [origin.strip() for origin in origins.split(",") if origin.strip()]
 
-
+# --- INICIALIZACIÓN DE SENTRY ---
+sentry_dsn = os.getenv("SENTRY_DSN")
+print(f"DEBUG: El DSN detectado es: {sentry_dsn}")
+if sentry_dsn:
+    sentry_sdk.init(
+        dsn=sentry_dsn,
+        traces_sample_rate=0.1,
+        profiles_sample_rate=0.1,
+    )
+    print("Sentry activado para monitoreo de errores")
+else:
+    print("Sentry NO se activó porque no se encontró el DSN")
+    
 # --- APP LIFESPAN & SERVICES ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -85,7 +98,6 @@ def home(request: Request):
         "index.html",
         {"request": request, "username": username},
     )
-
 
 @app.get("/health", tags=["health"])
 def health_check() -> dict[str, str]:
