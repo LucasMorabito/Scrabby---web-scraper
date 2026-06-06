@@ -28,6 +28,8 @@ El proyecto también incorpora:
 * Autenticación basada en JWT
 * Manejo de sesión mediante cookies HTTP-only
 * Protección contra abuso mediante Rate Limiting
+* Caché distribuida con Redis
+* Monitoreo y captura de errores mediante Sentry
 * Manejo estandarizado de errores
 * Persistencia optimizada en PostgreSQL
 
@@ -48,6 +50,13 @@ Actualmente el sistema obtiene datos desde:
 ---
 
 ## Funcionalidades Actuales
+
+### Rendimiento y Observabilidad
+
+* Caché de consultas frecuentes mediante Redis
+* Reducción de carga sobre PostgreSQL
+* Monitoreo centralizado de errores con Sentry
+* Trazabilidad de excepciones en producción
 
 ### Pipeline de Scraping
 
@@ -90,6 +99,7 @@ api/
 ├── core/
 ├── templates/
 ├── limiter.py
+├── cache.py
 └── security.py
 
 database/
@@ -136,32 +146,36 @@ Durante la misma transacción también se registra el historial de precios.
 
 FastAPI expone la información mediante endpoints REST protegidos por:
 
+* Redis Cache
 * Rate Limiting
 * Middleware de autenticación
 * Exception Handlers
 * Validación CORS
+* Monitoreo con Sentry
 
 ---
 
 # Stack Tecnológico
 
-| Tecnología       | Uso                    |
-| ---------------- | ---------------------- |
-| Python           | Lenguaje principal     |
-| FastAPI          | Framework backend      |
-| Uvicorn          | Servidor ASGI          |
-| PostgreSQL       | Base de datos          |
-| SQLAlchemy       | ORM                    |
-| Alembic          | Migraciones            |
-| psycopg2-binary  | Driver PostgreSQL      |
-| curl_cffi        | TLS Impersonation      |
-| SlowAPI          | Rate Limiting          |
-| BeautifulSoup    | Parsing HTML           |
-| Jinja2           | Renderizado HTML       |
-| PyJWT            | JWT Authentication     |
-| Passlib (bcrypt) | Hashing de contraseñas |
-| Docker           | Contenedorización      |
-| Render           | Despliegue             |
+| Tecnología       | Uso                         |
+| ---------------- | --------------------------- |
+| Python           | Lenguaje principal          |
+| FastAPI          | Framework backend           |
+| Uvicorn          | Servidor ASGI               |
+| PostgreSQL       | Base de datos               |
+| SQLAlchemy       | ORM                         |
+| Alembic          | Migraciones                 |
+| Redis            | Caché distribuida           |
+| Sentry           | Observabilidad y monitoreo  |
+| psycopg2-binary  | Driver PostgreSQL           |
+| curl_cffi        | TLS Impersonation           |
+| SlowAPI          | Rate Limiting               |
+| BeautifulSoup    | Parsing HTML                |
+| Jinja2           | Renderizado HTML            |
+| PyJWT            | JWT Authentication          |
+| Passlib (bcrypt) | Hashing de contraseñas      |
+| Docker           | Contenedorización           |
+| Render           | Despliegue                  |
 
 ---
 
@@ -195,6 +209,22 @@ Gestiona credenciales y acceso al dashboard administrativo.
 ## Tabla `user_favorites`
 
 Implementa una relación muchos-a-muchos entre usuarios y productos favoritos.
+
+---
+
+# Caché
+
+## Redis
+
+Scrabby utiliza Redis como capa de caché para almacenar temporalmente consultas frecuentes y reducir la carga sobre PostgreSQL.
+
+Beneficios:
+
+* Menor latencia de respuesta
+* Menor cantidad de consultas repetidas a la base de datos
+* Mejor experiencia de usuario bajo carga
+
+El sistema invalida automáticamente las entradas relevantes cuando los datos son actualizados mediante nuevos procesos de scraping.
 
 ---
 
@@ -266,6 +296,23 @@ El sistema utiliza TLS Impersonation y fingerprints consistentes para reducir bl
 
 ---
 
+# Observabilidad
+
+## Sentry
+
+El sistema integra Sentry para el monitoreo de errores y excepciones en producción.
+
+Capacidades:
+
+* Captura automática de excepciones no controladas
+* Trazabilidad completa de errores
+* Información contextual de requests
+* Alertas en tiempo real
+
+Esto permite detectar rápidamente fallos en endpoints, procesos de scraping y operaciones de base de datos.
+
+---
+
 # Manejo de Errores
 
 La API implementa handlers globales para devolver respuestas consistentes.
@@ -315,6 +362,13 @@ GitHub Actions ejecuta procesos automáticos de scraping mediante contenedores D
 ---
 
 ## Variables de Entorno
+
+### Infraestructura
+
+```env
+REDIS_URL=
+SENTRY_DSN=
+```
 
 ### Base de Datos
 

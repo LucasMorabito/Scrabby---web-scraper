@@ -155,6 +155,25 @@ Scrabby/
 
 ---
 
+```
+Scrapers
+    ↓
+Normalization Layer
+    ↓
+PostgreSQL
+    ↓
+Redis Cache
+    ↓
+FastAPI
+    ↓
+Frontend / API Clients
+
+         ↓
+       Sentry
+```
+
+---
+
 # Installation
 
 ## Requirements
