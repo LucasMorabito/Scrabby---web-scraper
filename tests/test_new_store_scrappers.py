@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from scrappers.mexx import parse_products as parse_mexx_products
 from scrappers.quantumhardstore import parse_products as parse_quantum_products
@@ -30,7 +31,8 @@ class MexxScraperTests(unittest.TestCase):
             "https://www.mexx.com.ar/productos-rubro/placas-de-video/test.html",
         )
 
-    def test_parse_products_filters_accessories(self):
+    @patch("scrappers.mexx.llm_parse_products")
+    def test_parse_products_filters_accessories(self, mock_llm):
         html = """
         <div class="card-body">
           <h4 class="card-title">
@@ -42,6 +44,7 @@ class MexxScraperTests(unittest.TestCase):
         </div>
         """
 
+        mock_llm.return_value = []
         self.assertEqual(parse_mexx_products(html), [])
 
 
@@ -78,7 +81,8 @@ class QuantumHardstoreScraperTests(unittest.TestCase):
             "https://quantumhardstore.com/productos/placa-test/",
         )
 
-    def test_parse_products_skips_unavailable_variants(self):
+    @patch("scrappers.quantumhardstore.llm_parse_products")
+    def test_parse_products_skips_unavailable_variants(self, mock_llm):
         html = """
         <article
           class="js-item-product"
@@ -98,6 +102,7 @@ class QuantumHardstoreScraperTests(unittest.TestCase):
         </article>
         """
 
+        mock_llm.return_value = []
         self.assertEqual(parse_quantum_products(html), [])
 
 

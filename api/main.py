@@ -1,6 +1,6 @@
 import os
 import sentry_sdk
-from sentry_sdk.integrations.google_genai import GoogleGenAiIntegration
+from sentry_sdk.integrations.google_genai import GoogleGenAIIntegration
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request, status, Depends
@@ -36,7 +36,7 @@ if sentry_dsn:
         dsn=sentry_dsn,
         traces_sample_rate=0.1,
         profiles_sample_rate=0.1,
-        integrations=[GoogleGenAiIntegration()],
+        integrations=[GoogleGenAIIntegration()],
     )
     print("Sentry activado para monitoreo de errores")
 else:

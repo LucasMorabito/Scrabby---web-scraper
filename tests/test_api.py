@@ -2,6 +2,8 @@ from datetime import datetime, timezone
 import unittest
 
 from fastapi.testclient import TestClient
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.inmemory import InMemoryBackend
 
 from api.dependencies import get_db
 from api.main import app
@@ -86,6 +88,7 @@ class FakeDB:
 
 class ApiTests(unittest.TestCase):
     def setUp(self):
+        FastAPICache.init(InMemoryBackend(), prefix="test-cache")
         self.client = TestClient(app)
 
     def tearDown(self):

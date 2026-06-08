@@ -46,13 +46,15 @@ class MercadoLibreScraperTests(unittest.TestCase):
             "https://articulo.mercadolibre.com.ar/MLA-test",
         )
 
-    def test_parse_products_ld_json_ignores_invalid_json(self):
+    @patch("scrappers.mercadolibre.llm_parse_products")
+    def test_parse_products_ld_json_ignores_invalid_json(self, mock_llm):
         html = """
         <script type="application/ld+json">
           {"@graph":
         </script>
         """
 
+        mock_llm.return_value = []
         self.assertEqual(parse_products_ld_json(html), [])
 
     @patch("scrappers.mercadolibre.HTTP_CLIENT.get")

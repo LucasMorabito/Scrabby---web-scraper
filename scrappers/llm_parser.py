@@ -73,6 +73,8 @@ Reglas:
 - No incluyas publicidades, banners, ni elementos de navegación.
 - Si el precio no es un número claro, omití ese producto.
 - Si no hay link al producto, omití ese producto.
+- Si no encontrás ningún producto, devolvé un array vacío: []
+- NUNCA respondas con texto, SIEMPRE devolvé un JSON array.
 """.strip()
 
 
