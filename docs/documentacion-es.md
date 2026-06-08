@@ -58,12 +58,12 @@ Actualmente el sistema obtiene datos desde:
 * Monitoreo centralizado de errores con Sentry
 * Trazabilidad de excepciones en producción
 
-### Pipeline de Scraping
+### Pipeline de Scraping Resiliente
 
 * Scraping distribuido multi-tienda
-* Suplantación TLS mediante `curl_cffi`
 * Estrategias de retry y backoff
 * Filtrado y normalización de productos
+* **Self-Healing Web Scraping:** Cuando los selectores tradicionales de BeautifulSoup fallan debido a cambios en la estructura HTML, el sistema intercepta automáticamente el error y deriva el HTML a **Gemini 2.5 Flash** (SDK `google-genai`) que actúa como un parser dinámico inteligente. El modelo razona la estructura del DOM y devuelve un JSON garantizando que el flujo de persistencia nunca se caiga.
 
 ### Persistencia
 
@@ -120,7 +120,7 @@ tests/
 
 ### 1. Recolección de Datos
 
-El sistema ejecuta scraping concurrente sobre múltiples tiendas utilizando un cliente HTTP centralizado configurado con TLS Impersonation.
+El sistema ejecuta scraping concurrente sobre múltiples tiendas utilizando un cliente HTTP centralizado.
 
 ### 2. Procesamiento
 
@@ -132,7 +132,11 @@ Los productos son:
 
 antes de persistirse.
 
-### 3. Persistencia
+### 3. Parseo Inteligente con Fallback
+
+Primero se intenta extraer productos usando BeautifulSoup con selectores HTML convencionales. Si la búsqueda retorna una lista vacía (indicando cambios en el DOM de la tienda), el sistema automáticamente activa el **fallback de IA**: envía el HTML crudo a Gemini 2.5 Flash que razona la estructura y retorna los productos en formato JSON estricto. Esto garantiza resiliencia ante cambios frecuentes en las tiendas target.
+
+### 4. Persistencia
 
 Los datos se almacenan mediante Bulk Upserts utilizando características específicas de PostgreSQL:
 
@@ -142,7 +146,7 @@ INSERT ... ON CONFLICT DO UPDATE
 
 Durante la misma transacción también se registra el historial de precios.
 
-### 4. Exposición de API
+### 5. Exposición de API
 
 FastAPI expone la información mediante endpoints REST protegidos por:
 
@@ -157,25 +161,26 @@ FastAPI expone la información mediante endpoints REST protegidos por:
 
 # Stack Tecnológico
 
-| Tecnología       | Uso                         |
-| ---------------- | --------------------------- |
-| Python           | Lenguaje principal          |
-| FastAPI          | Framework backend           |
-| Uvicorn          | Servidor ASGI               |
-| PostgreSQL       | Base de datos               |
-| SQLAlchemy       | ORM                         |
-| Alembic          | Migraciones                 |
-| Redis            | Caché distribuida           |
-| Sentry           | Observabilidad y monitoreo  |
-| psycopg2-binary  | Driver PostgreSQL           |
-| curl_cffi        | TLS Impersonation           |
-| SlowAPI          | Rate Limiting               |
-| BeautifulSoup    | Parsing HTML                |
-| Jinja2           | Renderizado HTML            |
-| PyJWT            | JWT Authentication          |
-| Passlib (bcrypt) | Hashing de contraseñas      |
-| Docker           | Contenedorización           |
-| Render           | Despliegue                  |
+| Tecnología       | Uso                                  |
+| ---------------- | ------------------------------------ |
+| Python           | Lenguaje principal                   |
+| FastAPI          | Framework backend                    |
+| Uvicorn          | Servidor ASGI                        |
+| PostgreSQL       | Base de datos                        |
+| SQLAlchemy       | ORM                                  |
+| Alembic          | Migraciones                          |
+| Redis            | Caché distribuida                    |
+| Sentry           | Observabilidad y monitoreo           |
+| psycopg2-binary  | Driver PostgreSQL                    |
+| curl_cffi        | Cliente HTTP robusto                 |
+| SlowAPI          | Rate Limiting                        |
+| BeautifulSoup    | Parsing HTML                         |
+| Gemini 2.5 Flash | Parseo dinámico y fallback           |
+| Jinja2           | Renderizado HTML                     |
+| PyJWT            | JWT Authentication                   |
+| Passlib (bcrypt) | Hashing de contraseñas               |
+| Docker           | Contenedorización                    |
+| Render           | Despliegue                           |
 
 ---
 
@@ -290,26 +295,23 @@ Protección contra abuso:
 
 ---
 
-## Mitigación Anti-Bot
-
-El sistema utiliza TLS Impersonation y fingerprints consistentes para reducir bloqueos automáticos por parte de tiendas objetivo.
-
----
-
 # Observabilidad
 
 ## Sentry
 
-El sistema integra Sentry para el monitoreo de errores y excepciones en producción.
+El sistema integra Sentry para el monitoreo de errores y excepciones en producción, incluyendo soporte nativo para Google GenAI.
 
 Capacidades:
 
 * Captura automática de excepciones no controladas
 * Trazabilidad completa de errores
 * Información contextual de requests
+* Monitoreo de latencia de inferencia en llamadas a Gemini
+* Tracking de consumo de tokens en modelos LLM
+* Tasa de éxito de fallbacks de scraping
 * Alertas en tiempo real
 
-Esto permite detectar rápidamente fallos en endpoints, procesos de scraping y operaciones de base de datos.
+Esto permite detectar rápidamente fallos en endpoints, procesos de scraping, operaciones de base de datos y eventos de IA, asegurando visibilidad total del pipeline.
 
 ---
 

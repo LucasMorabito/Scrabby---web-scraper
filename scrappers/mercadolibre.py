@@ -4,6 +4,7 @@ import urllib.parse
 from bs4 import BeautifulSoup
 
 from scrappers.http_client import create_stealth_http_client
+from .llm_parser import llm_parse_products
 
 SEARCH_URL = "https://listado.mercadolibre.com.ar/{query}"
 HTTP_CLIENT = create_stealth_http_client()
@@ -60,7 +61,7 @@ def parse_products_ld_json(html: str) -> list[dict]:
         if products:
             return products
 
-    return []
+    return llm_parse_products(html=html, store="mercadolibre", base_url="https://www.mercadolibre.com.ar")
 
 
 def scrape_search(query: str = "placas de video", limit: int = 50) -> list[dict]:

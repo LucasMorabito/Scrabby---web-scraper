@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 
 from bs4 import BeautifulSoup
 from curl_cffi import requests as cffi_requests
+from .llm_parser import llm_parse_products
 
 BASE_URL = "https://rockethard.com.ar"
 SEARCH_URL = f"{BASE_URL}/buscar/"
@@ -63,7 +64,7 @@ def scrape(keyword: str = "", size: int = 50) -> list[dict]:
         tarjetas = soup.find_all("div", attrs={"data-nombre": True, "data-precio": True})
 
         if not tarjetas:
-            break
+            return llm_parse_products(html=response.text, store="rockethard", base_url="https://www.rockethard.com.ar")
 
         new_products_found = 0
         for tarjeta in tarjetas:

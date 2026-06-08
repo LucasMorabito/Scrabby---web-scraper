@@ -6,6 +6,7 @@ from urllib.parse import urljoin
 import requests
 
 from bs4 import BeautifulSoup
+from .llm_parser import llm_parse_products
 
 BASE_URL = "https://quantumhardstore.com"
 SEARCH_URL = f"{BASE_URL}/search/"
@@ -113,8 +114,12 @@ def _price_from_variant(variant: dict) -> float | None:
 
 def parse_products(html: str, limit: int = 50) -> list[dict]:
     soup = BeautifulSoup(html, "html.parser")
+    articulos_encontrados = soup.select("a.q-pcard, article.js-item-product")
+    if not articulos_encontrados:
+        return llm_parse_products(html=html, store="quantumhardstore", base_url="https://www.quantumhardstore.com")
+    
     products = []
-    for articulo in soup.select("a.q-pcard, article.js-item-product"):
+    for articulo in articulos_encontrados:
         link = articulo if articulo.name == "a" else articulo.select_one("a[href]")
         nombre = normalizar_texto(
             (link.get("title") if link else None)

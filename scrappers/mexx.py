@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
+from .llm_parser import llm_parse_products
 
 BASE_URL = "https://www.mexx.com.ar"
 SEARCH_URL = f"{BASE_URL}/buscar/"
@@ -85,9 +86,13 @@ def fetch_html(keyword: str, page: int) -> str:
 
 def parse_products(html: str, limit: int = 50) -> list[dict]:
     soup = BeautifulSoup(html, "html.parser")
+    productos_encontrados = soup.select("div.card-body")
+    if not productos_encontrados:
+        return llm_parse_products(html=html, store="mexx", base_url="https://www.mexx.com.ar")
+    
     products = []
 
-    for tarjeta in soup.select("div.card-body"):
+    for tarjeta in productos_encontrados:
         link_tag = tarjeta.select_one("h4.card-title a")
         precio_tag = tarjeta.select_one("div.price h4 b")
         if not link_tag or not precio_tag:

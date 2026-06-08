@@ -58,12 +58,12 @@ The system currently collects data from:
 * Centralized error monitoring with Sentry
 * Production exception traceability
 
-### Scraping Pipeline
+### Resilient Scraping Pipeline
 
 * Multi-store distributed scraping
-* TLS impersonation using `curl_cffi`
 * Retry and backoff strategies
 * Product filtering and normalization
+* **Self-Healing Web Scraping:** When traditional BeautifulSoup selectors fail due to HTML structure changes, the system automatically intercepts the error and routes the HTML to **Gemini 2.5 Flash** (via `google-genai` SDK). The model acts as an intelligent dynamic parser, reasoning through DOM structure and returning guaranteed JSON format, ensuring the persistence pipeline never breaks.
 
 ### Persistence
 
@@ -120,7 +120,7 @@ tests/
 
 ### 1. Data Collection
 
-The system performs concurrent scraping across multiple stores using a centralized HTTP client configured with TLS Impersonation.
+The system performs concurrent scraping across multiple stores using a centralized HTTP client.
 
 ### 2. Processing
 
@@ -132,7 +132,11 @@ Products are:
 
 before being persisted.
 
-### 3. Persistence
+### 3. Intelligent Parsing with Fallback
+
+Initially, products are extracted using BeautifulSoup with conventional HTML selectors. If the search returns an empty list (indicating DOM changes on the target store), the system automatically activates the **AI fallback**: it sends the raw HTML to Gemini 2.5 Flash which reasons through the structure and returns products in strict JSON format. This guarantees resilience against frequent target store layout changes.
+
+### 4. Persistence
 
 Data is stored using Bulk Upserts powered by PostgreSQL-specific features:
 
@@ -142,7 +146,7 @@ INSERT ... ON CONFLICT DO UPDATE
 
 During the same transaction, price history records are also created.
 
-### 4. API Exposure
+### 5. API Exposure
 
 FastAPI exposes the data through REST endpoints protected by:
 
@@ -157,25 +161,26 @@ FastAPI exposes the data through REST endpoints protected by:
 
 # Technology Stack
 
-| Technology       | Purpose                      |
-| ---------------- | ---------------------------- |
-| Python           | Primary language             |
-| FastAPI          | Backend framework            |
-| Uvicorn          | ASGI server                  |
-| PostgreSQL       | Database                     |
-| SQLAlchemy       | ORM                          |
-| Alembic          | Migrations                   |
-| Redis            | Distributed cache            |
-| Sentry           | Observability and monitoring |
-| psycopg2-binary  | PostgreSQL driver            |
-| curl_cffi        | TLS Impersonation            |
-| SlowAPI          | Rate Limiting                |
-| BeautifulSoup    | HTML parsing                 |
-| Jinja2           | HTML rendering               |
-| PyJWT            | JWT Authentication           |
-| Passlib (bcrypt) | Password hashing             |
-| Docker           | Containerization             |
-| Render           | Deployment                   |
+| Technology       | Purpose                          |
+| ---------------- | -------------------------------- |
+| Python           | Primary language                 |
+| FastAPI          | Backend framework                |
+| Uvicorn          | ASGI server                      |
+| PostgreSQL       | Database                         |
+| SQLAlchemy       | ORM                              |
+| Alembic          | Migrations                       |
+| Redis            | Distributed cache                |
+| Sentry           | Observability and monitoring     |
+| psycopg2-binary  | PostgreSQL driver                |
+| curl_cffi        | Robust HTTP client               |
+| SlowAPI          | Rate Limiting                    |
+| BeautifulSoup    | HTML parsing                     |
+| Gemini 2.5 Flash | Dynamic parsing and fallback     |
+| Jinja2           | HTML rendering                   |
+| PyJWT            | JWT Authentication               |
+| Passlib (bcrypt) | Password hashing                 |
+| Docker           | Containerization                 |
+| Render           | Deployment                       |
 
 ---
 
@@ -290,26 +295,23 @@ Abuse protection:
 
 ---
 
-## Anti-Bot Mitigation
-
-The system uses TLS Impersonation and consistent fingerprints to reduce automated blocking by target stores.
-
----
-
 # Observability
 
 ## Sentry
 
-The system integrates Sentry for production error and exception monitoring.
+The system integrates Sentry for production error and exception monitoring, with native support for Google GenAI.
 
 Capabilities:
 
 * Automatic capture of unhandled exceptions
 * Complete error traceability
 * Request context information
+* LLM inference latency monitoring
+* Token consumption tracking on model calls
+* Scraping fallback success rates
 * Real-time alerts
 
-This enables rapid detection of failures in endpoints, scraping processes, and database operations.
+This enables rapid detection of failures in endpoints, scraping processes, database operations, and AI events, ensuring complete pipeline visibility.
 
 ---
 

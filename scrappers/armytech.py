@@ -2,6 +2,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timezone
+from .llm_parser import llm_parse_products
 
 BASE_URL = "https://www.armytech.com.ar"
 CATEGORY_URL = "https://www.armytech.com.ar/module/iqitsearch/searchiqit?s=placa+de+video"
@@ -31,8 +32,7 @@ def scrape(keyword: str = "", size: int = 50) -> list[dict]:
     tarjetas = soup.find_all("div", class_="product-description")
 
     if not tarjetas:
-        print("No se encontraron tarjetas en ArmyTech")
-        return []
+        return llm_parse_products(html=response.text, store="armytech", base_url="https://www.armytech.com.ar")
 
     for tarjeta in tarjetas:
         titulo_tag = tarjeta.find("h3", class_="product-title")

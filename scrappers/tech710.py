@@ -2,6 +2,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timezone
+from .llm_parser import llm_parse_products
 
 BASE_URL = "https://710tech.com.ar"
 CATEGORY_URL = f"{BASE_URL}/placas-de-video/nuevo"
@@ -35,7 +36,7 @@ def scrape(keyword: str = "", size: int = 50) -> list[dict]:
         tarjetas = soup.find_all("div", attrs={"data-nombre": True, "data-precio": True})
 
         if not tarjetas:
-            break
+            return llm_parse_products(html=response.text, store="710tech", base_url="https://www.710tech.com.ar")
         
         # Detectar si estamos en la misma página (loop infinito)
         nombres_pagina = {t.get("data-nombre") for t in tarjetas}
