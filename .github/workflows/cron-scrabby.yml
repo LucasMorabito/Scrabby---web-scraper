@@ -45,4 +45,4 @@ jobs:
             -e SCRABBY_MIN_PRICE="$SCRABBY_MIN_PRICE" \
             -e ALLOWED_ORIGINS="$ALLOWED_ORIGINS" \
             -e PORT="$PORT" \
-            scrabby-bot python -m scrabby.main
+            scrabby-bot python -m main.py
