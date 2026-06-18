@@ -2,7 +2,7 @@ name: Scrabby Daily Run
 
 on:
   schedule:
-    - cron: '0 10 * * *' # Se ejecuta a las 10:00 UTC (07:00 AM de Argentina)
+    - cron: '0 10 * * *'
   
   workflow_dispatch: 
 
@@ -22,5 +22,11 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        run:
-        docker run --rm -e DATABASE_URL="$DATABASE_URL" -e GEMINI_API_KEY="$GEMINI_API_KEY" -e SECRET_KEY="$SECRET_KEY" scrabby-bot
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: |
+          docker run --rm \
+            -e DATABASE_URL="$DATABASE_URL" \
+            -e GEMINI_API_KEY="$GEMINI_API_KEY" \
+            -e SECRET_KEY="$SECRET_KEY" \
+            -e SENTRY_DSN="$SENTRY_DSN" \
+            scrabby-bot
