@@ -23,10 +23,26 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
+          ALGORITHM: "HS256"
+          TOKEN_SECONDS_EXPIRE: "900"
+          SCRABBY_SEARCH_QUERY: "placa de video"
+          SCRABBY_RESULT_LIMIT: "50"
+          SCRABBY_MIN_PRICE: "100000.0"
+          ALLOWED_ORIGINS: "http://localhost:8000,http://127.0.0.1:8000,http://localhost:3000,http://127.0.0.1:3000"
+          PORT: "10000"
         run: |
           docker run --rm \
             -e DATABASE_URL="$DATABASE_URL" \
             -e GEMINI_API_KEY="$GEMINI_API_KEY" \
             -e SECRET_KEY="$SECRET_KEY" \
             -e SENTRY_DSN="$SENTRY_DSN" \
-            scrabby-bot
+            -e REDIS_URL="$REDIS_URL" \
+            -e ALGORITHM="$ALGORITHM" \
+            -e TOKEN_SECONDS_EXPIRE="$TOKEN_SECONDS_EXPIRE" \
+            -e SCRABBY_SEARCH_QUERY="$SCRABBY_SEARCH_QUERY" \
+            -e SCRABBY_RESULT_LIMIT="$SCRABBY_RESULT_LIMIT" \
+            -e SCRABBY_MIN_PRICE="$SCRABBY_MIN_PRICE" \
+            -e ALLOWED_ORIGINS="$ALLOWED_ORIGINS" \
+            -e PORT="$PORT" \
+            scrabby-bot python -m scrabby.main
